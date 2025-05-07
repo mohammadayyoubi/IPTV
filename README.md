@@ -115,11 +115,7 @@ Here are some exciting features planned for future development:
 * Introduce a sleek and user-friendly **dark mode UI**.
 * Explore **remote configuration** options using Firebase Remote Config or a dedicated API backend for dynamic updates.
 
-## 📸 Screenshots (Optional)
-
-*(Consider adding screenshots here to visually showcase the app's interface. Examples include the channel list view, the video player screen, and the favorites section.)*
-
 ## 🤝 Contributing
-
-Contributions are highly appreciated\! If you have ideas for improvements or bug fixes, feel free to submit a pull request. For significant changes, it's recommended to open an issue first to discuss your proposed modifications.
-EOF
+This project will be done dy:
+- Mohammad Al Ayoubi
+- Mahmoud Al Natour
