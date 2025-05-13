@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "510181108453",
+    "project_id": "iptv-e6050",
+    "storage_bucket": "iptv-e6050.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510181108453:android:b0e15ebc27bb396396820c",
+        "android_client_info": {
+          "package_name": "com.example.iptv"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYXb_mAUoUvs4WPhMfVcOho4s5909J2hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
