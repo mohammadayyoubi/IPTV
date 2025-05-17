@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                         // Go to admin panel or main screen
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class)); // or MainActivity.class
+                        startActivity(new Intent(LoginActivity.this, AdminPanelActivity.class)); // or MainActivity.class
                         finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();

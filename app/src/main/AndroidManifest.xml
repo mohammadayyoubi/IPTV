@@ -15,25 +15,25 @@
         android:theme="@style/Theme.IPTV"
         tools:targetApi="31">
         <activity
+            android:name=".AdminPanelActivity"
+            android:exported="false" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".LoginActivity"-->
-<!--            android:exported="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+         <activity
+         android:name=".LoginActivity"
+         android:exported="true">
+         <intent-filter>
+         <action android:name="android.intent.action.MAIN" />
+         <category android:name="android.intent.category.LAUNCHER" />
+         </intent-filter>
+         </activity>
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
         <activity
             android:name=".activity_category_management"
-            android:exported="true" />
-
+            android:exported="false" />
     </application>
 
 </manifest>

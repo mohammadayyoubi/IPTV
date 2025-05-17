@@ -1,16 +1,19 @@
 package com.example.iptv;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
-import androidx.annotation.NonNull;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.iptv.OOP.Category;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.DBHelper;
@@ -42,7 +45,7 @@ public class activity_category_management extends AppCompatActivity {
 
     private void loadCategories() {
         List<Category> categories = categoryDAO.getAll();
-        adapter = new CategoryAdapter(categories);
+        adapter = new CategoryAdapter(categories, categoryDAO, this::showCategoryDialog, this::loadCategories);
         categoryRecyclerView.setAdapter(adapter);
     }
 
@@ -50,75 +53,32 @@ public class activity_category_management extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(categoryToEdit == null ? "Add Category" : "Edit Category");
 
+        // Input field for category name
         final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setInputType(InputType.TYPE_CLASS_TEXT); // Set input type to plain text
         if (categoryToEdit != null) {
-            input.setText(categoryToEdit.getName());
+            input.setText(categoryToEdit.getName()); // Pre-fill if editing
         }
         builder.setView(input);
 
+        // "Save" button: insert new or update existing category
         builder.setPositiveButton("Save", (dialog, which) -> {
-            String name = input.getText().toString().trim();
-            if (name.isEmpty()) return;
+            String name = input.getText().toString().trim(); // Get input text
+            if (name.isEmpty()) return; // Do nothing if input is empty
 
             if (categoryToEdit == null) {
-                categoryDAO.insert(new Category( name));
+                categoryDAO.insert(new Category(name)); // Insert new category
             } else {
-                categoryToEdit.setName(name);
-                categoryDAO.update(categoryToEdit);
+                categoryToEdit.setName(name);           // Update category name
+                categoryDAO.update(categoryToEdit);     // Save changes to DB
             }
-            loadCategories();
+            loadCategories(); // Refresh RecyclerView
         });
 
+        // "Cancel" button to dismiss dialog
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
+        // Show the dialog
         builder.show();
-    }
-
-    class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
-        private List<Category> categoryList;
-
-        public CategoryAdapter(List<Category> categoryList) {
-            this.categoryList = categoryList;
-        }
-
-        @NonNull
-        @Override
-        public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_category, parent, false);
-            return new CategoryViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-            Category category = categoryList.get(position);
-            holder.nameTextView.setText(category.getName());
-            holder.idTextView.setText(String.valueOf(category.getId()));
-
-            holder.editButton.setOnClickListener(v -> showCategoryDialog(category));
-            holder.deleteButton.setOnClickListener(v -> {
-                categoryDAO.delete(category.getId());
-                loadCategories();
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return categoryList.size();
-        }
-
-        class CategoryViewHolder extends RecyclerView.ViewHolder {
-            TextView nameTextView, idTextView;
-            Button editButton, deleteButton;
-
-            public CategoryViewHolder(View itemView) {
-                super(itemView);
-                idTextView = itemView.findViewById(R.id.categoryIdTextView);
-                nameTextView = itemView.findViewById(R.id.categoryNameTextView);
-                editButton = itemView.findViewById(R.id.editCategoryButton);
-                deleteButton = itemView.findViewById(R.id.deleteCategoryButton);
-            }
-        }
     }
 }
