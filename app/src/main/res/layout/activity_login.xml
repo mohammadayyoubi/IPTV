@@ -34,6 +34,32 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingBottom="1dp">
+
+                    <TextView
+                        android:id="@+id/AdminLoginPageLable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Admin's Login"
+                        android:textColor="#FFFFFF"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp"/>
+
+                    <View
+                        android:layout_width="235dp"
+                        android:layout_height="2dp"
+                        android:background="#E50914"
+                        android:layout_marginBottom="18dp"/>
+
+                </LinearLayout>
+
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/emailTextField"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -51,6 +77,8 @@
                         android:inputType="textEmailAddress"
                         android:textColor="#FFFFFF"
                         app:boxBackgroundMode="outline"
+                        android:background="@drawable/search_background"
+                        android:layout_marginBottom="7dp"
                         />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -73,7 +101,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="#FFFFFF"
+                        android:background="@drawable/search_background"
+                        />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
