@@ -1,6 +1,7 @@
 package com.example.iptv;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,9 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ChannelV
         }
 
         holder.editButton.setOnClickListener(v -> {
-            // TODO: Implement edit logic (e.g. open edit activity)
+            Intent intent = new Intent(context, activity_add_channel.class);
+            intent.putExtra(activity_add_channel.EXTRA_CHANNEL_ID, channel.getId());
+            context.startActivity(intent);
         });
         holder.deleteButton.setOnClickListener(v -> {
             new AlertDialog.Builder(context)
