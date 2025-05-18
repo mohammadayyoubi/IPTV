@@ -1,13 +1,8 @@
 package com.example.iptv;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.*;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,48 +32,62 @@ public class activity_category_management extends AppCompatActivity {
         categoryRecyclerView = findViewById(R.id.categoryRecyclerView);
         categoryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        adapter = new CategoryAdapter(categoryDAO.getAll(), getLayoutInflater(), new CategoryAdapter.OnItemActionListener() {
+            @Override
+            public void onEdit(Category category) {
+                showCategoryDialog(category);
+            }
+
+            @Override
+            public void onDelete(Category category) {
+                new AlertDialog.Builder(activity_category_management.this)
+                        .setTitle("Delete Category")
+                        .setMessage("Are you sure you want to delete \"" + category.getName() + "\"?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            categoryDAO.delete(category.getId());
+                            loadCategories();
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+            }
+        });
+
+        categoryRecyclerView.setAdapter(adapter);
+
         Button addButton = findViewById(R.id.addCategoryButton);
         addButton.setOnClickListener(v -> showCategoryDialog(null));
-
-        loadCategories();
     }
 
     private void loadCategories() {
         List<Category> categories = categoryDAO.getAll();
-        adapter = new CategoryAdapter(categories, categoryDAO, this::showCategoryDialog, this::loadCategories);
-        categoryRecyclerView.setAdapter(adapter);
+        adapter.updateData(categories);
     }
 
     private void showCategoryDialog(Category categoryToEdit) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(categoryToEdit == null ? "Add Category" : "Edit Category");
 
-        // Input field for category name
         final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT); // Set input type to plain text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
         if (categoryToEdit != null) {
-            input.setText(categoryToEdit.getName()); // Pre-fill if editing
+            input.setText(categoryToEdit.getName());
         }
         builder.setView(input);
 
-        // "Save" button: insert new or update existing category
         builder.setPositiveButton("Save", (dialog, which) -> {
-            String name = input.getText().toString().trim(); // Get input text
-            if (name.isEmpty()) return; // Do nothing if input is empty
+            String name = input.getText().toString().trim();
+            if (name.isEmpty()) return;
 
             if (categoryToEdit == null) {
-                categoryDAO.insert(new Category(name)); // Insert new category
+                categoryDAO.insert(new Category(name));
             } else {
-                categoryToEdit.setName(name);           // Update category name
-                categoryDAO.update(categoryToEdit);     // Save changes to DB
+                categoryToEdit.setName(name);
+                categoryDAO.update(categoryToEdit);
             }
-            loadCategories(); // Refresh RecyclerView
+            loadCategories();
         });
 
-        // "Cancel" button to dismiss dialog
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-        // Show the dialog
         builder.show();
     }
 }

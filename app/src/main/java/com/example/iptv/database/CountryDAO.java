@@ -36,24 +36,39 @@ public class CountryDAO {
                 list.add(country);
             } while (cursor.moveToNext());
         }
-        cursor.close();
+        cursor.close(); // ✅ important!
         return list;
     }
 
     public Country getById(int id) {
         Cursor cursor = db.rawQuery("SELECT * FROM Country WHERE id = ?", new String[]{String.valueOf(id)});
-        if (cursor.moveToFirst()) {
-            Country country = new Country(
-                    cursor.getInt(0),
-                    cursor.getString(1),
-                    cursor.getString(2)
-            );
-            cursor.close();
-            return country;
+        try {
+            if (cursor.moveToFirst()) {
+                return new Country(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2)
+                );
+            }
+            return null;
+        } finally {
+            cursor.close(); // 🔐 always close cursor
         }
-        cursor.close();
-        return null;
     }
+
+
+    public int update(Country country) {
+
+        ContentValues values = new ContentValues();
+        values.put("name", country.getName());
+        values.put("flagUrl", country.getFlagUrl());
+        return db.update("Country", values, "id = ?", new String[]{String.valueOf(country.getId())});
+    }
+
+    public int delete(int id) {
+        return db.delete("Country", "id = ?", new String[]{String.valueOf(id)});
+    }
+
     public int count() {
         Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM Country", null);
         if (cursor.moveToFirst()) {
@@ -61,5 +76,7 @@ public class CountryDAO {
         }
         return 0;
     }
+
+
 
 }

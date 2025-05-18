@@ -3,39 +3,41 @@ package com.example.iptv;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.OOP.Category;
-import com.example.iptv.database.CategoryDAO;
 
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
-    public interface CategoryActionListener {
+    public interface OnItemActionListener {
         void onEdit(Category category);
+        void onDelete(Category category);
     }
 
     private List<Category> categoryList;
-    private CategoryDAO categoryDAO;
-    private CategoryActionListener editListener;
-    private Runnable refreshCallback;
+    private final LayoutInflater inflater;
+    private final OnItemActionListener listener;
 
-    public CategoryAdapter(List<Category> categoryList, CategoryDAO categoryDAO, CategoryActionListener editListener, Runnable refreshCallback) {
+    public CategoryAdapter(List<Category> categoryList, LayoutInflater inflater, OnItemActionListener listener) {
         this.categoryList = categoryList;
-        this.categoryDAO = categoryDAO;
-        this.editListener = editListener;
-        this.refreshCallback = refreshCallback;
+        this.inflater = inflater;
+        this.listener = listener;
+    }
+
+    public void updateData(List<Category> newList) {
+        this.categoryList = newList;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category, parent, false);
+        View view = inflater.inflate(R.layout.item_category, parent, false);
         return new CategoryViewHolder(view);
     }
 
@@ -45,12 +47,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.nameTextView.setText(category.getName());
         holder.idTextView.setText(String.valueOf(category.getId()));
 
-        holder.editButton.setOnClickListener(v -> editListener.onEdit(category));
-
-        holder.deleteButton.setOnClickListener(v -> {
-            categoryDAO.delete(category.getId());
-            refreshCallback.run();
-        });
+        holder.editButton.setOnClickListener(v -> listener.onEdit(category));
+        holder.deleteButton.setOnClickListener(v -> listener.onDelete(category));
     }
 
     @Override
@@ -60,7 +58,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     static class CategoryViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView, idTextView;
-        Button editButton, deleteButton;
+        ImageButton editButton, deleteButton;
 
         public CategoryViewHolder(View itemView) {
             super(itemView);

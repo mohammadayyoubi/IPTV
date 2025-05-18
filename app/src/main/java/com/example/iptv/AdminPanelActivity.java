@@ -38,7 +38,8 @@ public class AdminPanelActivity extends AppCompatActivity {
         // Countries (placeholder)
         LinearLayout manageCountries = findViewById(R.id.manageCountriesButton);
         manageCountries.setOnClickListener(v -> {
-            // TODO: Replace with CountryManagementActivity
+            Intent intent = new Intent(AdminPanelActivity.this, activity_country_management.class);
+            startActivity(intent);
         });
 
         // Admin Users (placeholder)

@@ -10,35 +10,47 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingBottom="16dp">
+        android:paddingBottom="1dp">
 
         <TextView
             android:id="@+id/AdminPageLable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Categories"
+            android:text="Countries"
             android:textColor="#FFFFFF"
             android:textSize="26sp"
             android:textStyle="bold"
             android:layout_marginBottom="6dp"/>
 
         <View
-            android:layout_width="165dp"
+            android:layout_width="135dp"
             android:layout_height="2dp"
             android:background="#E50914" />
 
     </LinearLayout>
-    <Button
-        android:id="@+id/addCategoryButton"
+    <EditText
+        android:id="@+id/searchEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Category"
+        android:hint="Search Country..."
+        android:backgroundTint="#FFFFFF"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#AAAAAA"
+        android:padding="12dp"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/addCountryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Country"
         android:textColor="#FFFFFF"
         android:backgroundTint="#E50914"
         android:layout_marginBottom="16dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/categoryRecyclerView"
+        android:id="@+id/countryRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </LinearLayout>
