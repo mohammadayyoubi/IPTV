@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="#1D1E33"
+    android:layout_marginBottom="8dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/userEmailTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="user@example.com"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+    <ImageButton
+        android:id="@+id/editUserButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:backgroundTint="#FFA500"
+        android:contentDescription="Edit Country"
+        android:src="@android:drawable/ic_menu_edit"
+        app:tint="#FFA500" />
+
+    <ImageButton
+        android:id="@+id/deleteUserButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:backgroundTint="#E50914"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_delete"
+        android:contentDescription="Delete Country"
+        app:tint="#E50914" />
+</LinearLayout>

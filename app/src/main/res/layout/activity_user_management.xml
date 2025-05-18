@@ -16,43 +16,45 @@
             android:id="@+id/AdminPageLable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Countries"
+            android:text="User Management"
             android:textColor="#FFFFFF"
             android:textSize="26sp"
             android:textStyle="bold"
             android:layout_marginBottom="6dp"/>
 
         <View
-            android:layout_width="135dp"
+            android:layout_width="235dp"
             android:layout_height="2dp"
             android:background="#E50914"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="12dp"/>
 
     </LinearLayout>
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search Country..."
+        android:hint="Search admin user"
         android:textColor="#FFFFFF"
-        android:textColorHint="#AAAAAA"
+        android:textColorHint="#888888"
+        android:background="@drawable/search_background"
         android:padding="12dp"
         android:drawableStart="@android:drawable/ic_menu_search"
-        android:background="@drawable/search_background"
-
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="12dp" />
 
     <Button
-        android:id="@+id/addCountryButton"
+        android:id="@+id/addUserButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Country"
+        android:text="Add Admin User"
         android:textColor="#FFFFFF"
         android:backgroundTint="#E50914"
-        android:layout_marginBottom="16dp"/>
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/countryRecyclerView"
+        android:id="@+id/userRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="8dp" />
 </LinearLayout>

@@ -45,7 +45,9 @@ public class AdminPanelActivity extends AppCompatActivity {
         // Admin Users (placeholder)
         LinearLayout manageUsers = findViewById(R.id.manageUsersButton);
         manageUsers.setOnClickListener(v -> {
-            // TODO: Replace with AdminUserManagementActivity
+            Intent intent = new Intent(AdminPanelActivity.this, activity_user_management.class);
+            startActivity(intent);
+
         });
 
         // Logout
