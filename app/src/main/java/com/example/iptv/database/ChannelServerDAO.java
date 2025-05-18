@@ -32,7 +32,6 @@ public class ChannelServerDAO {
         if (cursor.moveToFirst()) {
             do {
                 ChannelServer server = new ChannelServer(
-                        cursor.getInt(0),
                         cursor.getInt(1),
                         cursor.getString(2),
                         cursor.getString(3)
@@ -43,4 +42,6 @@ public class ChannelServerDAO {
         cursor.close();
         return list;
     }
+
+
 }

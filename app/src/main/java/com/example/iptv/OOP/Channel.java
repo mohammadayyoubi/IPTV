@@ -11,8 +11,7 @@ public class Channel {
     private List<ChannelServer> servers;
     private boolean isFavorite; // Flag to indicate if this channel is marked as a favorite
 
-    public Channel(int id, String name, String logoUrl, int countryId, int categoryId, List<ChannelServer> servers) {
-        this.id = id;
+    public Channel( String name, String logoUrl, int countryId, int categoryId, List<ChannelServer> servers) {
         this.name = name;
         this.logoUrl = logoUrl;
         this.countryId = countryId;
@@ -23,6 +22,7 @@ public class Channel {
 
     // Getters and Setters
     public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

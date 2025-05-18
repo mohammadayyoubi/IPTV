@@ -15,6 +15,12 @@
         android:theme="@style/Theme.IPTV"
         tools:targetApi="31">
         <activity
+            android:name=".activity_add_channel"
+            android:exported="false" />
+        <activity
+            android:name=".activity_channel_management"
+            android:exported="false" />
+        <activity
             android:name=".activity_forgot_password"
             android:exported="false" />
         <activity
@@ -25,9 +31,6 @@
             android:exported="false" />
         <activity
             android:name=".AdminPanelActivity"
-            android:exported="false" />
-        <activity
-            android:name=".HomeActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

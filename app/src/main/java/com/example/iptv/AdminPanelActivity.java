@@ -32,7 +32,9 @@ public class AdminPanelActivity extends AppCompatActivity {
         // Channels (placeholder)
         LinearLayout manageChannels = findViewById(R.id.manageChannelsButton);
         manageChannels.setOnClickListener(v -> {
-            // TODO: Replace with ChannelManagementActivity
+            Intent intent = new Intent(AdminPanelActivity.this, activity_channel_management.class);
+            startActivity(intent);
+
         });
 
         // Countries (placeholder)

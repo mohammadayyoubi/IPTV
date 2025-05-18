@@ -5,8 +5,8 @@ public class ChannelServer {
     private String serverName;
     private String streamUrl;
 
-    public ChannelServer(int id, int channelId, String serverName, String streamUrl) {
-        this.id = id;
+    public ChannelServer( int channelId, String serverName, String streamUrl) {
+
         this.channelId = channelId;
         this.serverName = serverName;
         this.streamUrl = streamUrl;
