@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="12dp"
+    android:layout_marginBottom="8dp"
+    android:background="#1D1E33"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Channel Logo -->
+    <ImageView
+        android:id="@+id/channelLogoImageView"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="12dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Channel Logo" />
+
+    <!-- Channel Info -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/channelNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Channel Name"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/channelCategoryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            android:textColor="#AAAAAA"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Country Flag -->
+    <ImageView
+        android:id="@+id/countryFlagImageView"
+        android:layout_width="36dp"
+        android:layout_height="24dp"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="12dp"
+        android:contentDescription="Country Flag" />
+
+    <!-- Edit Button -->
+    <ImageButton
+        android:id="@+id/editChannelButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_edit"
+        android:contentDescription="Edit"
+        app:tint="#FFA500" />
+
+    <!-- Delete Button -->
+    <ImageButton
+        android:id="@+id/deleteChannelButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_delete"
+        android:layout_marginStart="4dp"
+        android:contentDescription="Delete"
+        app:tint="#E50914" />
+</LinearLayout>

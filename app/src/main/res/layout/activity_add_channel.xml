@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#0A0E21"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="1dp">
+
+            <TextView
+                android:id="@+id/AddChannelPageLable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Channel"
+                android:textColor="#FFFFFF"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp"/>
+
+            <View
+                android:layout_width="175dp"
+                android:layout_height="2dp"
+                android:background="#E50914"
+                android:layout_marginBottom="16dp"/>
+        </LinearLayout>
+
+        <!-- Channel Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Channel Name"
+            android:textColor="#B0B0B0"/>
+        <EditText
+            android:id="@+id/channelNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/search_background"
+            android:textColor="#FFFFFF"
+            android:hint="Example Channel"
+            android:padding="12dp"/>
+
+        <!-- Logo URL and Preview -->
+        <TextView
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logo URL"
+            android:textColor="#B0B0B0"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <EditText
+                android:id="@+id/logoUrlEditText"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:hint="https://example.com/logo.png"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/search_background"
+                android:padding="12dp"/>
+            <ImageView
+                android:id="@+id/logoPreviewImageView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="12dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder"/>
+        </LinearLayout>
+
+        <!-- Category Spinner -->
+        <TextView
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            android:textColor="#B0B0B0"/>
+        <Spinner
+            android:id="@+id/categorySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/search_background"
+            android:padding="12dp"/>
+
+        <!-- Country Spinner -->
+        <TextView
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Country"
+            android:textColor="#B0B0B0"/>
+        <Spinner
+            android:id="@+id/countrySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/search_background"
+            android:padding="12dp"/>
+
+        <!-- Server Management -->
+        <TextView
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Servers"
+            android:textColor="#B0B0B0"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/serverUrlEditText"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:hint="Server URL"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/search_background"
+                android:padding="12dp"/>
+            <Button
+                android:id="@+id/addServerButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Server"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#E50914"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <!-- Server list (added dynamically in Java) -->
+        <LinearLayout
+            android:id="@+id/serverListLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp" />
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/saveChannelButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#E50914"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+</ScrollView>

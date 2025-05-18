@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/itemServerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="@android:color/transparent"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/serverUrlTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="http://example.com/stream"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:paddingEnd="8dp" />
+
+    <ImageButton
+        android:id="@+id/deleteServerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_delete"
+        android:contentDescription="Delete"
+        app:tint="#FF4444" />
+</LinearLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#0A0E21"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Heading -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="1dp">
+
+        <TextView
+            android:id="@+id/ChannelManagementPageLable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Channels"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp"/>
+
+        <View
+            android:layout_width="135dp"
+            android:layout_height="2dp"
+            android:background="#E50914"
+            android:layout_marginBottom="16dp"/>
+
+    </LinearLayout>
+    <!-- Search Bar -->
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search by name or category"
+        android:background="@drawable/search_background"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#CCCCCC"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:padding="12dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Add Button -->
+    <Button
+        android:id="@+id/addChannelButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Channel"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#E50914"
+        android:layout_marginBottom="16dp"
+        android:textSize="18sp" />
+
+    <!-- Channel List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/channelRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical" />
+</LinearLayout>
