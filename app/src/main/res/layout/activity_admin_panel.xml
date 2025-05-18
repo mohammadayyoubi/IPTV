@@ -13,15 +13,148 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:id="@+id/AdminPageLable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Admin Panel"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <View
+                android:layout_width="165dp"
+                android:layout_height="2dp"
+                android:background="#E50914" />
+
+        </LinearLayout>
+
+        <!-- Dashboard Section Title -->
         <TextView
+            android:id="@+id/dashboardsectionlable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Admin Panel"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:text="Dashboard"
             android:textColor="#FFFFFF"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Statistics Dashboard -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="32dp">
+
+            <LinearLayout
+                android:id="@+id/cardChannels"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#1D1E33"
+                android:padding="12dp"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:elevation="4dp">
+
+                <TextView
+                    android:id="@+id/tvTotalChannels"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#E50914"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Channels"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardCategories"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#1D1E33"
+                android:padding="12dp"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:elevation="4dp">
+
+                <TextView
+                    android:id="@+id/tvTotalCategories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#E50914"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Categories"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardCountries"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#1D1E33"
+                android:padding="12dp"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:elevation="4dp">
+
+                <TextView
+                    android:id="@+id/tvTotalCountries"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#E50914"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Countries"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Managers Section Title -->
+        <TextView
+            android:id="@+id/managesectionlabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="Manage Sections"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <!-- Row 1: Categories & Channels -->
         <LinearLayout
@@ -162,6 +295,5 @@
             android:backgroundTint="#E50914"
             android:layout_marginTop="32dp"
             android:padding="12dp" />
-
     </LinearLayout>
 </ScrollView>

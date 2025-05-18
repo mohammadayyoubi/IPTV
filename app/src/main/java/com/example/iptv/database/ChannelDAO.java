@@ -67,4 +67,13 @@ public class ChannelDAO {
         cursor.close();
         return null;
     }
+
+    public int count() {
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM Channel", null);
+        if (cursor.moveToFirst()) {
+            return cursor.getInt(0);
+        }
+        return 0;
+    }
+
 }

@@ -5,9 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.iptv.database.CategoryDAO;
+import com.example.iptv.database.ChannelDAO;
+import com.example.iptv.database.CountryDAO;
+import com.example.iptv.database.DBHelper;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class AdminPanelActivity extends AppCompatActivity {
@@ -50,5 +55,30 @@ public class AdminPanelActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
+
+        refreshDashboard();
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshDashboard();
+    }
+
+    private void refreshDashboard() {
+        TextView tvTotalChannels = findViewById(R.id.tvTotalChannels);
+        TextView tvTotalCategories = findViewById(R.id.tvTotalCategories);
+        TextView tvTotalCountries = findViewById(R.id.tvTotalCountries);
+
+        DBHelper dbHelper = new DBHelper(this);
+        ChannelDAO channelDAO = new ChannelDAO(dbHelper.getReadableDatabase());
+        CategoryDAO categoryDAO = new CategoryDAO(dbHelper.getReadableDatabase());
+        CountryDAO countryDAO = new CountryDAO(dbHelper.getReadableDatabase());
+
+        tvTotalChannels.setText(String.valueOf(channelDAO.count()));
+        tvTotalCategories.setText(String.valueOf(categoryDAO.count()));
+        tvTotalCountries.setText(String.valueOf(countryDAO.count()));
+    }
+
 }

@@ -86,4 +86,13 @@ public class CategoryDAO {
     public int delete(int id) {
         return db.delete(TABLE_CATEGORY, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
     }
+
+    public int count() {
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM Category", null);
+        if (cursor.moveToFirst()) {
+            return cursor.getInt(0);
+        }
+        return 0;
+    }
+
 }
