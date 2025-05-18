@@ -64,6 +64,8 @@ public class activity_channel_management extends AppCompatActivity {
             Intent intent = new Intent(activity_channel_management.this, activity_add_channel.class);
             startActivity(intent);
         });
+
+
     }
 
     private void refreshChannelList() {
@@ -86,4 +88,6 @@ public class activity_channel_management extends AppCompatActivity {
         super.onResume();
         refreshChannelList(); // Refresh when returning from add/edit screen
     }
+
+
 }

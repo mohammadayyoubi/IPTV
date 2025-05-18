@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -74,12 +76,20 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ChannelV
         holder.editButton.setOnClickListener(v -> {
             // TODO: Implement edit logic (e.g. open edit activity)
         });
-
         holder.deleteButton.setOnClickListener(v -> {
-            ChannelDAO channelDAO = new ChannelDAO(new com.example.iptv.database.DBHelper(context).getWritableDatabase());
-            channelDAO.delete(channel.getId());
-            refreshCallback.run();
+            new AlertDialog.Builder(context)
+                    .setTitle("Delete Channel")
+                    .setMessage("Are you sure you want to delete this channel?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        ChannelDAO channelDAO = new ChannelDAO(new com.example.iptv.database.DBHelper(context).getWritableDatabase());
+                        channelDAO.deleteChanelByID(channel.getId());
+                        Toast.makeText(context, "Channel deleted", Toast.LENGTH_SHORT).show();
+                        refreshCallback.run();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
         });
+
     }
 
     @Override

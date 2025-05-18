@@ -90,7 +90,8 @@ public class ChannelDAO {
                 new String[]{String.valueOf(channel.getId())});
     }
 
-    public int delete(int id) {
+    public int deleteChanelByID(int id) {
+        csd.deleteChannelServersByChannelID(id); // delete associated servers first (cascade)
         return db.delete(TABLE_CHANNEL, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
     }
 

@@ -43,5 +43,16 @@ public class ChannelServerDAO {
         return list;
     }
 
+    //may be used if later we develop server management
+    public void deleteChannelServersByID(int channelId) {
+        // Delete all servers associated with the channel
+        db.delete("ChannelServer", "channelId = ?", new String[]{String.valueOf(channelId)});
+    }
+
+    // will be used when deleting a channel, so first should delete all its servers then the channel
+    public void deleteChannelServersByChannelID(int channelId) {
+        // Delete all servers associated with the channel
+        db.delete("ChannelServer", "channelId = ?", new String[]{String.valueOf(channelId)});
+    }
 
 }
