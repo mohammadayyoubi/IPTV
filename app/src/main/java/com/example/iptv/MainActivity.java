@@ -10,8 +10,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.iptv.OOP.Category;
+import com.example.iptv.OOP.Country;
 import com.example.iptv.database.CategoryDAO;
+import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
         });
         DBHelper dbHelper=new DBHelper(getApplicationContext());
         SQLiteDatabase db=dbHelper.getWritableDatabase();
-        CategoryDAO c=new CategoryDAO(db);
-        c.insert(new Category("name"));
+
+
     }
+
+
 }

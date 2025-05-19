@@ -103,7 +103,7 @@ public class activity_country_management extends AppCompatActivity {
             if (name.isEmpty()) return;
 
             if (countryToEdit == null) {
-                countryDAO.insert(new Country(0, name, flagUrl));
+                countryDAO.insert(new Country( name, flagUrl));
             } else {
                 countryToEdit.setName(name);
                 countryToEdit.setFlagUrl(flagUrl);

@@ -1,7 +1,11 @@
 package com.example.iptv;
 
+import static com.example.iptv.getFromInternet.getAllCategories;
+import static com.example.iptv.getFromInternet.getAllCountries;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -9,18 +13,28 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.iptv.Interfaces.CategoryCallback;
+import com.example.iptv.OOP.Category;
+import com.example.iptv.OOP.Country;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.ChannelDAO;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class AdminPanelActivity extends AppCompatActivity {
+import java.util.ArrayList;
 
+public class AdminPanelActivity extends AppCompatActivity {
+    DBHelper dbHelper;
+    private CountryDAO countryDao;
+    private CategoryDAO categoryDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_panel);
+        dbHelper= new DBHelper(this);
+         countryDao=new CountryDAO(dbHelper.getWritableDatabase());
+categoryDao=new CategoryDAO(dbHelper.getWritableDatabase());
 
         // Categories
         LinearLayout manageCategories = findViewById(R.id.manageCategoriesButton);
@@ -28,6 +42,7 @@ public class AdminPanelActivity extends AppCompatActivity {
             Intent intent = new Intent(AdminPanelActivity.this, activity_category_management.class);
             startActivity(intent);
         });
+
 
         // Channels (placeholder)
         LinearLayout manageChannels = findViewById(R.id.manageChannelsButton);
@@ -60,6 +75,28 @@ public class AdminPanelActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
+        /// /////////////////// get data if not already inserted//////////////////////////
+        if(countryDao.getAll().isEmpty()){
+            ArrayList<Country> countries=getAllCountries();
+            for( Country country : countries){
+                countryDao.insert(country) ;
+            }
+        }
+        if (categoryDao.getAll().isEmpty()) {
+            getFromInternet.getAllCategories(new CategoryCallback() {
+                @Override
+                public void onCategoriesLoaded(ArrayList<Category> categories) {
+                    // Save to database or local list
+                    for (Category c : categories) {
+                        categoryDao.insert(c); // assuming you have insert(Category) method
+                        Log.d("InsertedCategory", c.getName());
+                    }
+                    //mohamadayoubi050@gmail.com
+                    // Optionally update UI here
+                }
+            });
+        }
+
 
         refreshDashboard();
 

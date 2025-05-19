@@ -1,11 +1,14 @@
 package com.example.iptv.OOP;
+
+import java.util.ArrayList;
+
 public class Country {
     private int id;
     private String name;
     private String flagUrl;
 
-    public Country(int id, String name, String flagUrl) {
-        this.id = id;
+    public Country( String name, String flagUrl) {
+
         this.name = name;
         this.flagUrl = flagUrl;
     }
@@ -20,3 +23,4 @@ public class Country {
     public String getFlagUrl() { return flagUrl; }
     public void setFlagUrl(String flagUrl) { this.flagUrl = flagUrl; }
 }
+

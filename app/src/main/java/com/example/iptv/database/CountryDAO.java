@@ -29,10 +29,11 @@ public class CountryDAO {
         if (cursor.moveToFirst()) {
             do {
                 Country country = new Country(
-                        cursor.getInt(0),
+
                         cursor.getString(1),
                         cursor.getString(2)
                 );
+                country.setId(cursor.getInt(0));
                 list.add(country);
             } while (cursor.moveToNext());
         }
@@ -44,11 +45,14 @@ public class CountryDAO {
         Cursor cursor = db.rawQuery("SELECT * FROM Country WHERE id = ?", new String[]{String.valueOf(id)});
         try {
             if (cursor.moveToFirst()) {
-                return new Country(
-                        cursor.getInt(0),
+                Country c=new Country(
+
                         cursor.getString(1),
                         cursor.getString(2)
                 );
+                c.setId(cursor.getInt(0));
+                return c;
+
             }
             return null;
         } finally {
