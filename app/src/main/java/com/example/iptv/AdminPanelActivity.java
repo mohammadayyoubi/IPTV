@@ -75,27 +75,27 @@ categoryDao=new CategoryDAO(dbHelper.getWritableDatabase());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
-        /// /////////////////// get data if not already inserted//////////////////////////
+        /// /////////////////// get data if not already inserted - get from internet (iptv github api) when run//////////////////////////
         if(countryDao.getAll().isEmpty()){
             ArrayList<Country> countries=getAllCountries();
             for( Country country : countries){
                 countryDao.insert(country) ;
             }
         }
-        if (categoryDao.getAll().isEmpty()) {
+        if (categoryDao.getAll().isEmpty()) { // Check if the local database has no categories yet
             getFromInternet.getAllCategories(new CategoryCallback() {
                 @Override
                 public void onCategoriesLoaded(ArrayList<Category> categories) {
-                    // Save to database or local list
+                    // This is called after categories are fetched from the internet (on the main thread)
+
                     for (Category c : categories) {
-                        categoryDao.insert(c); // assuming you have insert(Category) method
-                        Log.d("InsertedCategory", c.getName());
+                        categoryDao.insert(c); // Insert each category into the local Room database
+                        Log.d("InsertedCategory", c.getName()); //log for debugging
                     }
-                    //mohamadayoubi050@gmail.com
-                    // Optionally update UI here
                 }
             });
         }
+
 
 
         refreshDashboard();

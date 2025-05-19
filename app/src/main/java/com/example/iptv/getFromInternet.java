@@ -42,44 +42,57 @@ public class getFromInternet {
         return countryList;
     }
     public static void getAllCategories(CategoryCallback callback) {
+        // Start a background thread because network operations are not allowed on the main thread
         new Thread(() -> {
-            ArrayList<Category> categoryList = new ArrayList<>();
-            String urlString = "https://iptv-org.github.io/api/categories.json";
+            ArrayList<Category> categoryList = new ArrayList<>(); // Will hold fetched categories
+            String urlString = "https://iptv-org.github.io/api/categories.json"; // API endpoint
 
             try {
+                // Create URL and open HTTP connection
                 URL url = new URL(urlString);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
+                conn.setRequestMethod("GET"); // Request type: GET
 
+                // Prepare to read the response
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(conn.getInputStream())
                 );
 
                 StringBuilder response = new StringBuilder();
                 String line;
+
+                // Read response line by line
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
                 }
-                reader.close();
 
+                reader.close(); // Close the input stream
+
+                // Parse the JSON array from response
                 JSONArray jsonArray = new JSONArray(response.toString());
 
+                // Loop through each JSON object in the array
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject categoryObject = jsonArray.getJSONObject(i);
+
+                    // Extract the "name" field (we ignore "id" for now)
                     String name = categoryObject.getString("name");
+
+                    // Create a Category object and add it to the list
                     categoryList.add(new Category(name));
                 }
 
-                // Call the callback on the main thread
+                // Return the result to the main thread using Handler
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    callback.onCategoriesLoaded(categoryList);
+                    callback.onCategoriesLoaded(categoryList); // Invoke the callback
                 });
 
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace(); // Log errors (network failure, JSON issue, etc.)
             }
-        }).start();
+        }).start(); // Start the background thread
     }
+
 }
 
 
