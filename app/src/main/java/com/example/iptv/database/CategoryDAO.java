@@ -16,6 +16,8 @@ public class CategoryDAO {
     private static final String COLUMN_NAME = "name";
 
     private SQLiteDatabase db;
+    private ChannelServerDAO csd;
+    private ChannelDAO cd;
 
     public CategoryDAO(SQLiteDatabase db) {
         this.db = db;
@@ -24,6 +26,8 @@ public class CategoryDAO {
     public long insert(Category category) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, category.getName());
+        this.csd = new ChannelServerDAO(db);
+        this.cd = new ChannelDAO(db);
         return db.insert(TABLE_CATEGORY, null, values);
     }
 
@@ -93,6 +97,11 @@ public class CategoryDAO {
             return cursor.getInt(0);
         }
         return 0;
+    }
+    public void deleteAllCategories() {
+        db.delete(TABLE_CATEGORY, null, null); // Replace with your actual table name
+        cd.deleteAllChannels();
+        csd.deleteAllChannelServers();
     }
 
 }

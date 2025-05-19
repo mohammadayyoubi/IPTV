@@ -5,12 +5,14 @@
     android:orientation="vertical"
     android:background="#0A0E21"
     android:padding="16dp">
+
+    <!-- Title Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingBottom="1dp">
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/AdminPageLable"
@@ -18,17 +20,18 @@
             android:layout_height="wrap_content"
             android:text="Countries"
             android:textColor="#FFFFFF"
-            android:textSize="26sp"
+            android:textSize="28sp"
             android:textStyle="bold"
-            android:layout_marginBottom="6dp"/>
+            android:layout_marginBottom="4dp" />
 
         <View
-            android:layout_width="135dp"
-            android:layout_height="2dp"
+            android:layout_width="160dp"
+            android:layout_height="3dp"
             android:background="#E50914"
-            android:layout_marginBottom="16dp"/>
-
+            android:layout_marginBottom="12dp" />
     </LinearLayout>
+
+    <!-- Search Bar -->
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
@@ -36,23 +39,49 @@
         android:hint="Search Country..."
         android:textColor="#FFFFFF"
         android:textColorHint="#AAAAAA"
-        android:padding="12dp"
         android:drawableStart="@android:drawable/ic_menu_search"
-        android:background="@drawable/search_background"
+        android:padding="14dp"
+        android:backgroundTint="#1C1C2E"
+        android:background="@drawable/rounded_edittext"
+        android:layout_marginBottom="12dp" />
 
-        android:layout_marginBottom="12dp"/>
-
-    <Button
-        android:id="@+id/addCountryButton"
+    <!-- Buttons Row -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Country"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#E50914"
-        android:layout_marginBottom="16dp"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
 
+        <Button
+            android:id="@+id/addCountryButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Country"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#E50914"
+            android:layout_marginEnd="8dp"
+            />
+
+        <Button
+            android:id="@+id/deleteAllCountriesButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Delete All"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#8B0000"
+            />
+    </LinearLayout>
+
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/countryRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="4dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
 </LinearLayout>

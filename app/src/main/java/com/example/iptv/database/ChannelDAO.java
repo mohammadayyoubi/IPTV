@@ -102,4 +102,10 @@ public class ChannelDAO {
         }
         return 0;
     }
+
+    public void deleteAllChannels() {
+        csd.deleteAllChannelServers(); // Delete all associated servers first
+        db.delete(TABLE_CHANNEL, null, null); // Replace "channels" with your actual table name
+    }
+
 }

@@ -5,6 +5,8 @@
     android:orientation="vertical"
     android:background="#0A0E21"
     android:padding="16dp">
+
+    <!-- Title -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,19 +28,51 @@
             android:layout_width="165dp"
             android:layout_height="2dp"
             android:background="#E50914" />
-
     </LinearLayout>
-    <Button
-        android:id="@+id/addCategoryButton"
+
+    <!-- Search Bar -->
+    <EditText
+        android:id="@+id/searchCategoryEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Category"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/search_background"
+        android:hint="Search categories..."
+        android:padding="10dp"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#E50914"
-        android:layout_marginBottom="16dp"/>
+        android:textColorHint="#AAAAAA" />
 
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/addCategoryButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Category"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#E50914"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/deleteAllCategoriesButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Delete All"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#8B0000"/>
+    </LinearLayout>
+
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoryRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 </LinearLayout>

@@ -10,27 +10,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.OOP.Category;
 
+import java.util.ArrayList;
 import java.util.List;
-
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> implements Filterable {
 
     public interface OnItemActionListener {
         void onEdit(Category category);
         void onDelete(Category category);
     }
 
-    private List<Category> categoryList;
+    private List<Category> fullList;
+    private List<Category> filteredList;
     private final LayoutInflater inflater;
     private final OnItemActionListener listener;
 
     public CategoryAdapter(List<Category> categoryList, LayoutInflater inflater, OnItemActionListener listener) {
-        this.categoryList = categoryList;
+        this.fullList = new ArrayList<>(categoryList);
+        this.filteredList = categoryList;
         this.inflater = inflater;
         this.listener = listener;
     }
 
     public void updateData(List<Category> newList) {
-        this.categoryList = newList;
+        this.fullList = new ArrayList<>(newList);
+        this.filteredList = new ArrayList<>(newList);
         notifyDataSetChanged();
     }
 
@@ -43,7 +46,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-        Category category = categoryList.get(position);
+        Category category = filteredList.get(position);
         holder.nameTextView.setText(category.getName());
         holder.idTextView.setText(String.valueOf(category.getId()));
 
@@ -53,8 +56,40 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public int getItemCount() {
-        return categoryList.size();
+        return filteredList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return categoryFilter;
+    }
+
+    private final Filter categoryFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Category> filtered = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0) {
+                filtered.addAll(fullList);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (Category cat : fullList) {
+                    if (cat.getName().toLowerCase().contains(filterPattern)) {
+                        filtered.add(cat);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtered;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredList.clear();
+            filteredList.addAll((List<Category>) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     static class CategoryViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView, idTextView;

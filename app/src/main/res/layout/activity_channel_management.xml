@@ -12,55 +12,80 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingBottom="1dp">
+        android:paddingBottom="8dp">
 
         <TextView
-            android:id="@+id/ChannelManagementPageLable"
+            android:id="@+id/ChannelManagementPageLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Channels"
+            android:text="Channel Management"
             android:textColor="#FFFFFF"
-            android:textSize="26sp"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:layout_marginBottom="6dp"/>
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="4dp" />
 
         <View
-            android:layout_width="135dp"
-            android:layout_height="2dp"
+            android:layout_width="320dp"
+            android:layout_height="3dp"
             android:background="#E50914"
-            android:layout_marginBottom="16dp"/>
-
+            android:layout_marginBottom="12dp" />
     </LinearLayout>
+
     <!-- Search Bar -->
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search by name or category"
+        android:layout_height="48dp"
+        android:hint="Search channels..."
         android:background="@drawable/search_background"
         android:textColor="#FFFFFF"
-        android:textColorHint="#CCCCCC"
+        android:textColorHint="#AAAAAA"
         android:drawableStart="@android:drawable/ic_menu_search"
-        android:padding="12dp"
-        android:layout_marginBottom="12dp" />
+        android:drawablePadding="8dp"
+        android:paddingHorizontal="16dp"
+        android:layout_marginBottom="16dp" />
 
-    <!-- Add Button -->
-    <Button
-        android:id="@+id/addChannelButton"
+    <!-- Button Group -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Channel"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#E50914"
+        android:orientation="horizontal"
+        android:gravity="center"
         android:layout_marginBottom="16dp"
-        android:textSize="18sp" />
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/addChannelButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Add Channel"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#E50914"
+            android:textSize="16sp"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/deleteAllChannelsButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Delete All"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#8B0000"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginBottom="16dp" />
 
     <!-- Channel List -->
     <androidx.recyclerview.widget.RecyclerView

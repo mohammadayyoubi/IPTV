@@ -66,6 +66,21 @@ public class activity_country_management extends AppCompatActivity {
                 adapter.filter(s.toString());
             }
         });
+
+        Button deleteAllButton = findViewById(R.id.deleteAllCountriesButton);
+        deleteAllButton.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Delete All Countries")
+                    .setMessage("Are you sure you want to delete all countries?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        countryDAO.deleteAllCountries(); // Your DAO method
+                        loadCountries(); // Reload list in RecyclerView
+                        Toast.makeText(this, "All countries deleted", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
+
     }
 
     private void loadCountries() {

@@ -11,9 +11,14 @@ import java.util.List;
 
 public class CountryDAO {
     private SQLiteDatabase db;
+    private ChannelServerDAO csd;
+    private ChannelDAO cd;
 
     public CountryDAO(SQLiteDatabase db) {
         this.db = db;
+        this.csd = new ChannelServerDAO(db);
+        this.cd = new ChannelDAO(db);
+
     }
 
     public long insert(Country country) {
@@ -99,6 +104,13 @@ public class CountryDAO {
     }
 
 
+    public void deleteAllCountries() {
+        // Delete all rows from the "Channel" table and channel server, thats bequase of foreign key constraints
+        cd.deleteAllChannels();
+        csd.deleteAllChannelServers();
+        // Delete all rows from the "Country" table
+        db.delete("Country", null, null); // replace "country_table" with your actual table name
+    }
 
 
 

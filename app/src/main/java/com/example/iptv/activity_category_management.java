@@ -1,7 +1,9 @@
 package com.example.iptv;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.widget.*;
 
 import androidx.appcompat.app.AlertDialog;
@@ -54,8 +56,42 @@ public class activity_category_management extends AppCompatActivity {
 
         categoryRecyclerView.setAdapter(adapter);
 
+        // Load categories initially
+        loadCategories();
+
+        // Search functionality
+        EditText searchEditText = findViewById(R.id.searchCategoryEditText);
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Add button
         Button addButton = findViewById(R.id.addCategoryButton);
         addButton.setOnClickListener(v -> showCategoryDialog(null));
+
+        // Delete all button
+        Button deleteAllButton = findViewById(R.id.deleteAllCategoriesButton);
+        deleteAllButton.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Delete All Categories")
+                    .setMessage("Are you sure you want to delete all categories? That will delete the channels related to categories also!")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        categoryDAO.deleteAllCategories();
+                        loadCategories();
+                        Toast.makeText(this, "All categories deleted", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
     }
 
     private void loadCategories() {

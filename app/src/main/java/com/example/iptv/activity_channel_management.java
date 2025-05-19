@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,6 +76,24 @@ public class activity_channel_management extends AppCompatActivity {
             Intent intent = new Intent(activity_channel_management.this, activity_add_channel.class);
             startActivity(intent);
         });
+
+        Button deleteAllButton = findViewById(R.id.deleteAllChannelsButton);
+        deleteAllButton.setOnClickListener(v -> {
+            // Confirm deletion (optional)
+            new AlertDialog.Builder(this)
+                    .setTitle("Confirm Delete")
+                    .setMessage("Are you sure you want to delete all channels?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        ChannelDAO channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
+                        channelDAO.deleteAllChannels(); // Add this method to ChannelDAO if not present
+                        Toast.makeText(this, "All channels deleted", Toast.LENGTH_SHORT).show();
+                        // Refresh RecyclerView
+                        refreshChannelList(); // Assuming this method reloads your channel list
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
+
     }
 
     private void loadChannelsFromDatabase() {
