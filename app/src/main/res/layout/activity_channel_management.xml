@@ -54,6 +54,13 @@
         android:backgroundTint="#E50914"
         android:layout_marginBottom="16dp"
         android:textSize="18sp" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"/>
 
     <!-- Channel List -->
     <androidx.recyclerview.widget.RecyclerView

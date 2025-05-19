@@ -60,6 +60,23 @@ public class CountryDAO {
         }
     }
 
+    public Country getByName(String name) {
+        Cursor cursor = db.rawQuery("SELECT * FROM Country WHERE name = ?", new String[]{name});
+
+        try {
+            if (cursor.moveToFirst()) {
+                Country c=new Country(
+                        cursor.getString(1),
+                        cursor.getString(2)
+                );
+                c.setId(cursor.getInt(0));
+                return c;
+                }
+            return null;
+        } finally {
+            cursor.close();
+            }
+    }
 
     public int update(Country country) {
 
@@ -80,6 +97,8 @@ public class CountryDAO {
         }
         return 0;
     }
+
+
 
 
 

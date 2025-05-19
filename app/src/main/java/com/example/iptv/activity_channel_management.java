@@ -4,9 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,7 +30,8 @@ public class activity_channel_management extends AppCompatActivity {
     private ChannelDAO channelDAO;
     private CountryDAO countryDAO;
     private CategoryDAO categoryDAO;
-    private List<Channel> allChannels;
+    private List<Channel> allChannels = new ArrayList<>();
+    private ProgressBar progressBar; // NEW: show loading spinner
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +45,22 @@ public class activity_channel_management extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.channelRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setVisibility(View.GONE); // Hide until data is loaded
+
+        progressBar = findViewById(R.id.progressBar); // Add this in your XML layout
+        progressBar.setVisibility(View.VISIBLE);
 
         searchEditText = findViewById(R.id.searchEditText);
         Button addButton = findViewById(R.id.addChannelButton);
 
-        allChannels = channelDAO.getAll();
-        adapter = new ChannelAdapter(this, allChannels, countryDAO, categoryDAO, this::refreshChannelList);
+        // Initial adapter with empty list to avoid "no adapter" error
+        adapter = new ChannelAdapter(this, new ArrayList<>(), countryDAO, categoryDAO, this::refreshChannelList);
         recyclerView.setAdapter(adapter);
 
-        // Filter as you type
+        // Load channels from DB in background
+        loadChannelsFromDatabase();
+
+        // Filter on search
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -60,17 +69,28 @@ public class activity_channel_management extends AppCompatActivity {
             @Override public void afterTextChanged(Editable s) {}
         });
 
+        // Add new channel
         addButton.setOnClickListener(v -> {
             Intent intent = new Intent(activity_channel_management.this, activity_add_channel.class);
             startActivity(intent);
         });
+    }
 
-
+    private void loadChannelsFromDatabase() {
+        new Thread(() -> {
+            List<Channel> loaded = channelDAO.getAll(); // Load safely in background
+            runOnUiThread(() -> {
+                allChannels.clear();
+                allChannels.addAll(loaded);
+                adapter.updateData(allChannels);
+                progressBar.setVisibility(View.GONE); // Hide spinner
+                recyclerView.setVisibility(View.VISIBLE); // Show list
+            });
+        }).start();
     }
 
     private void refreshChannelList() {
-        allChannels = channelDAO.getAll();
-        filter(searchEditText.getText().toString());
+        loadChannelsFromDatabase(); // Use thread-safe loading again
     }
 
     private void filter(String text) {
@@ -86,8 +106,6 @@ public class activity_channel_management extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        refreshChannelList(); // Refresh when returning from add/edit screen
+        refreshChannelList(); // Refresh when returning
     }
-
-
 }

@@ -18,6 +18,7 @@ import com.example.iptv.OOP.Category;
 import com.example.iptv.OOP.Country;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.ChannelDAO;
+import com.example.iptv.database.ChannelServerDAO;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,13 +29,17 @@ public class AdminPanelActivity extends AppCompatActivity {
     DBHelper dbHelper;
     private CountryDAO countryDao;
     private CategoryDAO categoryDao;
+    private ChannelDAO ChannelDao;
+    private ChannelServerDAO ChannelServerDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_panel);
         dbHelper= new DBHelper(this);
          countryDao=new CountryDAO(dbHelper.getWritableDatabase());
-categoryDao=new CategoryDAO(dbHelper.getWritableDatabase());
+        categoryDao=new CategoryDAO(dbHelper.getWritableDatabase());
+        ChannelDao=new ChannelDAO(dbHelper.getWritableDatabase());
+        ChannelServerDao=new ChannelServerDAO(dbHelper.getWritableDatabase());
 
         // Categories
         LinearLayout manageCategories = findViewById(R.id.manageCategoriesButton);
@@ -76,13 +81,13 @@ categoryDao=new CategoryDAO(dbHelper.getWritableDatabase());
             startActivity(intent);
         });
         /// /////////////////// get data if not already inserted - get from internet (iptv github api) when run//////////////////////////
-        if(countryDao.getAll().isEmpty()){
+        if(countryDao.count()==0){
             ArrayList<Country> countries=getAllCountries();
             for( Country country : countries){
                 countryDao.insert(country) ;
             }
         }
-        if (categoryDao.getAll().isEmpty()) { // Check if the local database has no categories yet
+        if (categoryDao.count()==0) { // Check if the local database has no categories yet
             getFromInternet.getAllCategories(new CategoryCallback() {
                 @Override
                 public void onCategoriesLoaded(ArrayList<Category> categories) {
@@ -92,11 +97,51 @@ categoryDao=new CategoryDAO(dbHelper.getWritableDatabase());
                         categoryDao.insert(c); // Insert each category into the local Room database
                         Log.d("InsertedCategory", c.getName()); //log for debugging
                     }
+                    // Now that categories are inserted, fetch channels and streams
+
+//                    Log.d("FetchingChannelsAndStreams", "Fetching channels and streams...");
+//                    getFromInternet.getAllChannelsAndStreams(ChannelDao, countryDao, categoryDao, ChannelServerDao);
+
+                    //fetch channels and streems accourding to user country
+                    Log.d("FetchingChannelsAndStreams", "Fetching channels and streams...");
+                    getFromInternet.getUserCountryCode(countryCode -> {
+                        Log.d("CountryCode", "User is from: " + countryCode);
+
+                        getFromInternet.getAllChannelsByCountry(
+                                countryCode, // Or from getUserCountryCode(...)
+                                ChannelDao,
+                                countryDao,
+                                categoryDao,
+                                ChannelServerDao,
+                                channels -> Log.d("Done", "Loaded and saved " + channels.size() + " channels")
+                        );
+
+                    });
+
+
                 }
             });
+        }else{
+            if(ChannelDao.count()==0) {
+//                Log.d("FetchingChannelsAndStreams", "Fetching channels and streams...");
+//                getFromInternet.getAllChannelsAndStreams(ChannelDao, countryDao, categoryDao, ChannelServerDao);
+
+                getFromInternet.getUserCountryCode(countryCode -> {
+                    Log.d("CountryCode", "User is from: " + countryCode);
+
+                    getFromInternet.getAllChannelsByCountry(
+                            countryCode, // Or from getUserCountryCode(...)
+                            ChannelDao,
+                            countryDao,
+                            categoryDao,
+                            ChannelServerDao,
+                            channels -> Log.d("Done", "Loaded and saved " + channels.size() + " channels")
+                    );
+
+                });
+
+            }
         }
-
-
 
         refreshDashboard();
 
@@ -124,3 +169,4 @@ categoryDao=new CategoryDAO(dbHelper.getWritableDatabase());
     }
 
 }
+//mohamadayoubi050@gmail.com
