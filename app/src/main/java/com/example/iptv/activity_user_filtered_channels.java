@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.iptv.Fragments.user.SpacesItemDecoration;
 import com.example.iptv.OOP.Channel;
 import com.example.iptv.adapters.user.ChannelUserAdapter;
+import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.ChannelDAO;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
@@ -45,6 +46,7 @@ public class activity_user_filtered_channels extends AppCompatActivity {
         // Get filter data
         filterType = getIntent().getStringExtra("filterType");
         filterId = getIntent().getIntExtra("filterId", -1);  // Assuming we pass id
+        String filterName = getIntent().getStringExtra("filterName");
 
         pageTitle.setText(filterType.equals("country") ? "Channels in Country" : "Channels in Category");
 
@@ -63,6 +65,9 @@ public class activity_user_filtered_channels extends AppCompatActivity {
             pageTitle.setText(countryName+"'s Channels");
         } else if ("category".equals(filterType)) {
             filteredChannels = channelDAO.getAllByCategoryId(filterId);
+            CategoryDAO categoryDAO = new CategoryDAO(dbHelper.getWritableDatabase());
+            String categoryName = categoryDAO.getById(filterId).getName();  // Ensure getById() exists
+            pageTitle.setText(categoryName + "'s Channels");
         }
 
         adapter = new ChannelUserAdapter(this, filteredChannels);

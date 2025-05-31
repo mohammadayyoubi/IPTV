@@ -17,7 +17,7 @@ import java.util.List;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
     private final Context context;
-    private final List<Category> categoryList;
+    private List<Category> categoryList;
     private final OnCategoryClickListener listener;
 
     public interface OnCategoryClickListener {
@@ -42,6 +42,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         Category category = categoryList.get(position);
         holder.textView.setText(category.getName());
         holder.itemView.setOnClickListener(v -> listener.onCategoryClick(category));
+    }
+    public void updateList(List<Category> newList) {
+        this.categoryList = newList;
+        notifyDataSetChanged();
     }
 
     @Override

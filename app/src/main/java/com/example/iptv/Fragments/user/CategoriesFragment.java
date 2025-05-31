@@ -1,5 +1,6 @@
 package com.example.iptv.Fragments.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.R;
 import com.example.iptv.OOP.Category;
+import com.example.iptv.activity_user_filtered_channels;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.DBHelper;
 import com.example.iptv.adapters.user.CategoryAdapter;
@@ -59,10 +61,13 @@ public class CategoriesFragment extends Fragment {
         filteredList = new ArrayList<>(categoryList);
 
         // Initialize adapter
-        adapter = new CategoryAdapter(requireContext(), filteredList, category -> {
-            // Handle category click: open filtered channels by category
+        adapter = new CategoryAdapter(requireContext(), categoryList, category -> {
+            Intent intent = new Intent(requireContext(), activity_user_filtered_channels.class);
+            intent.putExtra("filterType", "category");
+            intent.putExtra("filterId", category.getId());
+            intent.putExtra("filterName", category.getName());
+            startActivity(intent);
         });
-
         recyclerView.setAdapter(adapter);
 
         // Add search functionality
@@ -83,17 +88,17 @@ public class CategoriesFragment extends Fragment {
     }
 
     private void filterCategories(String query) {
-        filteredList.clear();
+        List<Category> tempList = new ArrayList<>();
         if (query.isEmpty()) {
-            filteredList.addAll(categoryList);
+            tempList.addAll(categoryList);
         } else {
             String lowerQuery = query.toLowerCase();
             for (Category category : categoryList) {
                 if (category.getName().toLowerCase().contains(lowerQuery)) {
-                    filteredList.add(category);
+                    tempList.add(category);
                 }
             }
         }
-        adapter.notifyDataSetChanged();
+        adapter.updateList(tempList);
     }
 }
