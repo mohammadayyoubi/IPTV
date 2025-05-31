@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -39,10 +41,11 @@
         android:textColor="#FFFFFF"
         android:layout_marginTop="4dp" />
 
-    <com.google.android.exoplayer2.ui.PlayerView
+    <androidx.media3.ui.PlayerView
         android:id="@+id/player_view"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="12dp" />
+        android:layout_marginTop="12dp"
+        android:background="#000000"/>
 
 </LinearLayout>

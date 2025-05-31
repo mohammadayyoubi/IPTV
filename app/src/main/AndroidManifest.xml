@@ -17,10 +17,6 @@
 
         <!-- User Side Launcher Activity -->
         <activity
-            android:name=".activities.user.ChannelDetailActivity"
-            android:exported="true" />
-
-        <activity
             android:name=".activities.user.MainUserActivity"
             android:exported="true">
             <intent-filter>
@@ -28,6 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.user.ChannelDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="sensor"
+            android:exported="false" />
 
         <!-- Admin Side Activities -->
         <activity
@@ -50,12 +52,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.admin.LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" /> <!-- Removed intent-filter here -->
 
         <!-- Optional Main Activity (if used) -->
         <activity
