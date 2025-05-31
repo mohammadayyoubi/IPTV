@@ -1,4 +1,4 @@
-package com.example.iptv;
+package com.example.iptv.activities.admin;
 /*
 Note that this page till now is only stimulating but not real controls the users.
  Firebase dont allow the client side to manage it
@@ -13,6 +13,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.*;
 
+import com.example.iptv.R;
+import com.example.iptv.adapters.admin.UserAdapter;
 import com.google.firebase.auth.*;
 import com.google.firebase.firestore.*;
 

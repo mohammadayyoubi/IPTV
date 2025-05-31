@@ -14,42 +14,57 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IPTV"
         tools:targetApi="31">
+
+        <!-- User Side Launcher Activity -->
         <activity
-            android:name=".MainUserActivity"
-            android:exported="false" />
+            android:name=".activities.user.ChannelDetailActivity"
+            android:exported="true" />
+
         <activity
-            android:name=".activity_add_channel"
-            android:exported="false" />
-        <activity
-            android:name=".activity_channel_management"
-            android:exported="false" />
-        <activity
-            android:name=".activity_forgot_password"
-            android:exported="false" />
-        <activity
-            android:name=".activity_user_management"
-            android:exported="false" />
-        <activity
-            android:name=".activity_country_management"
-            android:exported="false" />
-        <activity
-            android:name=".AdminPanelActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
+            android:name=".activities.user.MainUserActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Admin Side Activities -->
+        <activity
+            android:name=".activities.admin.activity_add_channel"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.activity_channel_management"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.activity_forgot_password"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.activity_user_management"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.activity_country_management"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.AdminPanelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Optional Main Activity (if used) -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-        <activity
-            android:name=".activity_category_management"
-            android:exported="false" />
-    </application>
 
+        <activity
+            android:name=".activities.admin.activity_category_management"
+            android:exported="false" />
+
+    </application>
 </manifest>

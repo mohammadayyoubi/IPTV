@@ -1,9 +1,7 @@
-package com.example.iptv;
+package com.example.iptv.activities.admin;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.View;
 import android.widget.*;
 
 import androidx.appcompat.app.AlertDialog;
@@ -11,11 +9,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.iptv.adapters.admin.CountryAdapter;
 import com.example.iptv.OOP.Country;
+import com.example.iptv.R;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
-
-import java.util.List;
 
 public class activity_country_management extends AppCompatActivity {
 

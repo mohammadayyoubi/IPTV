@@ -1,4 +1,4 @@
-package com.example.iptv;
+package com.example.iptv.adapters.admin;
 /*
 Note that this page till now is only stimulating but not real controls the users.
  Firebase dont allow the client side to manage it
@@ -8,6 +8,8 @@ import android.view.*;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.iptv.R;
 
 import java.util.List;
 

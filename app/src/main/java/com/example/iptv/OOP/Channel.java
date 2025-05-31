@@ -1,8 +1,9 @@
 package com.example.iptv.OOP;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Channel {
+public class Channel implements Serializable {
     private int id;
     private String name;
     private String logoUrl;

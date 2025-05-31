@@ -1,4 +1,4 @@
-package com.example.iptv;
+package com.example.iptv.adapters.admin;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.OOP.Category;
+import com.example.iptv.R;
 
 import java.util.ArrayList;
 import java.util.List;

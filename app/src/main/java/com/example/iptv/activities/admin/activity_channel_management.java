@@ -1,4 +1,4 @@
-package com.example.iptv;
+package com.example.iptv.activities.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.iptv.adapters.admin.ChannelAdapter;
 import com.example.iptv.OOP.Channel;
+import com.example.iptv.R;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.ChannelDAO;
 import com.example.iptv.database.CountryDAO;

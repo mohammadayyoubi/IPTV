@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="ll.xml">#FFFFFF</color> <!-- White or your preferred selected color -->
+    <color name="nav_item_unselected">#9E9E9E</color> <!-- Grey or your preferred unselected color -->
+
 </resources>

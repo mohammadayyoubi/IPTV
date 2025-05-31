@@ -16,24 +16,24 @@ public class FavoriteDAO {
 
     public long addToFavorites(int channelId) {
         ContentValues values = new ContentValues();
-        values.put("channelId", channelId);
+        values.put("channel_id", channelId);
         return db.insert("Favorite", null, values);
     }
 
     public boolean isFavorite(int channelId) {
-        Cursor cursor = db.rawQuery("SELECT id FROM Favorite WHERE channelId = ?", new String[]{String.valueOf(channelId)});
+        Cursor cursor = db.rawQuery("SELECT id FROM Favorite WHERE channel_id = ?", new String[]{String.valueOf(channelId)});
         boolean exists = cursor.moveToFirst();
         cursor.close();
         return exists;
     }
 
     public int removeFromFavorites(int channelId) {
-        return db.delete("Favorite", "channelId = ?", new String[]{String.valueOf(channelId)});
+        return db.delete("Favorite", "channel_id = ?", new String[]{String.valueOf(channelId)});
     }
 
     public List<Integer> getAllFavoriteChannelIds() {
         List<Integer> list = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT channelId FROM Favorite", null);
+        Cursor cursor = db.rawQuery("SELECT channel_id FROM Favorite", null);
         if (cursor.moveToFirst()) {
             do {
                 list.add(cursor.getInt(0));

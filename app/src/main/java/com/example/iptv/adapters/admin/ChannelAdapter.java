@@ -1,4 +1,4 @@
-package com.example.iptv;
+package com.example.iptv.adapters.admin;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.example.iptv.OOP.Category;
 import com.example.iptv.OOP.Channel;
 import com.example.iptv.OOP.Country;
+import com.example.iptv.R;
+import com.example.iptv.activities.admin.activity_add_channel;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.ChannelDAO;
 import com.example.iptv.database.CountryDAO;

@@ -1,4 +1,4 @@
-package com.example.iptv;
+package com.example.iptv.activities.admin;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.iptv.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class activity_forgot_password extends AppCompatActivity {

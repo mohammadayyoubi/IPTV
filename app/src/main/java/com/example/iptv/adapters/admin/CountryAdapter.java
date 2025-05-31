@@ -1,4 +1,4 @@
-package com.example.iptv;
+package com.example.iptv.adapters.admin;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.iptv.OOP.Country;
+import com.example.iptv.R;
 
 import java.util.ArrayList;
 import java.util.List;

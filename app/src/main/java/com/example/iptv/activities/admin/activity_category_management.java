@@ -1,4 +1,4 @@
-package com.example.iptv;
+package com.example.iptv.activities.admin;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,7 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.iptv.adapters.admin.CategoryAdapter;
 import com.example.iptv.OOP.Category;
+import com.example.iptv.R;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.DBHelper;
 
