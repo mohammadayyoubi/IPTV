@@ -14,24 +14,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IPTV"
         tools:targetApi="31">
-
+        <activity
+            android:name=".activity_user_filtered_channels"
+            android:exported="false" />
         <!-- User Side Launcher Activity -->
         <activity
             android:name=".activities.user.MainUserActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.user.ChannelDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="sensor"
-            android:exported="false" />
-
-        <!-- Admin Side Activities -->
+            android:exported="false"
+            android:screenOrientation="sensor" /> <!-- Admin Side Activities -->
         <activity
             android:name=".activities.admin.activity_add_channel"
             android:exported="false" />
@@ -53,15 +53,13 @@
         <activity
             android:name=".activities.admin.LoginActivity"
             android:exported="false" /> <!-- Removed intent-filter here -->
-
         <!-- Optional Main Activity (if used) -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
         <activity
             android:name=".activities.admin.activity_category_management"
             android:exported="false" />
-
     </application>
+
 </manifest>

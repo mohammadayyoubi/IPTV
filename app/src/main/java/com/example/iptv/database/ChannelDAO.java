@@ -107,5 +107,44 @@ public class ChannelDAO {
         csd.deleteAllChannelServers(); // Delete all associated servers first
         db.delete(TABLE_CHANNEL, null, null); // Replace "channels" with your actual table name
     }
+    public List<Channel> getAllByCountryId(int countryId) {
+        List<Channel> list = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CHANNEL + " WHERE " + COLUMN_COUNTRY_ID + " = ?", new String[]{String.valueOf(countryId)});
+        if (cursor.moveToFirst()) {
+            do {
+                Channel channel = new Channel(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOGO_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNTRY_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ID)),
+                        csd.getByChannelId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)))
+                );
+                channel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                list.add(channel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    public List<Channel> getAllByCategoryId(int categoryId) {
+        List<Channel> list = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CHANNEL + " WHERE " + COLUMN_CATEGORY_ID + " = ?", new String[]{String.valueOf(categoryId)});
+        if (cursor.moveToFirst()) {
+            do {
+                Channel channel = new Channel(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOGO_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNTRY_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ID)),
+                        csd.getByChannelId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)))
+                );
+                channel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                list.add(channel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
 
 }

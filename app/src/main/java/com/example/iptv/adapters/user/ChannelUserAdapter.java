@@ -21,7 +21,7 @@ import java.util.List;
 public class ChannelUserAdapter extends RecyclerView.Adapter<ChannelUserAdapter.ChannelViewHolder> {
 
     private final Context context;
-    private final List<Channel> channelList;
+    private List<Channel> channelList; // Removed 'final' to allow updates
 
     public ChannelUserAdapter(Context context, List<Channel> channelList) {
         this.context = context;
@@ -48,7 +48,7 @@ public class ChannelUserAdapter extends RecyclerView.Adapter<ChannelUserAdapter.
                 .placeholder(R.drawable.placeholder)
                 .into(holder.imageChannelLogo);
 
-        // Single click handling: Open ChannelDetailActivity
+        // Click handling: Open ChannelDetailActivity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChannelDetailActivity.class);
             intent.putExtra("channel", channel);
@@ -59,6 +59,12 @@ public class ChannelUserAdapter extends RecyclerView.Adapter<ChannelUserAdapter.
     @Override
     public int getItemCount() {
         return channelList.size();
+    }
+
+    // New method to update the channel list dynamically
+    public void updateList(List<Channel> newList) {
+        this.channelList = newList;
+        notifyDataSetChanged();
     }
 
     public static class ChannelViewHolder extends RecyclerView.ViewHolder {

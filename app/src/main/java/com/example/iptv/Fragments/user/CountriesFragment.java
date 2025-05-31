@@ -1,5 +1,6 @@
 package com.example.iptv.Fragments.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.R;
 import com.example.iptv.OOP.Country;
+import com.example.iptv.activity_user_filtered_channels;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
 import com.example.iptv.adapters.user.CountryAdapter;
@@ -59,7 +61,10 @@ public class CountriesFragment extends Fragment {
 
         // Initialize adapter
         adapter = new CountryAdapter(requireContext(), filteredList, country -> {
-            // Handle country click: e.g., open filtered channels by country
+            Intent intent = new Intent(requireContext(), activity_user_filtered_channels.class);
+            intent.putExtra("filterType", "country");
+            intent.putExtra("filterId", country.getId());
+            startActivity(intent);
         });
 
         recyclerView.setAdapter(adapter);
@@ -82,17 +87,18 @@ public class CountriesFragment extends Fragment {
     }
 
     private void filterCountries(String query) {
-        filteredList.clear();
+        List<Country> tempList = new ArrayList<>();
         if (query.isEmpty()) {
-            filteredList.addAll(countryList);
+            tempList.addAll(countryList);
         } else {
             String lowerQuery = query.toLowerCase();
             for (Country country : countryList) {
                 if (country.getName().toLowerCase().contains(lowerQuery)) {
-                    filteredList.add(country);
+                    tempList.add(country);
                 }
             }
         }
-        adapter.notifyDataSetChanged();
+        adapter.updateList(tempList);
     }
+
 }

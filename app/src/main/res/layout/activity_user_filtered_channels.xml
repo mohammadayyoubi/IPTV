@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#1A1B2E">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="1dp">
+
+        <TextView
+            android:id="@+id/filteredChannelsPageLable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filtered Channels"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp"/>
+
+        <View
+            android:layout_width="235dp"
+            android:layout_height="2dp"
+            android:background="#E50914"
+            android:layout_marginBottom="12dp"/>
+
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/FilteredChannelsSearchEditText"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Search channels..."
+        android:background="@drawable/search_background"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#AAAAAA"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawablePadding="8dp"
+        android:paddingHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_filtered_channels"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"/>
+
+</LinearLayout>

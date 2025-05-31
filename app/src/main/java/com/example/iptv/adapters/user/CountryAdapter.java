@@ -15,11 +15,10 @@ import com.example.iptv.OOP.Country;
 import com.example.iptv.R;
 
 import java.util.List;
-
 public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryViewHolder> {
 
     private final Context context;
-    private final List<Country> countryList;
+    private List<Country> countryList;
     private final OnCountryClickListener listener;
 
     public interface OnCountryClickListener {
@@ -44,7 +43,6 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
         Country country = countryList.get(position);
         holder.textCountryName.setText(country.getName());
 
-        // Load country flag
         Glide.with(context)
                 .load(country.getFlagUrl())
                 .placeholder(R.drawable.placeholder)
@@ -56,6 +54,11 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
     @Override
     public int getItemCount() {
         return countryList.size();
+    }
+
+    public void updateList(List<Country> newList) {
+        this.countryList = newList;
+        notifyDataSetChanged();
     }
 
     public static class CountryViewHolder extends RecyclerView.ViewHolder {
