@@ -14,9 +14,12 @@ import com.example.iptv.OOP.Channel;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.ui.PlayerView;
+
+// Media3 imports
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.common.MediaItem;
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
+import androidx.media3.ui.PlayerView;
 
 public class ChannelDetailActivity extends AppCompatActivity {
 
@@ -46,42 +49,43 @@ public class ChannelDetailActivity extends AppCompatActivity {
             finish();
             return;
         }
-        if (channel != null) {
-            textChannelName.setText(channel.getName());
-            Glide.with(this)
-                    .load(channel.getLogoUrl())
-                    .placeholder(R.drawable.placeholder)
-                    .into(imageChannelLogo);
 
-            dbHelper = new DBHelper(this);
-            String categoryName = "Unknown";
-            String countryName = "Unknown";
-            if (channel.getCategoryId() != 0) {
-                categoryName = new CategoryDAO(dbHelper.getWritableDatabase()).getById(channel.getCategoryId()).getName();
-            }
-            if (channel.getCountryId() != 0) {
-                countryName = new CountryDAO(dbHelper.getWritableDatabase()).getById(channel.getCountryId()).getName();
-            }
-            textCategoryName.setText("Category: " + categoryName);
-            textCountryName.setText("Country: " + countryName);
-            if (channel.getServers() != null && !channel.getServers().isEmpty()) {
-                String streamUrl = channel.getServers().get(0).getStreamUrl();
-                if (streamUrl != null && !streamUrl.isEmpty()) {
-                    initializePlayer(streamUrl);
-                } else {
-                    Toast.makeText(this, "No stream URL found", Toast.LENGTH_SHORT).show();
-                }
+        textChannelName.setText(channel.getName());
+        Glide.with(this)
+                .load(channel.getLogoUrl())
+                .placeholder(R.drawable.placeholder)
+                .into(imageChannelLogo);
+
+        dbHelper = new DBHelper(this);
+        String categoryName = "Unknown";
+        String countryName = "Unknown";
+        if (channel.getCategoryId() != 0) {
+            categoryName = new CategoryDAO(dbHelper.getWritableDatabase()).getById(channel.getCategoryId()).getName();
+        }
+        if (channel.getCountryId() != 0) {
+            countryName = new CountryDAO(dbHelper.getWritableDatabase()).getById(channel.getCountryId()).getName();
+        }
+        textCategoryName.setText("Category: " + categoryName);
+        textCountryName.setText("Country: " + countryName);
+
+        if (channel.getServers() != null && !channel.getServers().isEmpty()) {
+            String streamUrl = channel.getServers().get(0).getStreamUrl();
+            if (streamUrl != null && !streamUrl.isEmpty()) {
+                initializePlayer(streamUrl);
             } else {
-                Toast.makeText(this, "No servers available for this channel", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No stream URL found", Toast.LENGTH_SHORT).show();
             }
-
-            // Setup ExoPlayer for first server
-
+        } else {
+            Toast.makeText(this, "No servers available for this channel", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void initializePlayer(String streamUrl) {
-        player = new ExoPlayer.Builder(this).build();
+        // Corrected initialization with media source factory
+        player = new ExoPlayer.Builder(this)
+                .setMediaSourceFactory(new DefaultMediaSourceFactory(this))
+                .build();
+
         playerView.setPlayer(player);
 
         MediaItem mediaItem = MediaItem.fromUri(Uri.parse(streamUrl));
@@ -89,6 +93,7 @@ public class ChannelDetailActivity extends AppCompatActivity {
         player.prepare();
         player.setPlayWhenReady(true);
     }
+
 
     @Override
     protected void onStop() {

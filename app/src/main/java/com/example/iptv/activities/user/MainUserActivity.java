@@ -1,18 +1,24 @@
 package com.example.iptv.activities.user;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
 import com.example.iptv.Fragments.user.AllChannelsFragment;
 import com.example.iptv.Fragments.user.CategoriesFragment;
 import com.example.iptv.Fragments.user.CountriesFragment;
 import com.example.iptv.Fragments.user.FavoritesFragment;
 import com.example.iptv.R;
+import com.example.iptv.activities.admin.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainUserActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavView;
+    private Button buttonAdminSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +26,7 @@ public class MainUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_user);
 
         bottomNavView = findViewById(R.id.bottom_nav_view);
+        buttonAdminSignIn = findViewById(R.id.button_admin_signin);
 
         // Default fragment
         if (savedInstanceState == null) {
@@ -49,6 +56,12 @@ public class MainUserActivity extends AppCompatActivity {
             }
 
             return true;
+        });
+
+        // Admin Sign-In Button Click
+        buttonAdminSignIn.setOnClickListener(v -> {
+            Intent intent = new Intent(MainUserActivity.this, LoginActivity.class);
+            startActivity(intent);
         });
     }
 }
