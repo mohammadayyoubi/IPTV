@@ -26,7 +26,7 @@ public class activity_country_management extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_country_management);
 
-        searchEditText = findViewById(R.id.searchEditText);
+        searchEditText = findViewById(R.id.AllChannelsSearchEditText);
         Button addButton = findViewById(R.id.addCountryButton);
         RecyclerView recyclerView = findViewById(R.id.countryRecyclerView);
 

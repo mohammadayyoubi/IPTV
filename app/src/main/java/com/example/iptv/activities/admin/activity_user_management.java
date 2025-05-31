@@ -38,7 +38,7 @@ public class activity_user_management extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
 
         userRecyclerView = findViewById(R.id.userRecyclerView);
-        searchEditText = findViewById(R.id.searchEditText);
+        searchEditText = findViewById(R.id.AllChannelsSearchEditText);
         Button addButton = findViewById(R.id.addUserButton);
 
         adapter = new UserAdapter(userList, getLayoutInflater(), new UserAdapter.OnUserActionListener() {

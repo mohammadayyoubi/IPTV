@@ -54,7 +54,7 @@ public class activity_channel_management extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar); // Add this in your XML layout
         progressBar.setVisibility(View.VISIBLE);
 
-        searchEditText = findViewById(R.id.searchEditText);
+        searchEditText = findViewById(R.id.AllChannelsSearchEditText);
         Button addButton = findViewById(R.id.addChannelButton);
 
         // Initial adapter with empty list to avoid "no adapter" error

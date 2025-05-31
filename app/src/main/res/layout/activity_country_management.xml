@@ -33,7 +33,7 @@
 
     <!-- Search Bar -->
     <EditText
-        android:id="@+id/searchEditText"
+        android:id="@+id/AllChannelsSearchEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Search Country..."
