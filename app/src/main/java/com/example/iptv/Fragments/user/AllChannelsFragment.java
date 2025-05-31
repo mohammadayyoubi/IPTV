@@ -1,5 +1,6 @@
 package com.example.iptv.Fragments.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.R;
+import com.example.iptv.activities.admin.LoginActivity;
 import com.example.iptv.adapters.user.ChannelUserAdapter;
 import com.example.iptv.OOP.Channel;
 import com.example.iptv.database.ChannelDAO;
@@ -77,6 +80,12 @@ public class AllChannelsFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) { }
+        });
+        ImageButton adminLoginButton = view.findViewById(R.id.btn_admin_login);
+        adminLoginButton.setOnClickListener(v -> {
+            // Navigate to admin login activity
+            Intent intent = new Intent(requireContext(), LoginActivity.class);
+            startActivity(intent);
         });
 
         return view;
