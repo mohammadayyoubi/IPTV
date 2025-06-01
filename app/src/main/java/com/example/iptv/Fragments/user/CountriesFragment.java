@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.R;
 import com.example.iptv.OOP.Country;
-import com.example.iptv.activity_user_filtered_channels;
+import com.example.iptv.activities.user.activity_user_filtered_channels;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
 import com.example.iptv.adapters.user.CountryAdapter;

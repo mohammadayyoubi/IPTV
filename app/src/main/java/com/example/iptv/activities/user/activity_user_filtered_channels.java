@@ -1,4 +1,4 @@
-package com.example.iptv;
+package com.example.iptv.activities.user;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.Fragments.user.SpacesItemDecoration;
 import com.example.iptv.OOP.Channel;
+import com.example.iptv.R;
 import com.example.iptv.adapters.user.ChannelUserAdapter;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.ChannelDAO;

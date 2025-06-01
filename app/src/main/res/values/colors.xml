@@ -5,5 +5,7 @@
     <color name="ll.xml">#FFFFFF</color> <!-- White or your preferred selected color -->
     <color name="nav_item_unselected">#9E9E9E</color> <!-- Grey or your preferred unselected color -->
     <color name="myRed">#E50914</color>
+    <color name="accent_gold">#d4af37</color>
+
 
 </resources>

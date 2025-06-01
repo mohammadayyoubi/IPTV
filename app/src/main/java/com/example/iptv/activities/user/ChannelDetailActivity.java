@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.example.iptv.OOP.Channel;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
+import com.example.iptv.database.FavoriteDAO;
 
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.util.UnstableApi;
@@ -43,6 +45,8 @@ public class ChannelDetailActivity extends AppCompatActivity {
     private Channel channel;
     private DBHelper dbHelper;
     private LinearLayout rootLayout;
+    private FavoriteDAO favoriteDAO;
+    private boolean isFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +104,28 @@ public class ChannelDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "No stream URL found", Toast.LENGTH_SHORT).show();
             }
         }
+
+
+        favoriteDAO = new FavoriteDAO(dbHelper.getWritableDatabase());
+
+        Button favoriteButton = findViewById(R.id.button_favorite);
+        isFavorite = favoriteDAO.isFavorite(channel.getId());
+        int channelId = getIntent().getIntExtra("channel_id", -1);
+
+
+        favoriteButton.setText(isFavorite ? "Remove from Favorites" : "Add to Favorites");
+
+        favoriteButton.setOnClickListener(v -> {
+            if (isFavorite) {
+                favoriteDAO.removeFromFavorites(channelId);
+                favoriteButton.setText("Add to Favorites");
+            } else {
+                favoriteDAO.addToFavorites(channelId);
+                favoriteButton.setText("Remove from Favorites");
+            }
+            isFavorite = !isFavorite;
+        });
+
     }
 
     @OptIn(markerClass = UnstableApi.class)

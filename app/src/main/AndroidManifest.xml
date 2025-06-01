@@ -15,7 +15,7 @@
         android:theme="@style/Theme.IPTV"
         tools:targetApi="31">
         <activity
-            android:name=".activity_user_filtered_channels"
+            android:name=".activities.user.activity_user_filtered_channels"
             android:exported="false" />
         <!-- User Side Launcher Activity -->
         <activity
