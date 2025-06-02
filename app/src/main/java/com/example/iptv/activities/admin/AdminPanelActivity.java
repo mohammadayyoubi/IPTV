@@ -1,15 +1,15 @@
 package com.example.iptv.activities.admin;
 
-import static com.example.iptv.getFromInternet.getAllCountries;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.example.iptv.Interfaces.CategoryCallback;
 import com.example.iptv.OOP.Category;
@@ -25,126 +25,124 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
+import static com.example.iptv.getFromInternet.getAllCountries;
+
 public class AdminPanelActivity extends AppCompatActivity {
     DBHelper dbHelper;
     private CountryDAO countryDao;
     private CategoryDAO categoryDao;
     private ChannelDAO ChannelDao;
     private ChannelServerDAO ChannelServerDao;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_panel);
-        dbHelper= new DBHelper(this);
-         countryDao=new CountryDAO(dbHelper.getWritableDatabase());
-        categoryDao=new CategoryDAO(dbHelper.getWritableDatabase());
-        ChannelDao=new ChannelDAO(dbHelper.getWritableDatabase());
-        ChannelServerDao=new ChannelServerDAO(dbHelper.getWritableDatabase());
 
-        // Categories
-        LinearLayout manageCategories = findViewById(R.id.manageCategoriesButton);
-        manageCategories.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminPanelActivity.this, activity_category_management.class);
-            startActivity(intent);
-        });
+        dbHelper = new DBHelper(this);
+        countryDao = new CountryDAO(dbHelper.getWritableDatabase());
+        categoryDao = new CategoryDAO(dbHelper.getWritableDatabase());
+        ChannelDao = new ChannelDAO(dbHelper.getWritableDatabase());
+        ChannelServerDao = new ChannelServerDAO(dbHelper.getWritableDatabase());
 
 
-        // Channels (placeholder)
-        LinearLayout manageChannels = findViewById(R.id.manageChannelsButton);
-        manageChannels.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminPanelActivity.this, activity_channel_management.class);
-            startActivity(intent);
 
-        });
+        // Manage Categories
+        CardView manageCategories = findViewById(R.id.manageCategoriesButton);
+        manageCategories.setOnClickListener(v -> startActivity(new Intent(this, activity_category_management.class)));
 
-        // Countries (placeholder)
-        LinearLayout manageCountries = findViewById(R.id.manageCountriesButton);
-        manageCountries.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminPanelActivity.this, activity_country_management.class);
-            startActivity(intent);
-        });
+        // Manage Channels
+        CardView manageChannels = findViewById(R.id.manageChannelsButton);
+        manageChannels.setOnClickListener(v -> startActivity(new Intent(this, activity_channel_management.class)));
 
-        // Admin Users (placeholder)
-        LinearLayout manageUsers = findViewById(R.id.manageUsersButton);
-        manageUsers.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminPanelActivity.this, activity_user_management.class);
-            startActivity(intent);
+        // Manage Countries
+        CardView manageCountries = findViewById(R.id.manageCountriesButton);
+        manageCountries.setOnClickListener(v -> startActivity(new Intent(this, activity_country_management.class)));
 
-        });
+        // Manage Users
+        CardView manageUsers = findViewById(R.id.manageUsersButton);
+        manageUsers.setOnClickListener(v -> startActivity(new Intent(this, activity_user_management.class)));
 
         // Logout
         Button logoutButton = findViewById(R.id.logoutButton);
         logoutButton.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(AdminPanelActivity.this, LoginActivity.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
-        /// /////////////////// get data if not already inserted - get from internet (iptv github api) when run//////////////////////////
-        if(countryDao.count()==0){
-            ArrayList<Country> countries=getAllCountries();
-            for( Country country : countries){
-                countryDao.insert(country) ;
+
+        // Fetch data from the internet if database is empty
+        if (countryDao.count() == 0) {
+            ArrayList<Country> countries = getAllCountries();
+            for (Country country : countries) {
+                countryDao.insert(country);
             }
+            refreshDashboard(); // This is synchronous, okay to call here
         }
-        if (categoryDao.count()==0) { // Check if the local database has no categories yet
+
+        if (categoryDao.count() == 0) {
+
             getFromInternet.getAllCategories(new CategoryCallback() {
                 @Override
                 public void onCategoriesLoaded(ArrayList<Category> categories) {
-                    // This is called after categories are fetched from the internet (on the main thread)
-
                     for (Category c : categories) {
-                        categoryDao.insert(c); // Insert each category into the local Room database
-                        Log.d("InsertedCategory", c.getName()); //log for debugging
+                        categoryDao.insert(c);
+                        Log.d("InsertedCategory", c.getName());
                     }
-                    // Now that categories are inserted, fetch channels and streams
 
-//                    Log.d("FetchingChannelsAndStreams", "Fetching channels and streams...");
-//                    getFromInternet.getAllChannelsAndStreams(ChannelDao, countryDao, categoryDao, ChannelServerDao);
-
-                    //fetch channels and streems accourding to user country
-                    Log.d("FetchingChannelsAndStreams", "Fetching channels and streams...");
                     getFromInternet.getUserCountryCode(countryCode -> {
-                        Log.d("CountryCode", "User is from: " + countryCode);
-
                         getFromInternet.getAllChannelsByCountry(
-                                countryCode, // Or from getUserCountryCode(...)
+                                countryCode,
                                 ChannelDao,
                                 countryDao,
                                 categoryDao,
                                 ChannelServerDao,
-                                channels -> Log.d("Done", "Loaded and saved " + channels.size() + " channels")
+                                channels -> {
+                                    Log.d("Done", "Loaded and saved " + channels.size() + " channels");
+                                    runOnUiThread(() -> {
+                                        refreshDashboard();  // Refresh AFTER all data inserted
+                                    });
+                                }
                         );
-
                     });
-
-
                 }
             });
-        }else{
-            if(ChannelDao.count()==0) {
-//                Log.d("FetchingChannelsAndStreams", "Fetching channels and streams...");
-//                getFromInternet.getAllChannelsAndStreams(ChannelDao, countryDao, categoryDao, ChannelServerDao);
-
-                getFromInternet.getUserCountryCode(countryCode -> {
-                    Log.d("CountryCode", "User is from: " + countryCode);
-
-                    getFromInternet.getAllChannelsByCountry(
-                            countryCode, // Or from getUserCountryCode(...)
-                            ChannelDao,
-                            countryDao,
-                            categoryDao,
-                            ChannelServerDao,
-                            channels -> Log.d("Done", "Loaded and saved " + channels.size() + " channels")
-                    );
-
-                });
-
-            }
+        } else if (ChannelDao.count() == 0) {
+            getFromInternet.getUserCountryCode(countryCode -> {
+                getFromInternet.getAllChannelsByCountry(
+                        countryCode,
+                        ChannelDao,
+                        countryDao,
+                        categoryDao,
+                        ChannelServerDao,
+                        channels -> {
+                            Log.d("Done", "Loaded and saved " + channels.size() + " channels");
+                            runOnUiThread(() -> {
+                                refreshDashboard();  // Refresh AFTER data insertion
+                            });
+                        }
+                );
+            });
         }
 
-        refreshDashboard();
+        // Clear Database Button (CardView)
+        CardView clearDbCard = findViewById(R.id.clearDatabaseButton);
+        clearDbCard.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Clear All Data")
+                    .setMessage("Are you sure you want to delete all data? This cannot be undone.")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        dbHelper.resetDatabase();
+                        Toast.makeText(this, "All data cleared!", Toast.LENGTH_SHORT).show();
+                        refreshDashboard();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
 
+        refreshDashboard();  // Initial refresh
     }
 
     @Override
@@ -167,6 +165,4 @@ public class AdminPanelActivity extends AppCompatActivity {
         tvTotalCategories.setText(String.valueOf(categoryDAO.count()));
         tvTotalCountries.setText(String.valueOf(countryDAO.count()));
     }
-
 }
-//mohamadayoubi050@gmail.com

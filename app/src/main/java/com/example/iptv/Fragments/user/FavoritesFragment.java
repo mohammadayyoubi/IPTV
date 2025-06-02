@@ -60,6 +60,33 @@ public class FavoritesFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
+        //refresh channels
+        refreshChannels();
+
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshChannels();
+    }
+
+
+    private void refreshChannels() {
+        // Fetch updated favorite channels
+        ChannelDAO channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
+        FavoriteDAO favoriteDAO = new FavoriteDAO(dbHelper.getWritableDatabase());
+        List<Integer> favoriteChannelIds = favoriteDAO.getAllFavoriteChannelIds();
+        favoriteChannels.clear();
+        for (int channelId : favoriteChannelIds) {
+            Channel channel = channelDAO.getById(channelId);
+            if (channel != null) {
+                favoriteChannels.add(channel);
+                }
+        }
+        adapter.notifyDataSetChanged();
+
+    }
+
 }

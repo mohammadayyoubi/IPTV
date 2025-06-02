@@ -19,13 +19,13 @@ public class FavoriteDAO {
         values.put("channel_id", channelId);
         return db.insert("Favorite", null, values);
     }
-
     public boolean isFavorite(int channelId) {
         Cursor cursor = db.rawQuery("SELECT id FROM Favorite WHERE channel_id = ?", new String[]{String.valueOf(channelId)});
         boolean exists = cursor.moveToFirst();
         cursor.close();
         return exists;
     }
+
 
     public int removeFromFavorites(int channelId) {
         return db.delete("Favorite", "channel_id = ?", new String[]{String.valueOf(channelId)});

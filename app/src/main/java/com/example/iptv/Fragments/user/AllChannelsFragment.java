@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.example.iptv.adapters.user.ChannelUserAdapter;
 import com.example.iptv.OOP.Channel;
 import com.example.iptv.database.ChannelDAO;
 import com.example.iptv.database.DBHelper;
+import com.example.iptv.database.FavoriteDAO;
 
 import java.util.ArrayList;
 import java.util.List;

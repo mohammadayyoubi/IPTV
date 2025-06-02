@@ -13,7 +13,10 @@ import com.example.iptv.Fragments.user.CountriesFragment;
 import com.example.iptv.Fragments.user.FavoritesFragment;
 import com.example.iptv.R;
 import com.example.iptv.activities.admin.LoginActivity;
+import com.example.iptv.database.FavoriteDAO;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.List;
 
 public class MainUserActivity extends AppCompatActivity {
 
@@ -22,6 +25,8 @@ public class MainUserActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_user);
 
@@ -63,5 +68,7 @@ public class MainUserActivity extends AppCompatActivity {
             Intent intent = new Intent(MainUserActivity.this, LoginActivity.class);
             startActivity(intent);
         });
+
+
     }
 }

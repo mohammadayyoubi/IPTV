@@ -103,4 +103,14 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITE);
         onCreate(db);
     }
+
+    public void resetDatabase() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHANNEL);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHANNEL_SERVER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COUNTRY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITE);
+        onCreate(db);
+    }
 }
