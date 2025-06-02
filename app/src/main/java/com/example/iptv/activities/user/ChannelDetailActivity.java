@@ -131,7 +131,10 @@ public class ChannelDetailActivity extends AppCompatActivity {
                     if (position == 0) return; // Ignore hint
                     String selectedUrl = servers.get(position - 1).getStreamUrl(); // Adjust index
                     if (selectedUrl != null && !selectedUrl.isEmpty()) {
-                        initializePlayer(selectedUrl);
+                        String originalUrl =selectedUrl ;  // Replace this with your actual source
+                        String secureUrl = originalUrl.replace("http://", "https://");  // Upgrade HTTP to HTTPS
+                        System.out.println("playing Streeming: "+secureUrl);
+                        initializePlayer(secureUrl);
                     } else {
                         Toast.makeText(ChannelDetailActivity.this, "No stream URL for this server", Toast.LENGTH_SHORT).show();
                     }
