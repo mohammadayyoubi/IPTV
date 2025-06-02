@@ -22,11 +22,14 @@ import java.util.List;
 public class FavoritesFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private ChannelUserAdapter adapter;
+    public static ChannelUserAdapter adapter;
     private List<Channel> favoriteChannels;
     private DBHelper dbHelper;
 
     public FavoritesFragment() {}
+
+    public static void updateFavorites() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

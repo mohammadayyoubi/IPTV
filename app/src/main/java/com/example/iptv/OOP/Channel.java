@@ -1,5 +1,10 @@
 package com.example.iptv.OOP;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,6 +25,16 @@ public class Channel implements Serializable {
         this.servers = servers;
         this.isFavorite = false; // Default to false, will be updated based on favorites DB
     }
+
+    protected Channel(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        logoUrl = in.readString();
+        countryId = in.readInt();
+        categoryId = in.readInt();
+        isFavorite = in.readByte() != 0;
+    }
+
 
     // Getters and Setters
     public int getId() { return id; }
@@ -42,4 +57,6 @@ public class Channel implements Serializable {
 
     public boolean isFavorite() { return isFavorite; }
     public void setFavorite(boolean favorite) { isFavorite = favorite; }
+
+
 }

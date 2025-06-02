@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
+import androidx.media3.common.util.UnstableApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -35,6 +37,7 @@ public class ChannelUserAdapter extends RecyclerView.Adapter<ChannelUserAdapter.
         return new ChannelViewHolder(view);
     }
 
+    @OptIn(markerClass = UnstableApi.class)
     @Override
     public void onBindViewHolder(@NonNull ChannelViewHolder holder, int position) {
         Channel channel = channelList.get(position);

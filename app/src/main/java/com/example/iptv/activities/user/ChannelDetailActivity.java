@@ -20,6 +20,7 @@ import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.iptv.Fragments.user.FavoritesFragment;
 import com.example.iptv.R;
 import com.example.iptv.OOP.Channel;
 import com.example.iptv.database.CategoryDAO;
@@ -110,7 +111,7 @@ public class ChannelDetailActivity extends AppCompatActivity {
 
         Button favoriteButton = findViewById(R.id.button_favorite);
         isFavorite = favoriteDAO.isFavorite(channel.getId());
-        int channelId = getIntent().getIntExtra("channel_id", -1);
+        int channelId =channel.getId();
 
 
         favoriteButton.setText(isFavorite ? "Remove from Favorites" : "Add to Favorites");
@@ -127,6 +128,7 @@ public class ChannelDetailActivity extends AppCompatActivity {
         });
 
     }
+
 
     @OptIn(markerClass = UnstableApi.class)
     private void initializePlayer(String streamUrl) {
