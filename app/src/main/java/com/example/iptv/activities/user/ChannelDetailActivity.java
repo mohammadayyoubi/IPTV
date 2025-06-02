@@ -10,9 +10,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,9 +23,9 @@ import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.iptv.Fragments.user.FavoritesFragment;
 import com.example.iptv.R;
 import com.example.iptv.OOP.Channel;
+import com.example.iptv.OOP.ChannelServer;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
@@ -34,6 +37,9 @@ import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.ui.PlayerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @UnstableApi
 public class ChannelDetailActivity extends AppCompatActivity {
@@ -48,22 +54,18 @@ public class ChannelDetailActivity extends AppCompatActivity {
     private LinearLayout rootLayout;
     private FavoriteDAO favoriteDAO;
     private boolean isFavorite;
+    private Spinner serverSpinner;
+    private List<ChannelServer> servers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Remove title bar and set fullscreen mode
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_channel_detail);
 
-        // Hide action bar if it exists
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
+        if (getSupportActionBar() != null) getSupportActionBar().hide();
 
         imageChannelLogo = findViewById(R.id.image_channel_logo);
         textChannelName = findViewById(R.id.text_channel_name);
@@ -71,6 +73,7 @@ public class ChannelDetailActivity extends AppCompatActivity {
         textCountryName = findViewById(R.id.text_country_name);
         playerView = findViewById(R.id.player_view);
         rootLayout = findViewById(R.id.root_layout);
+        serverSpinner = findViewById(R.id.server_spinner);
 
         channel = (Channel) getIntent().getSerializableExtra("channel");
         if (channel == null) {
@@ -80,10 +83,7 @@ public class ChannelDetailActivity extends AppCompatActivity {
         }
 
         textChannelName.setText(channel.getName());
-        Glide.with(this)
-                .load(channel.getLogoUrl())
-                .placeholder(R.drawable.placeholder)
-                .into(imageChannelLogo);
+        Glide.with(this).load(channel.getLogoUrl()).placeholder(R.drawable.placeholder).into(imageChannelLogo);
 
         dbHelper = new DBHelper(this);
         String categoryName = "Unknown";
@@ -97,25 +97,11 @@ public class ChannelDetailActivity extends AppCompatActivity {
         textCategoryName.setText("Category: " + categoryName);
         textCountryName.setText("Country: " + countryName);
 
-        if (channel.getServers() != null && !channel.getServers().isEmpty()) {
-            String streamUrl = channel.getServers().get(0).getStreamUrl();
-            if (streamUrl != null && !streamUrl.isEmpty()) {
-                initializePlayer(streamUrl);
-            } else {
-                Toast.makeText(this, "No stream URL found", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-
         favoriteDAO = new FavoriteDAO(dbHelper.getWritableDatabase());
-
         Button favoriteButton = findViewById(R.id.button_favorite);
         isFavorite = favoriteDAO.isFavorite(channel.getId());
-        int channelId =channel.getId();
-
-
+        int channelId = channel.getId();
         favoriteButton.setText(isFavorite ? "Remove from Favorites" : "Add to Favorites");
-
         favoriteButton.setOnClickListener(v -> {
             if (isFavorite) {
                 favoriteDAO.removeFromFavorites(channelId);
@@ -126,12 +112,48 @@ public class ChannelDetailActivity extends AppCompatActivity {
             }
             isFavorite = !isFavorite;
         });
+/////////server spinner/////////
+        servers = channel.getServers();
+        if (servers != null && !servers.isEmpty()) {
+            List<String> serverNames = new ArrayList<>();
+            serverNames.add("Select a Server"); // Hint/placeholder
+            for (ChannelServer server : servers) {
+                serverNames.add(server.getServerName());
+            }
 
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, serverNames);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            serverSpinner.setAdapter(adapter);
+
+            serverSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position == 0) return; // Ignore hint
+                    String selectedUrl = servers.get(position - 1).getStreamUrl(); // Adjust index
+                    if (selectedUrl != null && !selectedUrl.isEmpty()) {
+                        initializePlayer(selectedUrl);
+                    } else {
+                        Toast.makeText(ChannelDetailActivity.this, "No stream URL for this server", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+
+        } else {
+            String s = "No servers available";
+            //create adapter for no server spinner
+            ArrayAdapter<String> noServerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{s});
+            //set layout for no server spinner
+            noServerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            serverSpinner.setAdapter(noServerAdapter);
+            Toast.makeText(this, "No servers available", Toast.LENGTH_SHORT).show();
+        }
     }
-
 
     @OptIn(markerClass = UnstableApi.class)
     private void initializePlayer(String streamUrl) {
+        if (player != null) player.release();
         trackSelector = new DefaultTrackSelector(this);
         player = new ExoPlayer.Builder(this)
                 .setTrackSelector(trackSelector)
@@ -144,36 +166,25 @@ public class ChannelDetailActivity extends AppCompatActivity {
         player.setPlayWhenReady(true);
     }
 
-    //fullscreen when flip device
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { //eza ken telephone bl 3arad
-            enterFullScreen();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { //lama yrja3 bl tul
-            exitFullScreen();
-        }
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) enterFullScreen();
+        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) exitFullScreen();
     }
 
     private void enterFullScreen() {
-        // Hide system UI
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getWindow().getInsetsController().hide(WindowInsets.Type.systemBars());
         } else {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
-
-        // Hide all UI elements
         imageChannelLogo.setVisibility(View.GONE);
         textChannelName.setVisibility(View.GONE);
         textCategoryName.setVisibility(View.GONE);
         textCountryName.setVisibility(View.GONE);
-
-        // Adjust root layout for fullscreen
         rootLayout.setBackgroundColor(Color.BLACK);
         rootLayout.setPadding(0, 0, 0, 0);
-
-        // Make PlayerView fullscreen
         ViewGroup.LayoutParams params = playerView.getLayoutParams();
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -182,25 +193,18 @@ public class ChannelDetailActivity extends AppCompatActivity {
     }
 
     private void exitFullScreen() {
-        // Show system UI
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getWindow().getInsetsController().show(WindowInsets.Type.systemBars());
         } else {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         }
-
-        // Show all UI elements
         imageChannelLogo.setVisibility(View.VISIBLE);
         textChannelName.setVisibility(View.VISIBLE);
         textCategoryName.setVisibility(View.VISIBLE);
         textCountryName.setVisibility(View.VISIBLE);
-
-        // Restore root layout
         int padding = (int) (16 * getResources().getDisplayMetrics().density);
         rootLayout.setPadding(padding, padding, padding, padding);
         rootLayout.setBackgroundColor(Color.parseColor("#1A1B2E"));
-
-        // Restore PlayerView size
         ViewGroup.LayoutParams params = playerView.getLayoutParams();
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.height = (int) (200 * getResources().getDisplayMetrics().density);
