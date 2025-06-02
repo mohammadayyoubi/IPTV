@@ -22,5 +22,10 @@ public class Country {
 
     public String getFlagUrl() { return flagUrl; }
     public void setFlagUrl(String flagUrl) { this.flagUrl = flagUrl; }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
 

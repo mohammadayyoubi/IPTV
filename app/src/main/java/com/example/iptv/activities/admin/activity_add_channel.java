@@ -4,47 +4,31 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.*;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.bumptech.glide.Glide;
-import com.example.iptv.OOP.Channel;
-import com.example.iptv.OOP.ChannelServer;
-import com.example.iptv.OOP.Category;
-import com.example.iptv.OOP.Country;
+import com.example.iptv.OOP.*;
 import com.example.iptv.R;
-import com.example.iptv.database.CategoryDAO;
-import com.example.iptv.database.ChannelDAO;
-import com.example.iptv.database.ChannelServerDAO;
-import com.example.iptv.database.CountryDAO;
-import com.example.iptv.database.DBHelper;
+import com.example.iptv.database.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class activity_add_channel extends AppCompatActivity {
-
     private EditText nameEditText, logoUrlEditText, serverInput;
     private ImageView logoPreview;
     private Spinner categorySpinner, countrySpinner;
     private LinearLayout serverContainer;
     private Button addServerButton, saveButton;
-
     private ChannelDAO channelDAO;
     private ChannelServerDAO serverDAO;
     private CategoryDAO categoryDAO;
     private CountryDAO countryDAO;
-
     private List<Category> categories;
     private List<Country> countries;
     private List<String> serverUrls = new ArrayList<>();
-
-    private ArrayAdapter<String> categoryAdapter;
-    private ArrayAdapter<String> countryAdapter;
-
+    private ArrayAdapter<Category> categoryAdapter;
+    private ArrayAdapter<Country> countryAdapter;
     public static final String EXTRA_CHANNEL_ID = "channel_id";
-
-
     private int editingChannelId = -1;
 
     @Override
@@ -91,72 +75,44 @@ public class activity_add_channel extends AppCompatActivity {
 
         saveButton.setOnClickListener(v -> saveChannel());
 
-        // Check if this is an edit operation
         if (getIntent().hasExtra(EXTRA_CHANNEL_ID)) {
             editingChannelId = getIntent().getIntExtra(EXTRA_CHANNEL_ID, -1);
-
             if (editingChannelId != -1) {
-                //you are in edit mode
-                Toast toast = Toast.makeText(this, "Edit Mode", Toast.LENGTH_SHORT);
-                toast.show();
-                TextView t = findViewById(R.id.AddChannelPageLable);
-                t.setText("Edit Channel");
-                saveButton.setText("Update");
                 loadChannelData(editingChannelId);
             }
-        }else{
-            //you are in add mode
-            Toast toast = Toast.makeText(this, "Add Mode", Toast.LENGTH_SHORT);
-            toast.show();
-            TextView t = findViewById(R.id.AddChannelPageLable);
-            t.setText("Add Channel");
-            saveButton.setText("Save");
         }
     }
 
     private void loadCategories() {
         categories = categoryDAO.getAll();
-        List<String> categoryNames = new ArrayList<>();
-        for (Category c : categories) categoryNames.add(c.getName());
-        categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categoryNames);
+        categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryAdapter);
     }
 
     private void loadCountries() {
         countries = countryDAO.getAll();
-        List<String> countryNames = new ArrayList<>();
-        for (Country c : countries) countryNames.add(c.getName());
-        countryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, countryNames);
+        countryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, countries);
+        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         countrySpinner.setAdapter(countryAdapter);
     }
 
     private void loadChannelData(int channelId) {
         Channel channel = channelDAO.getById(channelId);
         if (channel == null) return;
-
         nameEditText.setText(channel.getName());
         logoUrlEditText.setText(channel.getLogoUrl());
-
-        for (int i = 0; i < categories.size(); i++) {
-            if (categories.get(i).getId() == channel.getCategoryId()) {
+        for (int i = 0; i < categories.size(); i++)
+            if (categories.get(i).getId() == channel.getCategoryId())
                 categorySpinner.setSelection(i);
-                break;
-            }
-        }
-
-        for (int i = 0; i < countries.size(); i++) {
-            if (countries.get(i).getId() == channel.getCountryId()) {
+        for (int i = 0; i < countries.size(); i++)
+            if (countries.get(i).getId() == channel.getCountryId())
                 countrySpinner.setSelection(i);
-                break;
-            }
-        }
-
         serverUrls.clear();
         for (ChannelServer server : channel.getServers()) {
             serverUrls.add(server.getStreamUrl());
             addServerToLayout(server.getStreamUrl());
         }
-
         Glide.with(this).load(channel.getLogoUrl()).placeholder(R.drawable.placeholder).into(logoPreview);
     }
 
@@ -164,13 +120,11 @@ public class activity_add_channel extends AppCompatActivity {
         View view = getLayoutInflater().inflate(R.layout.item_server_url, null);
         TextView urlText = view.findViewById(R.id.serverUrlTextView);
         ImageButton deleteBtn = view.findViewById(R.id.deleteServerButton);
-
         urlText.setText(url);
         deleteBtn.setOnClickListener(v -> {
             serverContainer.removeView(view);
             serverUrls.remove(url);
         });
-
         serverContainer.addView(view);
     }
 
@@ -178,31 +132,31 @@ public class activity_add_channel extends AppCompatActivity {
         String name = nameEditText.getText().toString().trim();
         String logoUrl = logoUrlEditText.getText().toString().trim();
 
-        if (TextUtils.isEmpty(name)) {
-            nameEditText.setError("Required");
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(logoUrl)) {
+            Toast.makeText(this, "Name and Logo URL required", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (TextUtils.isEmpty(logoUrl)) {
-            logoUrlEditText.setError("Required");
+        Category selectedCategory = (Category) categorySpinner.getSelectedItem();
+        Country selectedCountry = (Country) countrySpinner.getSelectedItem();
+
+        if (selectedCategory == null || selectedCountry == null) {
+            Toast.makeText(this, "Please select a valid Category and Country", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        int categoryIndex = categorySpinner.getSelectedItemPosition();
-        int countryIndex = countrySpinner.getSelectedItemPosition();
-
-        if (categoryIndex < 0 || countryIndex < 0) {
-            Toast.makeText(this, "Please select category and country", Toast.LENGTH_SHORT).show();
+        if (categoryDAO.getById(selectedCategory.getId()) == null || countryDAO.getById(selectedCountry.getId()) == null) {
+            Toast.makeText(this, "Selected Category or Country does not exist", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (serverUrls.isEmpty()) {
-            Toast.makeText(this, "Please add at least one server", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please add at least one server URL", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        int categoryId = categories.get(categoryIndex).getId();
-        int countryId = countries.get(countryIndex).getId();
+        int categoryId = selectedCategory.getId();
+        int countryId = selectedCountry.getId();
 
         List<ChannelServer> servers = new ArrayList<>();
         int count = 1;
@@ -211,34 +165,32 @@ public class activity_add_channel extends AppCompatActivity {
         }
 
         if (editingChannelId != -1) {
-            // EDIT
-            Channel updatedChannel = new Channel(name, logoUrl, categoryId, countryId, servers);
-            updatedChannel.setId(editingChannelId); // Set ID manually
-            channelDAO.update(updatedChannel);
-
+            Channel updatedChannel = new Channel(name, logoUrl, countryId, categoryId, servers);
+            updatedChannel.setId(editingChannelId);
+            if (channelDAO.update(updatedChannel) == 0) {
+                Toast.makeText(this, "Update failed due to constraints", Toast.LENGTH_SHORT).show();
+                return;
+            }
             serverDAO.deleteChannelServersByChannelID(editingChannelId);
             for (ChannelServer server : servers) {
                 server.setChannelId(editingChannelId);
                 serverDAO.insert(server);
             }
-
-            Toast.makeText(this, "Channel updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Channel updated successfully", Toast.LENGTH_SHORT).show();
         } else {
-            // ADD
-            Channel channel = new Channel(name, logoUrl, categoryId, countryId, servers);
-            long channelId = channelDAO.insert(channel);
+            Channel newChannel = new Channel(name, logoUrl, countryId, categoryId, servers);
+            long channelId = channelDAO.insert(newChannel);
             if (channelId != -1) {
                 for (ChannelServer server : servers) {
                     server.setChannelId((int) channelId);
                     serverDAO.insert(server);
                 }
-                Toast.makeText(this, "Channel added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Channel added successfully", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Failed to add channel", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
-
         finish();
     }
 }
