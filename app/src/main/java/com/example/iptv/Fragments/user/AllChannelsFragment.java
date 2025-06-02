@@ -60,6 +60,13 @@ public class AllChannelsFragment extends Fragment {
         dbHelper = new DBHelper(requireContext());
         ChannelDAO channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
         channelList = channelDAO.getAll();
+        //print all chennelservers
+        for (Channel channel : channelList) {
+            Log.d("AllChannelsFragment", "Channel: " + channel.getName());
+            for (int i = 0; i < channel.getServers().size(); i++) {
+                Log.d("AllChannelsFragment", "Server: " + channel.getServers().get(i).getStreamUrl());
+            }
+        }
 
         adapter = new ChannelUserAdapter(requireContext(), new ArrayList<>(channelList));
         recyclerView.setAdapter(adapter);
