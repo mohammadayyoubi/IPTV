@@ -354,6 +354,176 @@
             android:textColor="@color/accent_gold"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+<!--        bellow noted since by logic all countries and all categories are required to be loaded to suites the logic of our approch-->
+<!--        &lt;!&ndash; Row: Get All Countries & Get All Categories &ndash;&gt;-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_marginBottom="16dp"-->
+<!--            android:weightSum="2">-->
+
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:id="@+id/getAllCountriesButton"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_margin="8dp"-->
+<!--                app:cardCornerRadius="16dp"-->
+<!--                app:cardElevation="8dp"-->
+<!--                app:cardBackgroundColor="#1D1E33"-->
+<!--                android:foreground="?android:attr/selectableItemBackground"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:gravity="center"-->
+<!--                    android:padding="20dp">-->
+
+<!--                    <ImageView-->
+<!--                        android:layout_width="48dp"-->
+<!--                        android:layout_height="48dp"-->
+<!--                        android:src="@android:drawable/ic_menu_mapmode"-->
+<!--                        app:tint="#E50914" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Get All Countries"-->
+<!--                        android:textColor="#FFFFFF"-->
+<!--                        android:layout_marginTop="12dp"-->
+<!--                        android:textSize="16sp"-->
+<!--                        android:textStyle="bold" />-->
+<!--                </LinearLayout>-->
+<!--            </androidx.cardview.widget.CardView>-->
+
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:id="@+id/getAllCategoriesButton"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_margin="8dp"-->
+<!--                app:cardCornerRadius="16dp"-->
+<!--                app:cardElevation="8dp"-->
+<!--                app:cardBackgroundColor="#1D1E33"-->
+<!--                android:foreground="?android:attr/selectableItemBackground"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:gravity="center"-->
+<!--                    android:padding="20dp">-->
+
+<!--                    <ImageView-->
+<!--                        android:layout_width="48dp"-->
+<!--                        android:layout_height="48dp"-->
+<!--                        android:src="@android:drawable/ic_menu_sort_by_size"-->
+<!--                        app:tint="#E50914" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Get All Categories"-->
+<!--                        android:textColor="#FFFFFF"-->
+<!--                        android:layout_marginTop="12dp"-->
+<!--                        android:textSize="16sp"-->
+<!--                        android:textStyle="bold" />-->
+<!--                </LinearLayout>-->
+<!--            </androidx.cardview.widget.CardView>-->
+
+<!--        </LinearLayout>-->
+
+        <!-- Row: My Country & All Countries Channels -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:weightSum="2">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/getMyCountryChannelsButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="#1D1E33"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="20dp">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@android:drawable/ic_menu_compass"
+                        app:tint="#E50914" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="My Country Channels"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginTop="12dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/getAllCountriesChannelsButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="#1D1E33"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="20dp">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@android:drawable/ic_menu_manage"
+                        app:tint="#E50914" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="All Countries Channels"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginTop="12dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
         <!-- Clear Database Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/clearDatabaseButton"
