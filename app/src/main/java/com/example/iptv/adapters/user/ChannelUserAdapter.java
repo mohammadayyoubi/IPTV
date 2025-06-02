@@ -23,7 +23,7 @@ import java.util.List;
 public class ChannelUserAdapter extends RecyclerView.Adapter<ChannelUserAdapter.ChannelViewHolder> {
 
     private final Context context;
-    private List<Channel> channelList; // Removed 'final' to allow updates
+    private List<Channel> channelList;
 
     public ChannelUserAdapter(Context context, List<Channel> channelList) {
         this.context = context;
@@ -41,17 +41,13 @@ public class ChannelUserAdapter extends RecyclerView.Adapter<ChannelUserAdapter.
     @Override
     public void onBindViewHolder(@NonNull ChannelViewHolder holder, int position) {
         Channel channel = channelList.get(position);
-
-        // Set channel name
         holder.textChannelName.setText(channel.getName());
 
-        // Load channel logo
         Glide.with(context)
                 .load(channel.getLogoUrl())
                 .placeholder(R.drawable.placeholder)
                 .into(holder.imageChannelLogo);
 
-        // Click handling: Open ChannelDetailActivity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChannelDetailActivity.class);
             intent.putExtra("channel", channel);
@@ -64,7 +60,6 @@ public class ChannelUserAdapter extends RecyclerView.Adapter<ChannelUserAdapter.
         return channelList.size();
     }
 
-    // New method to update the channel list dynamically
     public void updateList(List<Channel> newList) {
         this.channelList = newList;
         notifyDataSetChanged();
