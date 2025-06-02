@@ -179,10 +179,13 @@ public class ChannelDetailActivity extends AppCompatActivity {
         } else {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+//        hide the elements
         imageChannelLogo.setVisibility(View.GONE);
         textChannelName.setVisibility(View.GONE);
         textCategoryName.setVisibility(View.GONE);
         textCountryName.setVisibility(View.GONE);
+        serverSpinner.setVisibility(View.GONE);
+
         rootLayout.setBackgroundColor(Color.BLACK);
         rootLayout.setPadding(0, 0, 0, 0);
         ViewGroup.LayoutParams params = playerView.getLayoutParams();
@@ -198,10 +201,13 @@ public class ChannelDetailActivity extends AppCompatActivity {
         } else {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         }
+//        re-set visible
         imageChannelLogo.setVisibility(View.VISIBLE);
         textChannelName.setVisibility(View.VISIBLE);
         textCategoryName.setVisibility(View.VISIBLE);
         textCountryName.setVisibility(View.VISIBLE);
+        serverSpinner.setVisibility(View.VISIBLE);
+
         int padding = (int) (16 * getResources().getDisplayMetrics().density);
         rootLayout.setPadding(padding, padding, padding, padding);
         rootLayout.setBackgroundColor(Color.parseColor("#1A1B2E"));
