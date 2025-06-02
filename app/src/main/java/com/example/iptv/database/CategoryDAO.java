@@ -3,9 +3,7 @@ package com.example.iptv.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.example.iptv.OOP.Category;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +14,6 @@ public class CategoryDAO {
     private static final String COLUMN_NAME = "name";
 
     private SQLiteDatabase db;
-    private ChannelServerDAO csd;
-    private ChannelDAO cd;
 
     public CategoryDAO(SQLiteDatabase db) {
         this.db = db;
@@ -26,8 +22,6 @@ public class CategoryDAO {
     public long insert(Category category) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, category.getName());
-        this.csd = new ChannelServerDAO(db);
-        this.cd = new ChannelDAO(db);
         return db.insert(TABLE_CATEGORY, null, values);
     }
 
@@ -37,7 +31,6 @@ public class CategoryDAO {
         if (cursor.moveToFirst()) {
             do {
                 Category category = new Category(
-
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME))
                 );
                 category.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
@@ -53,7 +46,6 @@ public class CategoryDAO {
                 new String[]{String.valueOf(id)});
         if (cursor.moveToFirst()) {
             Category category = new Category(
-
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME))
             );
             category.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
@@ -69,7 +61,6 @@ public class CategoryDAO {
                 new String[]{name});
         if (cursor.moveToFirst()) {
             Category category = new Category(
-
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME))
             );
             category.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
@@ -98,10 +89,8 @@ public class CategoryDAO {
         }
         return 0;
     }
-    public void deleteAllCategories() {
-        db.delete(TABLE_CATEGORY, null, null); // Replace with your actual table name
-        cd.deleteAllChannels();
-        csd.deleteAllChannelServers();
-    }
 
+    public void deleteAllCategories() {
+        db.delete(TABLE_CATEGORY, null, null);  // Channels & ChannelServers auto-deleted via cascade
+    }
 }

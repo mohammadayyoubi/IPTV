@@ -90,6 +90,8 @@ public class AllChannelsFragment extends Fragment {
             startActivity(intent);
         });
 
+        refreshChannels();
+
         return view;
     }
 
@@ -107,4 +109,20 @@ public class AllChannelsFragment extends Fragment {
         }
         adapter.notifyDataSetChanged();
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshChannels();
+
+    }
+    //refresh all channels
+    public void refreshChannels() {
+        ChannelDAO channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
+        channelList = channelDAO.getAll();
+        filteredList = new ArrayList<>(channelList);
+        adapter.notifyDataSetChanged();
+    }
+
 }

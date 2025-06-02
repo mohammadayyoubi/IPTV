@@ -44,6 +44,10 @@ public class AdminPanelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_panel);
 
+        TextView tvTotalChannels = findViewById(R.id.tvTotalChannels);
+        TextView tvTotalCategories = findViewById(R.id.tvTotalCategories);
+        TextView tvTotalCountries = findViewById(R.id.tvTotalCountries);
+
         dbHelper = new DBHelper(this);
         countryDao = new CountryDAO(dbHelper.getWritableDatabase());
         categoryDao = new CategoryDAO(dbHelper.getWritableDatabase());
@@ -73,6 +77,8 @@ public class AdminPanelActivity extends AppCompatActivity {
 
         // Auto-load countries if needed
         if (countryDao.count() == 0) {
+            Log.d("AutoLoad", "Loading countries...");
+            tvTotalCountries.setText("Loading...");
             ArrayList<Country> countries = getAllCountries();
             for (Country country : countries) {
                 countryDao.insert(country);
@@ -82,6 +88,8 @@ public class AdminPanelActivity extends AppCompatActivity {
 
         // Auto-load categories if needed
         if (categoryDao.count() == 0) {
+            Log.d("AutoLoad", "Loading categories...");
+            tvTotalCategories.setText("Loading...");
             getFromInternet.getAllCategories(new CategoryCallback() {
                 @Override
                 public void onCategoriesLoaded(ArrayList<Category> categories) {
@@ -101,6 +109,12 @@ public class AdminPanelActivity extends AppCompatActivity {
                     .setTitle("Clear All Data")
                     .setMessage("Are you sure you want to delete all data? This cannot be undone.")
                     .setPositiveButton("Yes", (dialog, which) -> {
+                        // Clear the database
+                        Log.d("ClearDatabase", "Clearing database...");
+                        tvTotalChannels.setText("clearing...");
+                        tvTotalCategories.setText("clearing...");
+                        tvTotalCountries.setText("clearing...");
+
                         dbHelper.resetDatabase();
                         Toast.makeText(this, "All data cleared!", Toast.LENGTH_SHORT).show();
                         refreshDashboard();
@@ -117,6 +131,8 @@ public class AdminPanelActivity extends AppCompatActivity {
                     .setMessage("Do you want to load channels for your country?")
                     .setPositiveButton("Yes", (dialog, which) -> {
                         getFromInternet.getUserCountryCode(countryCode -> {
+                            Log.d("IPTV", "Loading channels for " + countryCode);
+                            tvTotalChannels.setText("loading...");
                             getFromInternet.getAllChannelsByCountry(
                                     countryCode,
                                     ChannelDao,
@@ -158,6 +174,8 @@ public class AdminPanelActivity extends AppCompatActivity {
                         return;
                     }
                 }
+                Log.d("IPTV", "Loading channels for all countries");
+                tvTotalChannels.setText("loading...");
 
                 // Use new optimized method
                 getFromInternet.getAllChannelsOnceAndFilter(

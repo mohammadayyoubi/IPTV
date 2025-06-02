@@ -104,7 +104,7 @@ public class ChannelDAO {
     }
 
     public void deleteAllChannels() {
-        csd.deleteAllChannelServers(); // Delete all associated servers first
+       // csd.deleteAllChannelServers(); // Delete all associated servers first
         db.delete(TABLE_CHANNEL, null, null); // Replace "channels" with your actual table name
     }
     public List<Channel> getAllByCountryId(int countryId) {
