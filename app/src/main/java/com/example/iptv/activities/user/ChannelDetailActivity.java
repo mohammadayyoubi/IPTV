@@ -121,7 +121,7 @@ public class ChannelDetailActivity extends AppCompatActivity {
                 serverNames.add(server.getServerName());
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, serverNames);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item_white, serverNames);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             serverSpinner.setAdapter(adapter);
 
@@ -146,7 +146,7 @@ public class ChannelDetailActivity extends AppCompatActivity {
         } else {
             String s = "No servers available";
             //create adapter for no server spinner
-            ArrayAdapter<String> noServerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{s});
+            ArrayAdapter<String> noServerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_white, new String[]{s});
             //set layout for no server spinner
             noServerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             serverSpinner.setAdapter(noServerAdapter);

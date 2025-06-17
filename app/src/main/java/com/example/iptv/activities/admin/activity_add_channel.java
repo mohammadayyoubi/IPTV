@@ -85,15 +85,15 @@ public class activity_add_channel extends AppCompatActivity {
 
     private void loadCategories() {
         categories = categoryDAO.getAll();
-        categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+        categoryAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_white, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryAdapter);
     }
 
     private void loadCountries() {
         countries = countryDAO.getAll();
-        countryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, countries);
-        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        countryAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_white, countries);
+        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         countrySpinner.setAdapter(countryAdapter);
     }
 
