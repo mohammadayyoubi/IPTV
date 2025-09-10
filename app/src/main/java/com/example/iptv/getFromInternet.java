@@ -107,119 +107,6 @@ public class getFromInternet {
         }).start(); // Start the background thread
     }
 
-//get all channels and streams method
-    public static void getAllChannelsAndStreams(ChannelDAO channelDao, CountryDAO countryDao, CategoryDAO categoryDao, ChannelServerDAO channelServerDao) {
-        new Thread(() -> {
-            try {
-                Log.d("SyncChannels", "Started syncing channels and streams...");
-
-                // --- 1. Fetch channels.json ---
-                Log.d("SyncChannels", "Fetching channels.json...");
-                URL channelsUrl = new URL("https://iptv-org.github.io/api/channels.json");
-                HttpURLConnection channelsConn = (HttpURLConnection) channelsUrl.openConnection();
-                channelsConn.setRequestMethod("GET");
-                BufferedReader channelsReader = new BufferedReader(new InputStreamReader(channelsConn.getInputStream()));
-                StringBuilder channelsResponse = new StringBuilder();
-                String line;
-                while ((line = channelsReader.readLine()) != null) {
-                    channelsResponse.append(line);
-                }
-                channelsReader.close();
-                JSONArray channelsArray = new JSONArray(channelsResponse.toString());
-                Log.d("SyncChannels", "Fetched " + channelsArray.length() + " channels.");
-
-                // --- 2. Fetch streams.json ---
-                Log.d("SyncChannels", "Fetching streams.json...");
-                URL streamsUrl = new URL("https://iptv-org.github.io/api/streams.json");
-                HttpURLConnection streamsConn = (HttpURLConnection) streamsUrl.openConnection();
-                streamsConn.setRequestMethod("GET");
-                BufferedReader streamsReader = new BufferedReader(new InputStreamReader(streamsConn.getInputStream()));
-                StringBuilder streamsResponse = new StringBuilder();
-                while ((line = streamsReader.readLine()) != null) {
-                    streamsResponse.append(line);
-                }
-                streamsReader.close();
-                JSONArray streamsArray = new JSONArray(streamsResponse.toString());
-                Log.d("SyncChannels", "Fetched " + streamsArray.length() + " streams.");
-
-                // --- 3. Map channelId -> List of stream URLs ---
-                Map<String, List<String>> channelStreams = new HashMap<>();
-                for (int i = 0; i < streamsArray.length(); i++) {
-                    JSONObject stream = streamsArray.getJSONObject(i);
-                    String channelId = stream.getString("channel");
-                    String url = stream.getString("url");
-
-                    if (!channelStreams.containsKey(channelId)) {
-                        channelStreams.put(channelId, new ArrayList<>());
-                    }
-                    channelStreams.get(channelId).add(url);
-                }
-                Log.d("SyncChannels", "Mapped streams to channels. Total entries: " + channelStreams.size());
-
-                // --- 4. Insert each channel and related servers ---
-                int insertedCount = 0;
-                for (int i = 0; i < channelsArray.length(); i++) {
-                    JSONObject obj = channelsArray.getJSONObject(i);
-                    String channelId = obj.getString("id");
-                    String name = obj.optString("name", "NoName");
-                    String logo = obj.optString("logo", "");
-                    String countryCode = obj.optString("country", "");
-                    JSONArray catArray = obj.optJSONArray("categories");
-                    String categoryName = (catArray != null && catArray.length() > 0) ? catArray.getString(0) : "General";
-
-                    // Convert ISO country code to full country name
-                    String fullCountryName = new Locale("", countryCode).getDisplayCountry(Locale.ENGLISH);
-                    Log.d("CountryResolve", countryCode + " → " + fullCountryName);
-
-                    Log.d("SyncChannel", "Processing: " + name + ", Country: " + fullCountryName + ", Category: " + categoryName);
-
-                    // Resolve country ID
-                    Country country = countryDao.getByName(fullCountryName);
-                    if (country == null) {
-                        Log.w("SyncChannel", "Skipped '" + name + "' due to missing country: " + fullCountryName);
-                        continue;
-                    }
-                    int countryId = country.getId();
-
-                    // Resolve category ID
-                    Category category = categoryDao.getByName(categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1).toLowerCase());
-                    if (category == null) {
-                        Log.w("SyncChannel", "Skipped '" + name + "' due to missing category: " + categoryName);
-                        continue;
-                    }
-                    int categoryId = category.getId();
-
-                    // Prepare list of channel servers
-                    List<ChannelServer> servers = new ArrayList<>();
-                    List<String> urls = channelStreams.get(channelId);
-                    if (urls != null) {
-                        for (int j = 0; j < urls.size(); j++) {
-                            servers.add(new ChannelServer(0, "Server " + (j + 1), urls.get(j)));
-                        }
-                    }
-
-                    // Insert channel
-                    Channel channel = new Channel(name, logo, countryId, categoryId, servers);
-                    long insertedId = channelDao.insert(channel);
-                    Log.d("SyncChannel", "Inserted channel: " + name + " → DB ID: " + insertedId);
-
-                    // Insert all related servers
-                    for (ChannelServer cs : servers) {
-                        cs.setChannelId((int) insertedId);
-                        channelServerDao.insert(cs);
-                    }
-
-                    Log.d("InsertedChannel", name + " with " + servers.size() + " server(s)");
-                    insertedCount++;
-                }
-
-                Log.i("SyncChannels", "Done. Inserted " + insertedCount + " channels.");
-
-            } catch (Exception e) {
-                Log.e("SyncChannels", "Error occurred during channel sync", e);
-            }
-        }).start();
-    }
 
 //get user country code by his ip
 public static void getUserCountryCode(CountryCodeCallback callback) {
@@ -271,7 +158,12 @@ public static void getUserCountryCode(CountryCodeCallback callback) {
 }
 
 //get channels accourding to user country
-public static void getAllChannelsByCountry(String countryCode, ChannelDAO channelDao, CountryDAO countryDao, CategoryDAO categoryDao, ChannelServerDAO channelServerDao, ChannelCallback callback) {
+public static void getAllChannelsByCountry(String countryCode,
+                                           ChannelDAO channelDao,
+                                           CountryDAO countryDao,
+                                           CategoryDAO categoryDao,
+                                           ChannelServerDAO channelServerDao,
+                                           ChannelCallback callback) {
     new Thread(() -> {
         List<Channel> filteredChannels = new ArrayList<>();
 
@@ -280,13 +172,10 @@ public static void getAllChannelsByCountry(String countryCode, ChannelDAO channe
             URL channelsUrl = new URL("https://iptv-org.github.io/api/channels.json");
             HttpURLConnection conn = (HttpURLConnection) channelsUrl.openConnection();
             conn.setRequestMethod("GET");
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             StringBuilder response = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
+            while ((line = reader.readLine()) != null) response.append(line);
             reader.close();
             JSONArray channelsArray = new JSONArray(response.toString());
 
@@ -294,38 +183,52 @@ public static void getAllChannelsByCountry(String countryCode, ChannelDAO channe
             URL streamsUrl = new URL("https://iptv-org.github.io/api/streams.json");
             HttpURLConnection streamsConn = (HttpURLConnection) streamsUrl.openConnection();
             streamsConn.setRequestMethod("GET");
-
             BufferedReader streamsReader = new BufferedReader(new InputStreamReader(streamsConn.getInputStream()));
             StringBuilder streamsResponse = new StringBuilder();
-            while ((line = streamsReader.readLine()) != null) {
-                streamsResponse.append(line);
-            }
+            while ((line = streamsReader.readLine()) != null) streamsResponse.append(line);
             streamsReader.close();
             JSONArray streamsArray = new JSONArray(streamsResponse.toString());
 
-            // Build map: channel_id → list of stream URLs
+            Log.d("IPTV", "Fetching logos.json...");
+            URL logosUrl = new URL("https://iptv-org.github.io/api/logos.json");
+            HttpURLConnection logosConn = (HttpURLConnection) logosUrl.openConnection();
+            logosConn.setRequestMethod("GET");
+            BufferedReader logosReader = new BufferedReader(new InputStreamReader(logosConn.getInputStream()));
+            StringBuilder logosResponse = new StringBuilder();
+            while ((line = logosReader.readLine()) != null) logosResponse.append(line);
+            logosReader.close();
+            JSONArray logosArray = new JSONArray(logosResponse.toString());
+
+            // Build channelId → logoUrl map (pick first non-empty)
+            Map<String, String> channelLogos = new HashMap<>();
+            for (int i = 0; i < logosArray.length(); i++) {
+                JSONObject logoObj = logosArray.getJSONObject(i);
+                String chId = logoObj.optString("channel", "");
+                String urlLogo = logoObj.optString("url", "");
+                if (!chId.isEmpty() && !urlLogo.isEmpty() && !channelLogos.containsKey(chId)) {
+                    channelLogos.put(chId, urlLogo);
+                }
+            }
+
+            // Map channel_id → list of stream URLs
             Map<String, List<String>> channelStreams = new HashMap<>();
             for (int i = 0; i < streamsArray.length(); i++) {
                 JSONObject streamObj = streamsArray.getJSONObject(i);
-                String channelId = streamObj.getString("channel");
-                String url = streamObj.getString("url");
-
-                if (!channelStreams.containsKey(channelId)) {
-                    channelStreams.put(channelId, new ArrayList<>());
-                }
-                channelStreams.get(channelId).add(url);
+                String channelId = streamObj.isNull("channel") ? null : streamObj.optString("channel", null);
+                String urlStream = streamObj.optString("url", "");
+                if (channelId == null || urlStream.isEmpty()) continue;
+                channelStreams.computeIfAbsent(channelId, k -> new ArrayList<>()).add(urlStream);
             }
 
-            // Now filter and insert channels with their servers
+            // Filter and insert channels
             for (int i = 0; i < channelsArray.length(); i++) {
                 JSONObject obj = channelsArray.getJSONObject(i);
-                String channelId = obj.getString("id");
+                String channelId = obj.optString("id", "");
                 String name = obj.optString("name", "Unnamed");
-                String logo = obj.optString("logo", "");
                 String channelCountry = obj.optString("country", "");
                 JSONArray categories = obj.optJSONArray("categories");
                 String categoryName = (categories != null && categories.length() > 0)
-                        ? categories.getString(0)
+                        ? categories.optString(0, "General")
                         : "General";
 
                 if (!channelCountry.equalsIgnoreCase(countryCode)) continue;
@@ -335,48 +238,42 @@ public static void getAllChannelsByCountry(String countryCode, ChannelDAO channe
                 if (country == null) continue;
                 int countryId = country.getId();
 
-                Category category = categoryDao.getByName(
-                        categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1).toLowerCase()
-                );
+                String normalizedCategory = categoryName.substring(0,1).toUpperCase() +
+                        categoryName.substring(1).toLowerCase();
+                Category category = categoryDao.getByName(normalizedCategory);
                 if (category == null) continue;
                 int categoryId = category.getId();
 
-                // Add server list from map
+                // Use logo from logos.json if present, else fallback to channels.json
+                String logo = channelLogos.getOrDefault(channelId, obj.optString("logo", ""));
+
                 List<ChannelServer> servers = new ArrayList<>();
                 List<String> urls = channelStreams.get(channelId);
                 if (urls != null) {
                     for (int j = 0; j < urls.size(); j++) {
-                        servers.add(new ChannelServer(0, "Server " + (j + 1), urls.get(j)));
+                        servers.add(new ChannelServer(0, "Server " + (j+1), urls.get(j)));
                     }
                 }
 
                 Channel channel = new Channel(name, logo, countryId, categoryId, servers);
                 long insertedId = channelDao.insert(channel);
-
                 for (ChannelServer cs : servers) {
                     cs.setChannelId((int) insertedId);
                     channelServerDao.insert(cs);
                 }
 
                 filteredChannels.add(channel);
-                Log.d("InsertedChannel", name + " with " + servers.size() + " server(s)");
             }
 
             Log.i("IPTV", "Saved " + filteredChannels.size() + " channels for " + countryCode);
-
-            new Handler(Looper.getMainLooper()).post(() -> {
-                callback.onChannelsFetched(filteredChannels);
-            });
+            new Handler(Looper.getMainLooper()).post(() -> callback.onChannelsFetched(filteredChannels));
 
         } catch (Exception e) {
             Log.e("IPTV", "Error in getAllChannelsByCountry", e);
-            new Handler(Looper.getMainLooper()).post(() -> {
-                callback.onChannelsFetched(new ArrayList<>());
-            });
+            new Handler(Looper.getMainLooper()).post(() -> callback.onChannelsFetched(new ArrayList<>()));
         }
     }).start();
 }
-
 
     public static void getAllChannelsOnceAndFilter(
             ChannelDAO channelDao,
@@ -388,69 +285,60 @@ public static void getAllChannelsByCountry(String countryCode, ChannelDAO channe
 
         new Thread(() -> {
             try {
-                Log.d("IPTV", "Fetching channels.json and streams.json once...");
+                Log.d("IPTV", "Fetching channels.json / streams.json / logos.json...");
+                JSONArray channelsArray = fetchJsonArray("https://iptv-org.github.io/api/channels.json");
+                JSONArray streamsArray  = fetchJsonArray("https://iptv-org.github.io/api/streams.json");
+                JSONArray logosArray    = fetchJsonArray("https://iptv-org.github.io/api/logos.json");
 
-                // Fetch channels.json
-                URL channelsUrl = new URL("https://iptv-org.github.io/api/channels.json");
-                HttpURLConnection conn = (HttpURLConnection) channelsUrl.openConnection();
-                conn.setRequestMethod("GET");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
+                // Build channelId → logoUrl map
+                Map<String, String> channelLogos = new HashMap<>();
+                for (int i = 0; i < logosArray.length(); i++) {
+                    JSONObject logoObj = logosArray.getJSONObject(i);
+                    String chId = logoObj.optString("channel", "");
+                    String urlLogo = logoObj.optString("url", "");
+                    if (!chId.isEmpty() && !urlLogo.isEmpty() && !channelLogos.containsKey(chId)) {
+                        channelLogos.put(chId, urlLogo);
+                    }
                 }
-                reader.close();
-                JSONArray channelsArray = new JSONArray(response.toString());
 
-                // Fetch streams.json
-                URL streamsUrl = new URL("https://iptv-org.github.io/api/streams.json");
-                HttpURLConnection streamsConn = (HttpURLConnection) streamsUrl.openConnection();
-                streamsConn.setRequestMethod("GET");
-                BufferedReader streamsReader = new BufferedReader(new InputStreamReader(streamsConn.getInputStream()));
-                StringBuilder streamsResponse = new StringBuilder();
-                while ((line = streamsReader.readLine()) != null) {
-                    streamsResponse.append(line);
-                }
-                streamsReader.close();
-                JSONArray streamsArray = new JSONArray(streamsResponse.toString());
-
-                // Map channelId -> List of stream URLs
+                // Map streams
                 Map<String, List<String>> channelStreams = new HashMap<>();
                 for (int i = 0; i < streamsArray.length(); i++) {
                     JSONObject streamObj = streamsArray.getJSONObject(i);
-                    String channelId = streamObj.getString("channel");
-                    String url = streamObj.getString("url");
-
-                    channelStreams.computeIfAbsent(channelId, k -> new ArrayList<>()).add(url);
+                    String channelId = streamObj.isNull("channel") ? null : streamObj.optString("channel", null);
+                    String urlStream = streamObj.optString("url", "");
+                    if (channelId == null || urlStream.isEmpty()) continue;
+                    channelStreams.computeIfAbsent(channelId, k -> new ArrayList<>()).add(urlStream);
                 }
 
                 // Group channels by country
                 Map<String, List<Channel>> countryChannelsMap = new HashMap<>();
                 for (int i = 0; i < channelsArray.length(); i++) {
                     JSONObject obj = channelsArray.getJSONObject(i);
-                    String channelId = obj.getString("id");
+                    String channelId = obj.optString("id", "");
                     String name = obj.optString("name", "Unnamed");
-                    String logo = obj.optString("logo", "");
                     String countryCode = obj.optString("country", "");
                     JSONArray categories = obj.optJSONArray("categories");
                     String categoryName = (categories != null && categories.length() > 0)
-                            ? categories.getString(0)
+                            ? categories.optString(0, "General")
                             : "General";
 
                     String fullCountryName = new Locale("", countryCode).getDisplayCountry(Locale.ENGLISH);
                     if (fullCountryName.isEmpty()) continue;
 
                     Country country = countryDao.getByName(fullCountryName);
-                    Category category = categoryDao.getByName(categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1).toLowerCase());
-
+                    Category category = categoryDao.getByName(
+                            categoryName.substring(0,1).toUpperCase() + categoryName.substring(1).toLowerCase()
+                    );
                     if (country == null || category == null) continue;
+
+                    String logo = channelLogos.getOrDefault(channelId, obj.optString("logo", ""));
 
                     List<ChannelServer> servers = new ArrayList<>();
                     List<String> urls = channelStreams.get(channelId);
                     if (urls != null) {
                         for (int j = 0; j < urls.size(); j++) {
-                            servers.add(new ChannelServer(0, "Server " + (j + 1), urls.get(j)));
+                            servers.add(new ChannelServer(0, "Server " + (j+1), urls.get(j)));
                         }
                     }
 
@@ -463,21 +351,11 @@ public static void getAllChannelsByCountry(String countryCode, ChannelDAO channe
                     String countryName = entry.getKey();
                     List<Channel> channels = entry.getValue();
 
-                    int limit;
-                    if (maxChannelsPerCountry <= 0) {
-                        // No limit specified, load all channels
-                        limit = channels.size();
-                    } else if (channels.size() > maxChannelsPerCountry) {
-                        // Apply the specified limit
-                        limit = maxChannelsPerCountry;
-                    } else {
-                        // Load all available channels if fewer than the limit
-                        limit = channels.size();
-                    }
+                    int limit = (maxChannelsPerCountry <= 0 || maxChannelsPerCountry > channels.size())
+                            ? channels.size() : maxChannelsPerCountry;
 
-                    List<Channel> limitedChannels = channels.subList(0, limit);
-
-                    for (Channel ch : limitedChannels) {
+                    for (int i = 0; i < limit; i++) {
+                        Channel ch = channels.get(i);
                         long insertedId = channelDao.insert(ch);
                         for (ChannelServer cs : ch.getServers()) {
                             cs.setChannelId((int) insertedId);
@@ -488,16 +366,31 @@ public static void getAllChannelsByCountry(String countryCode, ChannelDAO channe
                     Log.i("IPTV", "Inserted " + limit + " channels for " + countryName);
                 }
 
-                // Notify completion on main thread
                 new Handler(Looper.getMainLooper()).post(onComplete);
 
             } catch (Exception e) {
                 Log.e("IPTV", "Error fetching channels", e);
+                new Handler(Looper.getMainLooper()).post(onComplete);
             }
         }).start();
     }
 
 
+    private static JSONArray fetchJsonArray(String urlString) throws Exception {
+        URL url = new URL(urlString);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("User-Agent", "IPTV-App/1.0 (Android)");
+        conn.setConnectTimeout(20000);
+        conn.setReadTimeout(40000);
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) sb.append(line);
+            return new JSONArray(sb.toString());
+        }
+    }
 }
 
 
