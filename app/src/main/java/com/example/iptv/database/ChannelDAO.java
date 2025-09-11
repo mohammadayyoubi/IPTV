@@ -98,9 +98,110 @@ public class ChannelDAO {
     public int count() {
         Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_CHANNEL, null);
         if (cursor.moveToFirst()) {
-            return cursor.getInt(0);
+            int count = cursor.getInt(0);
+            cursor.close();
+            return count;
         }
+        cursor.close();
         return 0;
+    }
+
+    public List<Channel> getChannelsPaginated(int limit, int offset) {
+        List<Channel> list = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CHANNEL + " LIMIT ? OFFSET ?", 
+                new String[]{String.valueOf(limit), String.valueOf(offset)});
+        if (cursor.moveToFirst()) {
+            do {
+                Channel channel = new Channel(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOGO_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNTRY_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ID)),
+                        csd.getByChannelId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)))
+                );
+                channel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                list.add(channel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    public List<Channel> searchChannelsPaginated(String query, int limit, int offset) {
+        List<Channel> list = new ArrayList<>();
+        String searchQuery = "SELECT * FROM " + TABLE_CHANNEL + " WHERE " + COLUMN_NAME + " LIKE ? LIMIT ? OFFSET ?";
+        Cursor cursor = db.rawQuery(searchQuery, 
+                new String[]{"%" + query + "%", String.valueOf(limit), String.valueOf(offset)});
+        if (cursor.moveToFirst()) {
+            do {
+                Channel channel = new Channel(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOGO_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNTRY_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ID)),
+                        csd.getByChannelId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)))
+                );
+                channel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                list.add(channel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    public int countSearchResults(String query) {
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_CHANNEL + " WHERE " + COLUMN_NAME + " LIKE ?", 
+                new String[]{"%" + query + "%"});
+        if (cursor.moveToFirst()) {
+            int count = cursor.getInt(0);
+            cursor.close();
+            return count;
+        }
+        cursor.close();
+        return 0;
+    }
+
+    public List<Channel> getFavoriteChannelsPaginated(List<Integer> favoriteIds, int limit, int offset) {
+        if (favoriteIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+        
+        List<Channel> list = new ArrayList<>();
+        // Create placeholder for IN clause
+        StringBuilder placeholders = new StringBuilder();
+        for (int i = 0; i < favoriteIds.size(); i++) {
+            placeholders.append("?");
+            if (i < favoriteIds.size() - 1) {
+                placeholders.append(",");
+            }
+        }
+        
+        String query = "SELECT * FROM " + TABLE_CHANNEL + " WHERE " + COLUMN_ID + " IN (" + placeholders.toString() + ") LIMIT ? OFFSET ?";
+        
+        // Convert favoriteIds to string array and add limit/offset
+        String[] args = new String[favoriteIds.size() + 2];
+        for (int i = 0; i < favoriteIds.size(); i++) {
+            args[i] = String.valueOf(favoriteIds.get(i));
+        }
+        args[favoriteIds.size()] = String.valueOf(limit);
+        args[favoriteIds.size() + 1] = String.valueOf(offset);
+        
+        Cursor cursor = db.rawQuery(query, args);
+        if (cursor.moveToFirst()) {
+            do {
+                Channel channel = new Channel(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOGO_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNTRY_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ID)),
+                        csd.getByChannelId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)))
+                );
+                channel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                list.add(channel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
     }
 
     public void deleteAllChannels() {
@@ -127,9 +228,95 @@ public class ChannelDAO {
         return list;
     }
 
+    public List<Channel> getAllByCountryIdPaginated(int countryId, int limit, int offset) {
+        List<Channel> list = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CHANNEL + " WHERE " + COLUMN_COUNTRY_ID + " = ? LIMIT ? OFFSET ?", 
+                new String[]{String.valueOf(countryId), String.valueOf(limit), String.valueOf(offset)});
+        if (cursor.moveToFirst()) {
+            do {
+                Channel channel = new Channel(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOGO_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNTRY_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ID)),
+                        csd.getByChannelId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)))
+                );
+                channel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                list.add(channel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    public List<Channel> searchChannelsByCountryPaginated(int countryId, String query, int limit, int offset) {
+        List<Channel> list = new ArrayList<>();
+        String searchQuery = "SELECT * FROM " + TABLE_CHANNEL + " WHERE " + COLUMN_COUNTRY_ID + " = ? AND " + COLUMN_NAME + " LIKE ? LIMIT ? OFFSET ?";
+        Cursor cursor = db.rawQuery(searchQuery, 
+                new String[]{String.valueOf(countryId), "%" + query + "%", String.valueOf(limit), String.valueOf(offset)});
+        if (cursor.moveToFirst()) {
+            do {
+                Channel channel = new Channel(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOGO_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNTRY_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ID)),
+                        csd.getByChannelId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)))
+                );
+                channel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                list.add(channel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
     public List<Channel> getAllByCategoryId(int categoryId) {
         List<Channel> list = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CHANNEL + " WHERE " + COLUMN_CATEGORY_ID + " = ?", new String[]{String.valueOf(categoryId)});
+        if (cursor.moveToFirst()) {
+            do {
+                Channel channel = new Channel(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOGO_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNTRY_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ID)),
+                        csd.getByChannelId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)))
+                );
+                channel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                list.add(channel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    public List<Channel> getAllByCategoryIdPaginated(int categoryId, int limit, int offset) {
+        List<Channel> list = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CHANNEL + " WHERE " + COLUMN_CATEGORY_ID + " = ? LIMIT ? OFFSET ?", 
+                new String[]{String.valueOf(categoryId), String.valueOf(limit), String.valueOf(offset)});
+        if (cursor.moveToFirst()) {
+            do {
+                Channel channel = new Channel(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOGO_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNTRY_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ID)),
+                        csd.getByChannelId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)))
+                );
+                channel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                list.add(channel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    public List<Channel> searchChannelsByCategoryPaginated(int categoryId, String query, int limit, int offset) {
+        List<Channel> list = new ArrayList<>();
+        String searchQuery = "SELECT * FROM " + TABLE_CHANNEL + " WHERE " + COLUMN_CATEGORY_ID + " = ? AND " + COLUMN_NAME + " LIKE ? LIMIT ? OFFSET ?";
+        Cursor cursor = db.rawQuery(searchQuery, 
+                new String[]{String.valueOf(categoryId), "%" + query + "%", String.valueOf(limit), String.valueOf(offset)});
         if (cursor.moveToFirst()) {
             do {
                 Channel channel = new Channel(
