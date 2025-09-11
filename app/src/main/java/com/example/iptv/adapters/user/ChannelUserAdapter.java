@@ -20,10 +20,14 @@ import com.example.iptv.activities.user.ChannelDetailActivity;
 
 import java.util.List;
 
-public class ChannelUserAdapter extends RecyclerView.Adapter<ChannelUserAdapter.ChannelViewHolder> {
+public class ChannelUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int VIEW_TYPE_CHANNEL = 1;
+    private static final int VIEW_TYPE_LOADING = 2;
 
     private final Context context;
     private List<Channel> channelList;
+    private boolean isLoading = false;
 
     public ChannelUserAdapter(Context context, List<Channel> channelList) {
         this.context = context;
@@ -32,37 +36,71 @@ public class ChannelUserAdapter extends RecyclerView.Adapter<ChannelUserAdapter.
 
     @NonNull
     @Override
-    public ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_channel_user, parent, false);
-        return new ChannelViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_LOADING) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_loading, parent, false);
+            return new LoadingViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_channel_user, parent, false);
+            return new ChannelViewHolder(view);
+        }
     }
 
     @OptIn(markerClass = UnstableApi.class)
     @Override
-    public void onBindViewHolder(@NonNull ChannelViewHolder holder, int position) {
-        Channel channel = channelList.get(position);
-        holder.textChannelName.setText(channel.getName());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == VIEW_TYPE_CHANNEL) {
+            Channel channel = channelList.get(position);
+            ChannelViewHolder channelHolder = (ChannelViewHolder) holder;
+            channelHolder.textChannelName.setText(channel.getName());
 
-        Glide.with(context)
-                .load(channel.getLogoUrl())
-                .placeholder(R.drawable.placeholder)
-                .into(holder.imageChannelLogo);
+            Glide.with(context)
+                    .load(channel.getLogoUrl())
+                    .placeholder(R.drawable.placeholder)
+                    .into(channelHolder.imageChannelLogo);
 
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, ChannelDetailActivity.class);
-            intent.putExtra("channel", channel);
-            context.startActivity(intent);
-        });
+            channelHolder.itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, ChannelDetailActivity.class);
+                intent.putExtra("channel", channel);
+                context.startActivity(intent);
+            });
+        }
+        // LoadingViewHolder doesn't need any binding
     }
 
     @Override
     public int getItemCount() {
-        return channelList.size();
+        return channelList.size() + (isLoading ? 1 : 0);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position >= channelList.size() && isLoading) {
+            return VIEW_TYPE_LOADING;
+        }
+        return VIEW_TYPE_CHANNEL;
     }
 
     public void updateList(List<Channel> newList) {
         this.channelList = newList;
         notifyDataSetChanged();
+    }
+
+    public void addChannels(List<Channel> newChannels) {
+        int startPosition = channelList.size();
+        channelList.addAll(newChannels);
+        notifyItemRangeInserted(startPosition, newChannels.size());
+    }
+
+    public void setLoading(boolean loading) {
+        if (isLoading != loading) {
+            isLoading = loading;
+            if (loading) {
+                notifyItemInserted(channelList.size());
+            } else {
+                notifyItemRemoved(channelList.size());
+            }
+        }
     }
 
     public static class ChannelViewHolder extends RecyclerView.ViewHolder {
@@ -73,6 +111,12 @@ public class ChannelUserAdapter extends RecyclerView.Adapter<ChannelUserAdapter.
             super(itemView);
             imageChannelLogo = itemView.findViewById(R.id.image_channel_logo);
             textChannelName = itemView.findViewById(R.id.text_channel_name);
+        }
+    }
+
+    public static class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public LoadingViewHolder(@NonNull View itemView) {
+            super(itemView);
         }
     }
 }
