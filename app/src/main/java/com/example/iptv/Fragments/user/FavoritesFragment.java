@@ -1,6 +1,9 @@
 package com.example.iptv.Fragments.user;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,17 +21,38 @@ import com.example.iptv.adapters.user.ChannelUserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class FavoritesFragment extends Fragment {
 
+    private static final int PAGE_SIZE = 40;
+    
     private RecyclerView recyclerView;
     public static ChannelUserAdapter adapter;
     private List<Channel> favoriteChannels;
+    private List<Integer> allFavoriteIds;
     private DBHelper dbHelper;
+    
+    // Pagination variables
+    private int currentPage = 0;
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
+    
+    // Background thread handling
+    private ExecutorService executor;
+    private Handler mainHandler;
 
-    public FavoritesFragment() {}
+    public FavoritesFragment() {
+        executor = Executors.newSingleThreadExecutor();
+        mainHandler = new Handler(Looper.getMainLooper());
+    }
 
     public static void updateFavorites() {
+        if (adapter != null) {
+            // This static method can be called to trigger a refresh
+            // The actual refresh will be handled by the instance methods
+        }
     }
 
     @Override
@@ -37,33 +61,130 @@ public class FavoritesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
 
         recyclerView = view.findViewById(R.id.recycler_favorites);
-        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // 3-column grid
+        
+        // Setup RecyclerView with GridLayoutManager
+        GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 3);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                // Loading item spans all columns
+                return adapter != null && adapter.getItemViewType(position) == 2 ? 3 : 1;
+            }
+        });
+        recyclerView.setLayoutManager(layoutManager);
 
         dbHelper = new DBHelper(requireContext());
-        ChannelDAO channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
-        FavoriteDAO favoriteDAO = new FavoriteDAO(dbHelper.getWritableDatabase());
-
-        // Get favorite channel IDs
-        List<Integer> favoriteChannelIds = favoriteDAO.getAllFavoriteChannelIds(); // Ensure this method exists
-
-        // Fetch channels by IDs
         favoriteChannels = new ArrayList<>();
-        for (int channelId : favoriteChannelIds) {
-            Channel channel = channelDAO.getById(channelId); // Ensure getChannelById() is implemented
-            if (channel != null) {
-                favoriteChannels.add(channel);
-            }
-        }
-
-        // Initialize adapter
+        allFavoriteIds = new ArrayList<>();
+        
         adapter = new ChannelUserAdapter(requireContext(), favoriteChannels);
-
         recyclerView.setAdapter(adapter);
+        
+        // Add scroll listener for pagination
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                
+                GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null && !isLoading && !isLastPage) {
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int totalItemCount = layoutManager.getItemCount();
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                    
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 3) {
+                        loadMoreFavorites();
+                    }
+                }
+            }
+        });
 
-        //refresh channels
-        refreshChannels();
+        // Load initial favorites
+        loadFavorites();
 
         return view;
+    }
+
+    private void resetPagination() {
+        currentPage = 0;
+        isLastPage = false;
+        isLoading = false;
+        favoriteChannels.clear();
+        if (adapter != null) {
+            adapter.updateList(favoriteChannels);
+        }
+    }
+
+    private void loadFavorites() {
+        if (isLoading) return;
+        
+        isLoading = true;
+        if (adapter != null) {
+            adapter.setLoading(true);
+        }
+        
+        executor.execute(() -> {
+            try {
+                FavoriteDAO favoriteDAO = new FavoriteDAO(dbHelper.getWritableDatabase());
+                
+                if (currentPage == 0) {
+                    // Load all favorite IDs on first page
+                    allFavoriteIds = favoriteDAO.getAllFavoriteChannelIds();
+                    if (allFavoriteIds.isEmpty()) {
+                        mainHandler.post(() -> {
+                            isLoading = false;
+                            isLastPage = true;
+                            if (adapter != null) {
+                                adapter.setLoading(false);
+                                favoriteChannels.clear();
+                                adapter.updateList(favoriteChannels);
+                            }
+                        });
+                        return;
+                    }
+                }
+                
+                ChannelDAO channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
+                List<Channel> newFavorites = channelDAO.getFavoriteChannelsPaginated(
+                    allFavoriteIds, PAGE_SIZE, currentPage * PAGE_SIZE
+                );
+                
+                mainHandler.post(() -> {
+                    isLoading = false;
+                    if (adapter != null) {
+                        adapter.setLoading(false);
+                    }
+                    
+                    if (newFavorites.isEmpty()) {
+                        isLastPage = true;
+                    } else {
+                        if (currentPage == 0) {
+                            favoriteChannels.clear();
+                            favoriteChannels.addAll(newFavorites);
+                            if (adapter != null) {
+                                adapter.updateList(favoriteChannels);
+                            }
+                        } else {
+                            if (adapter != null) {
+                                adapter.addChannels(newFavorites);
+                            }
+                        }
+                        currentPage++;
+                    }
+                });
+            } catch (Exception e) {
+                mainHandler.post(() -> {
+                    isLoading = false;
+                    if (adapter != null) {
+                        adapter.setLoading(false);
+                    }
+                });
+            }
+        });
+    }
+    
+    private void loadMoreFavorites() {
+        loadFavorites();
     }
 
     @Override
@@ -72,21 +193,16 @@ public class FavoritesFragment extends Fragment {
         refreshChannels();
     }
 
-
     private void refreshChannels() {
-        // Fetch updated favorite channels
-        ChannelDAO channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
-        FavoriteDAO favoriteDAO = new FavoriteDAO(dbHelper.getWritableDatabase());
-        List<Integer> favoriteChannelIds = favoriteDAO.getAllFavoriteChannelIds();
-        favoriteChannels.clear();
-        for (int channelId : favoriteChannelIds) {
-            Channel channel = channelDAO.getById(channelId);
-            if (channel != null) {
-                favoriteChannels.add(channel);
-                }
-        }
-        adapter.notifyDataSetChanged();
-
+        resetPagination();
+        loadFavorites();
     }
-
+    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (executor != null && !executor.isShutdown()) {
+            executor.shutdown();
+        }
+    }
 }
