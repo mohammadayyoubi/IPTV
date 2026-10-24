@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ═════════════ Typography ═════════════ -->
+    <style name="TextAppearance.IPTV.Display" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.IPTV.Title" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.IPTV.Subtitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.IPTV.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="TextAppearance.IPTV.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="TextAppearance.IPTV.Overline" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/text_tertiary</item>
+    </style>
+
+    <style name="TextAppearance.IPTV.Stat" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.IPTV.Button" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- ═════════════ Cards ═════════════ -->
+    <style name="Widget.IPTV.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="cardCornerRadius">@dimen/radius_md</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/outline</item>
+        <item name="rippleColor">@color/ripple_light</item>
+    </style>
+
+    <style name="Widget.IPTV.Card.Flat">
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <style name="Widget.IPTV.Card.Danger">
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="strokeColor">@color/danger_container</item>
+    </style>
+
+    <!-- ═════════════ Text fields ═════════════ -->
+    <style name="Widget.IPTV.TextField" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/surface</item>
+        <item name="boxStrokeColor">@color/selector_box_stroke</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1.5dp</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radius_md</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_md</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_md</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_md</item>
+        <item name="hintTextColor">@color/accent</item>
+        <item name="startIconTint">@color/text_secondary</item>
+        <item name="endIconTint">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_tertiary</item>
+    </style>
+
+    <style name="Widget.IPTV.TextField.OnDialog">
+        <item name="boxBackgroundColor">@color/surface</item>
+    </style>
+
+    <style name="Widget.IPTV.TextField.Dropdown" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxBackgroundColor">@color/surface</item>
+        <item name="boxStrokeColor">@color/selector_box_stroke</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1.5dp</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radius_md</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_md</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_md</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_md</item>
+        <item name="hintTextColor">@color/accent</item>
+        <item name="startIconTint">@color/text_secondary</item>
+        <item name="endIconTint">@color/text_secondary</item>
+    </style>
+
+    <!-- Pill search bar used at the top of every list -->
+    <style name="Widget.IPTV.SearchField" parent="Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxBackgroundColor">@color/surface</item>
+        <item name="boxStrokeColor">@color/selector_box_stroke</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1.5dp</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radius_pill</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_pill</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_pill</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_pill</item>
+        <item name="hintEnabled">false</item>
+        <item name="startIconDrawable">@drawable/ic_search</item>
+        <item name="startIconTint">@color/text_secondary</item>
+        <item name="endIconMode">clear_text</item>
+        <item name="endIconTint">@color/text_secondary</item>
+    </style>
+
+    <style name="Widget.IPTV.SearchInput" parent="">
+        <item name="android:imeOptions">actionSearch</item>
+        <item name="android:inputType">text</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColorHint">@color/text_tertiary</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <!-- ═════════════ Buttons ═════════════ -->
+    <style name="Widget.IPTV.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">52dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="cornerRadius">@dimen/radius_md</item>
+        <item name="backgroundTint">@color/selector_button_primary</item>
+        <item name="android:textColor">@color/on_accent</item>
+        <item name="iconTint">@color/on_accent</item>
+        <item name="android:textAppearance">@style/TextAppearance.IPTV.Button</item>
+    </style>
+
+    <style name="Widget.IPTV.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:minHeight">52dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="cornerRadius">@dimen/radius_md</item>
+        <item name="backgroundTint">@color/surface_high</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="iconTint">@color/text_primary</item>
+        <item name="android:textAppearance">@style/TextAppearance.IPTV.Button</item>
+    </style>
+
+    <style name="Widget.IPTV.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:textAppearance">@style/TextAppearance.IPTV.Button</item>
+    </style>
+
+    <!-- Circular icon button with a subtle surface -->
+    <style name="Widget.IPTV.IconButton" parent="Widget.Material3.Button.IconButton.Filled.Tonal">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconSize">22dp</item>
+        <item name="cornerRadius">22dp</item>
+        <item name="backgroundTint">@color/surface_high</item>
+        <item name="iconTint">@color/text_primary</item>
+    </style>
+
+    <!-- Smaller transparent icon button used inside list rows -->
+    <style name="Widget.IPTV.IconButton.Row">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="iconSize">20dp</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="iconTint">@color/text_secondary</item>
+    </style>
+
+    <style name="Widget.IPTV.IconButton.Row.Danger">
+        <item name="iconTint">@color/danger</item>
+    </style>
+
+    <style name="Widget.IPTV.IconButton.Danger">
+        <item name="backgroundTint">@color/danger_container</item>
+        <item name="iconTint">@color/danger</item>
+    </style>
+
+    <!-- Translucent button that floats over the video -->
+    <style name="Widget.IPTV.IconButton.OnVideo">
+        <item name="backgroundTint">@color/scrim</item>
+        <item name="iconTint">@color/white</item>
+    </style>
+
+    <style name="Widget.IPTV.ExtendedFab" parent="Widget.Material3.ExtendedFloatingActionButton.Icon.Primary">
+        <item name="backgroundTint">@color/accent</item>
+        <item name="android:textColor">@color/on_accent</item>
+        <item name="iconTint">@color/on_accent</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.IPTV.Fab</item>
+        <item name="android:textAppearance">@style/TextAppearance.IPTV.Button</item>
+    </style>
+
+    <style name="ShapeAppearance.IPTV.Fab" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">18dp</item>
+    </style>
+
+    <!-- Segmented choice (MaterialButtonToggleGroup) -->
+    <style name="Widget.IPTV.Segment" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">44dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingStart">6dp</item>
+        <item name="android:paddingEnd">6dp</item>
+        <item name="backgroundTint">@color/selector_segment_bg</item>
+        <item name="android:textColor">@color/selector_segment_text</item>
+        <item name="strokeColor">@color/selector_segment_stroke</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <!-- ═════════════ Chips ═════════════ -->
+    <style name="Widget.IPTV.Chip.Filter" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/selector_chip_bg</item>
+        <item name="chipStrokeColor">@color/selector_chip_stroke</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@color/selector_chip_text</item>
+        <item name="checkedIconTint">@color/on_accent_container</item>
+        <item name="chipCornerRadius">12dp</item>
+        <item name="chipMinHeight">40dp</item>
+    </style>
+
+    <style name="Widget.IPTV.Chip.Meta" parent="Widget.Material3.Chip.Assist">
+        <item name="chipBackgroundColor">@color/surface_high</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="chipIconTint">@color/text_secondary</item>
+        <item name="chipIconSize">16dp</item>
+        <item name="chipCornerRadius">10dp</item>
+        <item name="chipMinHeight">32dp</item>
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+    </style>
+
+    <!-- ═════════════ Navigation ═════════════ -->
+    <style name="Widget.IPTV.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/surface</item>
+        <item name="itemIconTint">@color/selector_nav_icon</item>
+        <item name="itemTextColor">@color/selector_nav_text</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.IPTV.NavIndicator</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="itemTextAppearanceActive">@style/TextAppearance.IPTV.NavLabel</item>
+        <item name="itemTextAppearanceInactive">@style/TextAppearance.IPTV.NavLabel</item>
+    </style>
+
+    <style name="Widget.IPTV.NavRail" parent="Widget.Material3.NavigationRailView">
+        <item name="backgroundTint">@color/surface</item>
+        <item name="itemIconTint">@color/selector_nav_icon</item>
+        <item name="itemTextColor">@color/selector_nav_text</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.IPTV.NavIndicator</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="menuGravity">center</item>
+    </style>
+
+    <style name="Widget.IPTV.NavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/accent_container</item>
+    </style>
+
+    <style name="TextAppearance.IPTV.NavLabel" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="Widget.IPTV.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="titleTextAppearance">@style/TextAppearance.IPTV.Title</item>
+        <item name="subtitleTextAppearance">@style/TextAppearance.IPTV.Caption</item>
+        <item name="navigationIconTint">@color/text_primary</item>
+    </style>
+
+    <style name="Widget.IPTV.LinearProgress" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="indicatorColor">@color/accent</item>
+        <item name="trackColor">@color/surface_high</item>
+        <item name="trackCornerRadius">2dp</item>
+    </style>
+
+    <!-- ═════════════ Image shapes ═════════════ -->
+    <style name="ShapeAppearance.IPTV.Flag" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
+    </style>
+
+    <style name="ShapeAppearance.IPTV.Logo" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <!-- ═════════════ Misc ═════════════ -->
+    <style name="IPTV.LiveBadge" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/bg_badge_live</item>
+        <item name="android:paddingStart">6dp</item>
+        <item name="android:paddingEnd">6dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:text">@string/live</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+
+    <style name="IPTV.SectionLabel" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.IPTV.Overline</item>
+        <item name="android:layout_marginTop">@dimen/space_lg</item>
+        <item name="android:layout_marginBottom">@dimen/space_xs</item>
+        <item name="android:layout_marginStart">@dimen/space_2xs</item>
+    </style>
+</resources>

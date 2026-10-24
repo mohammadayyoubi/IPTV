@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Options for imports, "Update database" and server checks (AdminPanelActivity) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/space_lg"
+    android:paddingTop="@dimen/space_xs"
+    android:paddingEnd="@dimen/space_lg">
+
+    <!-- Scope (Update database only) -->
+    <TextView
+        android:id="@+id/scopeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_xs"
+        android:text="@string/import_scope"
+        android:textAppearance="@style/TextAppearance.IPTV.Overline"
+        android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/scopeToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_md"
+        android:visibility="gone"
+        app:checkedButton="@+id/scopeMine"
+        app:selectionRequired="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/scopeMine"
+            style="@style/Widget.IPTV.Segment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/scope_my_countries" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/scopeAll"
+            style="@style/Widget.IPTV.Segment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/scope_all_countries" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <!-- Which channels -->
+    <TextView
+        android:id="@+id/filterLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_xs"
+        android:text="@string/import_which_channels"
+        android:textAppearance="@style/TextAppearance.IPTV.Overline" />
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/serverFilterToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:checkedButton="@+id/filterWithServers"
+        app:selectionRequired="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/filterAll"
+            style="@style/Widget.IPTV.Segment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/import_filter_all" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/filterWithServers"
+            style="@style/Widget.IPTV.Segment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/import_filter_servers" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/filterWorking"
+            style="@style/Widget.IPTV.Segment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/import_filter_working" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <TextView
+        android:id="@+id/filterHelp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xs"
+        android:text="@string/import_filter_servers_help"
+        android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+
+    <!-- Cap per country (all-countries import only) -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/capField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_md"
+        android:hint="@string/channels_per_country"
+        android:visibility="gone"
+        app:helperText="@string/channels_per_country_helper">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/capInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLines="1"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Many public IPTV streams (and some channel logos) are only served over plain HTTP.
+    Android blocks cleartext traffic by default since API 28, which made those streams
+    and logos fail, so cleartext is allowed for this media player app.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

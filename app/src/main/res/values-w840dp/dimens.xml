@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="page_gutter">32dp</dimen>
+    <dimen name="tile_min_channel">160dp</dimen>
+    <dimen name="tile_min_row">220dp</dimen>
+</resources>

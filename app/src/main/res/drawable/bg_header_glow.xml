@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Subtle red glow at the top of auth screens -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient android:type="radial" android:gradientRadius="420dp" android:centerX="0.5" android:centerY="0"
+        android:startColor="#38E5484D" android:endColor="#000B0D12" />
+</shape>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="page_gutter">24dp</dimen>
+    <dimen name="grid_gap">14dp</dimen>
+    <dimen name="tile_min_channel">140dp</dimen>
+    <dimen name="tile_min_row">200dp</dimen>
+</resources>

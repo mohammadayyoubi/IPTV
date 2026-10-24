@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing scale -->
+    <dimen name="space_2xs">4dp</dimen>
+    <dimen name="space_xs">8dp</dimen>
+    <dimen name="space_sm">12dp</dimen>
+    <dimen name="space_md">16dp</dimen>
+    <dimen name="space_lg">24dp</dimen>
+    <dimen name="space_xl">32dp</dimen>
+
+    <!-- Horizontal page gutter; grows on wider screens -->
+    <dimen name="page_gutter">16dp</dimen>
+    <!-- Gap between grid tiles -->
+    <dimen name="grid_gap">10dp</dimen>
+
+    <!-- Minimum tile widths: the span count is derived from these so grids adapt to any width -->
+    <dimen name="tile_min_channel">112dp</dimen>
+    <dimen name="tile_min_row">160dp</dimen>
+    <dimen name="tile_min_admin_row">340dp</dimen>
+
+    <!-- Max widths for content on large screens -->
+    <dimen name="form_max_width">560dp</dimen>
+    <dimen name="content_max_width">840dp</dimen>
+
+    <!-- Corners -->
+    <dimen name="radius_sm">8dp</dimen>
+    <dimen name="radius_md">14dp</dimen>
+    <dimen name="radius_lg">20dp</dimen>
+    <dimen name="radius_pill">28dp</dimen>
+
+    <!-- Bottom padding for lists that sit under an extended FAB -->
+    <dimen name="fab_clearance">96dp</dimen>
+</resources>
