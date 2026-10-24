@@ -1,10 +1,8 @@
 package com.example.iptv.activities.user;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.iptv.Fragments.user.AllChannelsFragment;
@@ -12,36 +10,36 @@ import com.example.iptv.Fragments.user.CategoriesFragment;
 import com.example.iptv.Fragments.user.CountriesFragment;
 import com.example.iptv.Fragments.user.FavoritesFragment;
 import com.example.iptv.R;
-import com.example.iptv.activities.admin.LoginActivity;
-import com.example.iptv.database.FavoriteDAO;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.iptv.ui.BaseActivity;
+import com.example.iptv.ui.UiUtils;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigationrail.NavigationRailView;
 
-import java.util.List;
+public class MainUserActivity extends BaseActivity {
 
-public class MainUserActivity extends AppCompatActivity {
-
-    private BottomNavigationView bottomNavView;
-    private Button buttonAdminSignIn;
+    // A BottomNavigationView on phones, a NavigationRailView on wide screens (layout-w600dp)
+    private NavigationBarView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_user);
 
-        bottomNavView = findViewById(R.id.bottom_nav_view);
-        buttonAdminSignIn = findViewById(R.id.button_admin_signin);
+        navView = findViewById(R.id.bottom_nav_view);
+        View container = findViewById(R.id.fragment_container);
 
-        // Default fragment
+        // The nav views pad themselves for the system bars; the content only needs the
+        // status bar on top, plus the navigation bar at the bottom when there is no bottom nav.
+        UiUtils.applyInsets(container, true, navView instanceof NavigationRailView);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new AllChannelsFragment())
                     .commit();
-            bottomNavView.setSelectedItemId(R.id.nav_all_channels);
+            navView.setSelectedItemId(R.id.nav_all_channels);
         }
 
-        bottomNavView.setOnItemSelectedListener(item -> {
+        navView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 
             if (item.getItemId() == R.id.nav_all_channels) {
@@ -56,6 +54,7 @@ public class MainUserActivity extends AppCompatActivity {
 
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                         .replace(R.id.fragment_container, selectedFragment)
                         .commit();
             }
@@ -63,12 +62,7 @@ public class MainUserActivity extends AppCompatActivity {
             return true;
         });
 
-        // Admin Sign-In Button Click
-        buttonAdminSignIn.setOnClickListener(v -> {
-            Intent intent = new Intent(MainUserActivity.this, LoginActivity.class);
-            startActivity(intent);
-        });
-
-
+        // Re-selecting the current tab does nothing (instead of rebuilding the page)
+        navView.setOnItemReselectedListener(item -> { });
     }
 }

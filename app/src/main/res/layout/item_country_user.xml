@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="100dp"
-    android:layout_height="120dp"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="8dp"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:clickable="true"
-    android:focusable="true"
-    android:elevation="4dp"
-    android:backgroundTint="#FFFFFF"
-    app:cardCornerRadius="16dp">
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#1D1E33"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="68dp"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_sm">
 
-
-    <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/image_country_flag"
-            android:layout_width="90dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:scaleType="fitCenter"
-            android:src="@drawable/placeholder" />
+            android:layout_width="40dp"
+            android:layout_height="28dp"
+            android:background="@color/surface_highest"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.IPTV.Flag" />
 
         <TextView
             android:id="@+id/text_country_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_sm"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="2"
-            android:paddingTop="8dp"
-            android:text="Country Name"
-            android:textAlignment="center"
-            android:textColor="#FFFFFFFF"
+            android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
             android:textSize="14sp" />
 
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_chevron_right"
+            android:tint="@color/text_tertiary" />
     </LinearLayout>
-
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

@@ -1,136 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0E21"
-    android:fillViewport="true">
+    android:background="@color/bg">
 
-
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="32dp">
+        android:layout_height="420dp"
+        android:background="@drawable/bg_header_glow" />
 
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginBottom="24dp"
-            android:contentDescription="App Logo"
-            android:src="@drawable/iptv_logo" />
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="#1D1E33"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp">
+            android:paddingStart="@dimen/space_lg"
+            android:paddingTop="72dp"
+            android:paddingEnd="@dimen/space_lg"
+            android:paddingBottom="@dimen/space_lg">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.3"
+                app:layout_constraintWidth_max="@dimen/form_max_width">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingBottom="1dp">
-
-                    <TextView
-                        android:id="@+id/AdminLoginPageLable"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Admin's Login"
-                        android:textColor="#FFFFFF"
-                        android:textSize="30sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="6dp"/>
-
-                    <View
-                        android:layout_width="235dp"
-                        android:layout_height="2dp"
-                        android:background="#E50914"
-                        android:layout_marginBottom="18dp"/>
-
-                </LinearLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/emailTextField"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Email"
-                    android:textColorHint="#AAAAAA"
-                    app:boxStrokeColor="#FFFFFF"
-                    app:hintTextColor="#AAAAAA">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/emailEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:textColor="#FFFFFF"
-                        app:boxBackgroundMode="outline"
-                        android:background="@drawable/search_background"
-                        android:layout_marginBottom="7dp"
-                        />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/passwordTextField"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Password"
-                    android:textColorHint="#AAAAAA"
-                    app:boxStrokeColor="#FFFFFF"
-                    app:endIconMode="password_toggle"
-                    app:hintTextColor="#AAAAAA"
-                    app:boxBackgroundMode="outline"
-                    >
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/passwordEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:textColor="#FFFFFF"
-                        android:background="@drawable/search_background"
-                        />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/loginButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:backgroundTint="#E50914"
-                    android:text="Login"
-                    android:textColor="#FFFFFF"
-                    app:cornerRadius="8dp" />
+                <ImageView
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/iptv_logo" />
 
                 <TextView
-                    android:id="@+id/forgotPasswordTextView"
+                    android:id="@+id/AdminLoginPageLable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="Forgot Password?"
-                    android:textColor="#FFFFFF" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/space_lg"
+                    android:text="@string/login_title"
+                    android:textAppearance="@style/TextAppearance.IPTV.Display" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/space_xs"
+                    android:gravity="center"
+                    android:text="@string/login_subtitle"
+                    android:textAppearance="@style/TextAppearance.IPTV.Body" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xl"
+                    app:cardCornerRadius="@dimen/radius_lg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_lg">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/emailTextField"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/email"
+                            app:startIconDrawable="@drawable/ic_mail">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/emailEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autofillHints="emailAddress"
+                                android:imeOptions="actionNext"
+                                android:inputType="textEmailAddress"
+                                android:textColor="@color/text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/passwordTextField"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_md"
+                            android:hint="@string/password"
+                            app:endIconMode="password_toggle"
+                            app:startIconDrawable="@drawable/ic_lock">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/passwordEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autofillHints="password"
+                                android:imeOptions="actionDone"
+                                android:inputType="textPassword"
+                                android:textColor="@color/text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/forgotPasswordTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="@dimen/space_sm"
+                            android:background="?attr/selectableItemBackground"
+                            android:padding="@dimen/space_2xs"
+                            android:text="@string/forgot_password"
+                            android:textColor="@color/accent"
+                            android:textSize="14sp" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_lg">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/loginButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/sign_in" />
+
+                            <com.google.android.material.progressindicator.CircularProgressIndicator
+                                android:id="@+id/loginProgress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:elevation="8dp"
+                                android:indeterminate="true"
+                                android:visibility="gone"
+                                app:indicatorColor="@color/text_primary"
+                                app:indicatorSize="24dp"
+                                app:trackThickness="3dp" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-</ScrollView>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/backButton"
+        style="@style/Widget.IPTV.IconButton"
+        android:layout_margin="@dimen/space_sm"
+        android:contentDescription="@string/back"
+        app:icon="@drawable/ic_arrow_back" />
+</FrameLayout>

@@ -2,13 +2,10 @@ package com.example.iptv.activities.admin;
 
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.*;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.adapters.admin.CategoryAdapter;
@@ -16,25 +13,37 @@ import com.example.iptv.OOP.Category;
 import com.example.iptv.R;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.DBHelper;
+import com.example.iptv.ui.BaseActivity;
+import com.example.iptv.ui.InputDialog;
+import com.example.iptv.ui.UiUtils;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.List;
 
-public class activity_category_management extends AppCompatActivity {
+public class activity_category_management extends BaseActivity {
 
     private RecyclerView categoryRecyclerView;
     private CategoryAdapter adapter;
     private CategoryDAO categoryDAO;
+    private TextView countText;
+    private View emptyState;
+    private int totalCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_management);
+        UiUtils.applyInsets(findViewById(R.id.root), true, true);
 
         DBHelper dbHelper = new DBHelper(this);
         categoryDAO = new CategoryDAO(dbHelper.getWritableDatabase());
 
+        countText = findViewById(R.id.countText);
+        emptyState = findViewById(R.id.emptyState);
+        findViewById(R.id.backButton).setOnClickListener(v -> finish());
+
         categoryRecyclerView = findViewById(R.id.categoryRecyclerView);
-        categoryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        UiUtils.setupGrid(categoryRecyclerView, R.dimen.tile_min_admin_row);
 
         adapter = new CategoryAdapter(categoryDAO.getAll(), getLayoutInflater(), new CategoryAdapter.OnItemActionListener() {
             @Override
@@ -44,21 +53,18 @@ public class activity_category_management extends AppCompatActivity {
 
             @Override
             public void onDelete(Category category) {
-                new AlertDialog.Builder(activity_category_management.this)
-                        .setTitle("Delete Category")
-                        .setMessage("Are you sure you want to delete \"" + category.getName() + "\"?")
-                        .setPositiveButton("Yes", (dialog, which) -> {
+                InputDialog.confirm(activity_category_management.this, "Delete category",
+                        "Delete \"" + category.getName() + "\"? Its channels will be deleted too.",
+                        getString(R.string.delete), true, () -> {
                             categoryDAO.delete(category.getId());
                             loadCategories();
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
+                        });
             }
         });
 
         categoryRecyclerView.setAdapter(adapter);
+        UiUtils.onAdapterChanged(adapter, this::updateState);
 
-        // Load categories initially
         loadCategories();
 
         // Search functionality
@@ -76,56 +82,112 @@ public class activity_category_management extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
 
-        // Add button
-        Button addButton = findViewById(R.id.addCategoryButton);
+        ExtendedFloatingActionButton addButton = findViewById(R.id.addCategoryButton);
         addButton.setOnClickListener(v -> showCategoryDialog(null));
+        UiUtils.shrinkFabOnScroll(categoryRecyclerView, addButton);
 
-        // Delete all button
-        Button deleteAllButton = findViewById(R.id.deleteAllCategoriesButton);
-        deleteAllButton.setOnClickListener(v -> {
-            new AlertDialog.Builder(this)
-                    .setTitle("Delete All Categories")
-                    .setMessage("Are you sure you want to delete all categories? That will delete the channels related to categories also!")
-                    .setPositiveButton("Yes", (dialog, which) -> {
-                        categoryDAO.deleteAllCategories();
-                        loadCategories();
-                        Toast.makeText(this, "All categories deleted", Toast.LENGTH_SHORT).show();
-                    })
-                    .setNegativeButton("Cancel", null)
-                    .show();
+        // Adds every iptv-org category that isn't here yet (existing ones are kept)
+        com.google.android.material.button.MaterialButton loadAll = findViewById(R.id.loadAllCategoriesButton);
+        loadAll.setOnClickListener(v -> {
+            if (com.example.iptv.AdminTasks.isRunning()) {
+                Toast.makeText(this, R.string.task_running, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!com.example.iptv.NetworkMonitor.hasValidatedNetwork(this)) {
+                new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                        .setIcon(R.drawable.ic_wifi_off)
+                        .setTitle(R.string.offline_title)
+                        .setMessage(R.string.offline_body)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
+                return;
+            }
+            loadAll.setEnabled(false);
+            loadAll.setIcon(spinner());
+            com.example.iptv.getFromInternet.loadAllCategories(daos(dbHelper), new com.example.iptv.getFromInternet.ImportCallback() {
+                @Override public void onProgress(String status, int percent) { }
+
+                @Override
+                public void onDone(com.example.iptv.ImportOptions.Result result) {
+                    resetLoadAll(loadAll);
+                    loadCategories();
+                    Toast.makeText(activity_category_management.this, result.newCategories == 0
+                            ? "All iptv-org categories are already here"
+                            : result.newCategories + " categories added", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(String message) {
+                    resetLoadAll(loadAll);
+                    Toast.makeText(activity_category_management.this, "Couldn't load categories: " + message, Toast.LENGTH_LONG).show();
+                }
+            });
         });
+
+        findViewById(R.id.deleteAllCategoriesButton).setOnClickListener(v ->
+                InputDialog.confirm(this, "Delete all categories",
+                        "This also deletes every channel that belongs to a category. It can't be undone.",
+                        getString(R.string.delete_all), true, () -> {
+                            categoryDAO.deleteAllCategories();
+                            loadCategories();
+                            Toast.makeText(this, "All categories deleted", Toast.LENGTH_SHORT).show();
+                        }));
+    }
+
+    private com.example.iptv.getFromInternet.Daos daos(DBHelper dbHelper) {
+        android.database.sqlite.SQLiteDatabase db = dbHelper.getWritableDatabase();
+        return new com.example.iptv.getFromInternet.Daos(this,
+                new com.example.iptv.database.ChannelDAO(db), new com.example.iptv.database.CountryDAO(db),
+                new CategoryDAO(db), new com.example.iptv.database.ChannelServerDAO(db));
+    }
+
+    /** Small spinner shown in the button while categories download. */
+    private android.graphics.drawable.Drawable spinner() {
+        com.google.android.material.progressindicator.CircularProgressIndicatorSpec spec =
+                new com.google.android.material.progressindicator.CircularProgressIndicatorSpec(this, null, 0,
+                        com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall);
+        spec.indicatorColors = new int[]{getColor(R.color.text_primary)};
+        return com.google.android.material.progressindicator.IndeterminateDrawable.createCircularDrawable(this, spec);
+    }
+
+    private void resetLoadAll(com.google.android.material.button.MaterialButton button) {
+        button.setEnabled(true);
+        button.setIconResource(R.drawable.ic_cloud_download);
     }
 
     private void loadCategories() {
         List<Category> categories = categoryDAO.getAll();
+        totalCount = categories.size();
         adapter.updateData(categories);
     }
 
-    private void showCategoryDialog(Category categoryToEdit) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(categoryToEdit == null ? "Add Category" : "Edit Category");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        if (categoryToEdit != null) {
-            input.setText(categoryToEdit.getName());
+    private void updateState() {
+        int shown = adapter.getItemCount();
+        countText.setText(UiUtils.quantity(this, R.plurals.count_categories, totalCount));
+        if (totalCount == 0) {
+            UiUtils.showEmptyState(emptyState, true, R.drawable.ic_category,
+                    R.string.empty_categories_title, R.string.empty_categories_body);
+        } else {
+            UiUtils.showEmptyState(emptyState, shown == 0, R.drawable.ic_search,
+                    R.string.empty_search_title, R.string.empty_search_body);
         }
-        builder.setView(input);
+    }
 
-        builder.setPositiveButton("Save", (dialog, which) -> {
-            String name = input.getText().toString().trim();
-            if (name.isEmpty()) return;
+    private void showCategoryDialog(Category categoryToEdit) {
+        new InputDialog(this)
+                .title(categoryToEdit == null ? getString(R.string.add_category) : "Edit category")
+                .field(getString(R.string.category_name), categoryToEdit != null ? categoryToEdit.getName() : null)
+                .onSubmit((name, unused) -> {
+                    if (name.isEmpty()) return;
 
-            if (categoryToEdit == null) {
-                categoryDAO.insert(new Category(name));
-            } else {
-                categoryToEdit.setName(name);
-                categoryDAO.update(categoryToEdit);
-            }
-            loadCategories();
-        });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-        builder.show();
+                    if (categoryToEdit == null) {
+                        categoryDAO.insert(new Category(name));
+                    } else {
+                        categoryToEdit.setName(name);
+                        categoryDAO.update(categoryToEdit);
+                    }
+                    loadCategories();
+                })
+                .show();
     }
 }

@@ -25,6 +25,10 @@ android {
             )
         }
     }
+    testOptions {
+        // android.util.Log etc. return defaults in JVM unit tests (ProbeRunnerTest)
+        unitTests.isReturnDefaultValues = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

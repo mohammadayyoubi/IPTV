@@ -3,21 +3,27 @@ package com.example.iptv.activities.admin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.iptv.R;
+import com.example.iptv.ui.BaseActivity;
+import com.example.iptv.ui.UiUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     private TextInputEditText emailEditText, passwordEditText;
+    private TextInputLayout emailField, passwordField;
     private MaterialButton loginButton;
+    private View loginProgress;
     private TextView forgotPasswordTextView;
 
     private FirebaseAuth mAuth;
@@ -25,17 +31,27 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login); // Use your XML layout name
+        setContentView(R.layout.activity_login);
+        UiUtils.applyInsets(findViewById(R.id.root), true, true, true);
 
-        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        // Initialize UI components
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
+        emailField = findViewById(R.id.emailTextField);
+        passwordField = findViewById(R.id.passwordTextField);
         loginButton = findViewById(R.id.loginButton);
+        loginProgress = findViewById(R.id.loginProgress);
 
+        findViewById(R.id.backButton).setOnClickListener(v -> finish());
         loginButton.setOnClickListener(v -> loginUser());
+        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                loginUser();
+                return true;
+            }
+            return false;
+        });
 
         forgotPasswordTextView = findViewById(R.id.forgotPasswordTextView);
         forgotPasswordTextView.setOnClickListener(v -> {
@@ -43,33 +59,43 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void setLoading(boolean loading) {
+        loginButton.setEnabled(!loading);
+        loginButton.setText(loading ? "" : getString(R.string.sign_in));
+        loginProgress.setVisibility(loading ? View.VISIBLE : View.GONE);
+    }
+
     private void loginUser() {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
+        emailField.setError(null);
+        passwordField.setError(null);
+
         if (TextUtils.isEmpty(email)) {
-            emailEditText.setError("Email is required");
+            emailField.setError("Email is required");
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            passwordEditText.setError("Password is required");
+            passwordField.setError("Password is required");
             return;
         }
 
+        setLoading(true);
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
+                    setLoading(false);
                     if (task.isSuccessful()) {
                         Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        // Go to admin panel or main screen
-                        startActivity(new Intent(LoginActivity.this, AdminPanelActivity.class)); // or MainActivity.class
+                        startActivity(new Intent(LoginActivity.this, AdminPanelActivity.class));
                         finish();
                     } else {
                         Exception e = task.getException();
                         if (e instanceof FirebaseAuthInvalidUserException) {
-                            Toast.makeText(LoginActivity.this, "No account found with this email.", Toast.LENGTH_SHORT).show();
+                            emailField.setError("No account found with this email.");
                         } else if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                            Toast.makeText(LoginActivity.this, "Incorrect password. Please try again.", Toast.LENGTH_SHORT).show();
+                            passwordField.setError("Incorrect email or password. Please try again.");
                         } else {
                             Toast.makeText(LoginActivity.this, "Authentication failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }

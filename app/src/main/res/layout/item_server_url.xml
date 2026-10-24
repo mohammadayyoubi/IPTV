@@ -1,30 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- One stream URL in the add / edit channel form -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/itemServerLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/space_xs"
+    android:background="@drawable/bg_logo_well_rounded"
+    android:gravity="center_vertical"
+    android:minHeight="60dp"
     android:orientation="horizontal"
-    android:padding="8dp"
-    android:background="@android:color/transparent"
-    android:gravity="center_vertical">
+    android:paddingStart="@dimen/space_sm"
+    android:paddingEnd="@dimen/space_2xs">
 
-    <TextView
-        android:id="@+id/serverUrlTextView"
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_dns"
+        android:tint="@color/text_secondary" />
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_sm"
         android:layout_weight="1"
-        android:text="http://example.com/stream"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:paddingEnd="8dp" />
+        android:orientation="vertical">
 
-    <ImageButton
+        <TextView
+            android:id="@+id/serverLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/serverUrlTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/deleteServerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_delete"
-        android:contentDescription="Delete"
-        app:tint="#FF4444" />
+        style="@style/Widget.IPTV.IconButton.Row.Danger"
+        android:contentDescription="@string/delete"
+        app:icon="@drawable/ic_delete" />
 </LinearLayout>

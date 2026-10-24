@@ -1,75 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:padding="12dp"
-    android:layout_marginBottom="8dp"
-    android:background="#1D1E33"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!-- Channel Logo -->
-    <ImageView
-        android:id="@+id/channelLogoImageView"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="12dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="Channel Logo" />
-
-    <!-- Channel Info -->
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="72dp"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/space_sm"
+        android:paddingTop="@dimen/space_xs"
+        android:paddingEnd="@dimen/space_2xs"
+        android:paddingBottom="@dimen/space_xs">
 
-        <TextView
-            android:id="@+id/channelNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Channel Name"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="46dp"
+            android:background="@drawable/bg_logo_well_rounded">
 
-        <TextView
-            android:id="@+id/channelCategoryTextView"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/channelLogoImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:padding="6dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_channel_placeholder" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Category"
-            android:textColor="#AAAAAA"
-            android:textSize="14sp" />
+            android:layout_marginStart="@dimen/space_sm"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/channelNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/countryFlagImageView"
+                    android:layout_width="20dp"
+                    android:layout_height="14dp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@color/surface_highest"
+                    android:importantForAccessibility="no"
+                    android:scaleType="centerCrop"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.IPTV.Flag" />
+
+                <TextView
+                    android:id="@+id/channelCategoryTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editChannelButton"
+            style="@style/Widget.IPTV.IconButton.Row"
+            android:contentDescription="@string/edit"
+            app:icon="@drawable/ic_edit" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/deleteChannelButton"
+            style="@style/Widget.IPTV.IconButton.Row.Danger"
+            android:contentDescription="@string/delete"
+            app:icon="@drawable/ic_delete" />
     </LinearLayout>
-
-    <!-- Country Flag -->
-    <ImageView
-        android:id="@+id/countryFlagImageView"
-        android:layout_width="36dp"
-        android:layout_height="24dp"
-        android:scaleType="centerCrop"
-        android:layout_marginEnd="12dp"
-        android:contentDescription="Country Flag" />
-
-    <!-- Edit Button -->
-    <ImageButton
-        android:id="@+id/editChannelButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_menu_edit"
-        android:contentDescription="Edit"
-        app:tint="#FFA500" />
-
-    <!-- Delete Button -->
-    <ImageButton
-        android:id="@+id/deleteChannelButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_menu_delete"
-        android:layout_marginStart="4dp"
-        android:contentDescription="Delete"
-        app:tint="#E50914" />
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

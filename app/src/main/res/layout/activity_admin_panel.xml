@@ -1,583 +1,956 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0E21"
-    android:fillViewport="true"
-    tools:context=".activities.admin.AdminPanelActivity">
+    android:background="@color/bg"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <!-- Shown while an import is running -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/importProgress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:indeterminate="true"
+        android:visibility="invisible" />
 
-        <!-- Header Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="24dp">
+    <!-- Task status: progress text, paused warning, Stop -->
+    <LinearLayout
+        android:id="@+id/importStatusBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        android:gravity="center_vertical"
+        android:minHeight="40dp"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/page_gutter"
+        android:paddingEnd="@dimen/space_xs"
+        android:visibility="gone">
 
-            <TextView
-                android:id="@+id/AdminPageLable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Admin Panel"
-                android:textColor="#FFFFFF"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.03"
-                android:layout_marginBottom="8dp"/>
+        <ImageView
+            android:id="@+id/importStatusIcon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="@dimen/space_xs"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_wifi_off"
+            android:tint="@color/warning"
+            android:visibility="gone" />
 
-            <View
-                android:layout_width="200dp"
-                android:layout_height="3dp"
-                android:background="#E50914"
-                android:elevation="2dp" />
-        </LinearLayout>
-
-        <!-- Dashboard Section -->
         <TextView
-            android:id="@+id/dashboardsectionlable"
+            android:id="@+id/importStatusText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+
+        <TextView
+            android:id="@+id/importPercentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Dashboard"
-            android:textColor="@color/accent_gold"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.02"/>
+            android:layout_marginStart="@dimen/space_xs"
+            android:layout_marginEnd="@dimen/space_xs"
+            android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+            android:textColor="@color/text_primary"
+            android:visibility="gone" />
 
-        <!-- Statistics Dashboard -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp"
-            android:weightSum="3">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardChannels"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="6dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp"
-                app:cardBackgroundColor="#1D1E33">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/tvTotalChannels"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#E50914"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Channels"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
-                        android:layout_marginTop="4dp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardCategories"
-                android:layout_width="0dp"
-                android:layout_height="90dp"
-                android:layout_weight="1"
-                android:layout_margin="6dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp"
-                app:cardBackgroundColor="#1D1E33">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="12dp">
-
-                    <TextView
-                        android:id="@+id/tvTotalCategories"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#E50914"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Categories"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
-                        android:layout_marginTop="4dp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardCountries"
-                android:layout_width="0dp"
-                android:layout_height="90dp"
-                android:layout_weight="1"
-                android:layout_margin="6dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp"
-                app:cardBackgroundColor="#1D1E33">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/tvTotalCountries"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#E50914"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Countries"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
-                        android:layout_marginTop="4dp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <!-- Managers Section -->
-        <TextView
-            android:id="@+id/managesectionlabel"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/stopTaskButton"
+            style="@style/Widget.IPTV.Button.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="Manage Sections"
-            android:textColor="@color/accent_gold"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.02"/>
+            android:minHeight="36dp"
+            android:text="@string/stop"
+            android:visibility="gone" />
+    </LinearLayout>
 
-        <!-- Row 1: Categories & Channels -->
-        <LinearLayout
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:weightSum="2">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/manageCategoriesButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:cardBackgroundColor="#1D1E33"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_sort_by_size"
-                        app:tint="#E50914" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Categories"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginTop="12dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/manageChannelsButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:cardBackgroundColor="#1D1E33"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_slideshow"
-                        app:tint="#E50914" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Channels"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginTop="12dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <!-- Row 2: Countries & Admin Users -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:weightSum="2">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/manageCountriesButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:cardBackgroundColor="#1D1E33"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_mapmode"
-                        app:tint="#E50914" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Countries"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginTop="12dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/manageUsersButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:cardBackgroundColor="#1D1E33"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_myplaces"
-                        app:tint="#E50914" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Admin Users"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginTop="12dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-        <TextView
-            android:id="@+id/managesectionDBlabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Manage Database"
-            android:textColor="@color/accent_gold"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-<!--        bellow noted since by logic all countries and all categories are required to be loaded to suites the logic of our approch-->
-<!--        &lt;!&ndash; Row: Get All Countries & Get All Categories &ndash;&gt;-->
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:layout_marginBottom="16dp"-->
-<!--            android:weightSum="2">-->
-
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:id="@+id/getAllCountriesButton"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:layout_margin="8dp"-->
-<!--                app:cardCornerRadius="16dp"-->
-<!--                app:cardElevation="8dp"-->
-<!--                app:cardBackgroundColor="#1D1E33"-->
-<!--                android:foreground="?android:attr/selectableItemBackground"-->
-<!--                android:clickable="true"-->
-<!--                android:focusable="true">-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:gravity="center"-->
-<!--                    android:padding="20dp">-->
-
-<!--                    <ImageView-->
-<!--                        android:layout_width="48dp"-->
-<!--                        android:layout_height="48dp"-->
-<!--                        android:src="@android:drawable/ic_menu_mapmode"-->
-<!--                        app:tint="#E50914" />-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="Get All Countries"-->
-<!--                        android:textColor="#FFFFFF"-->
-<!--                        android:layout_marginTop="12dp"-->
-<!--                        android:textSize="16sp"-->
-<!--                        android:textStyle="bold" />-->
-<!--                </LinearLayout>-->
-<!--            </androidx.cardview.widget.CardView>-->
-
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:id="@+id/getAllCategoriesButton"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:layout_margin="8dp"-->
-<!--                app:cardCornerRadius="16dp"-->
-<!--                app:cardElevation="8dp"-->
-<!--                app:cardBackgroundColor="#1D1E33"-->
-<!--                android:foreground="?android:attr/selectableItemBackground"-->
-<!--                android:clickable="true"-->
-<!--                android:focusable="true">-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:gravity="center"-->
-<!--                    android:padding="20dp">-->
-
-<!--                    <ImageView-->
-<!--                        android:layout_width="48dp"-->
-<!--                        android:layout_height="48dp"-->
-<!--                        android:src="@android:drawable/ic_menu_sort_by_size"-->
-<!--                        app:tint="#E50914" />-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="Get All Categories"-->
-<!--                        android:textColor="#FFFFFF"-->
-<!--                        android:layout_marginTop="12dp"-->
-<!--                        android:textSize="16sp"-->
-<!--                        android:textStyle="bold" />-->
-<!--                </LinearLayout>-->
-<!--            </androidx.cardview.widget.CardView>-->
-
-<!--        </LinearLayout>-->
-
-        <!-- Row: My Country & All Countries Channels -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:weightSum="2">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/getMyCountryChannelsButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:cardBackgroundColor="#1D1E33"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_compass"
-                        app:tint="#E50914" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="My Country Channels"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginTop="12dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/getAllCountriesChannelsButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:cardBackgroundColor="#1D1E33"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_manage"
-                        app:tint="#E50914" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="All Countries Channels"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginTop="12dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-        <!-- Clear Database Card -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/clearDatabaseButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="#1D1E33"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
+            android:paddingStart="@dimen/page_gutter"
+            android:paddingEnd="@dimen/page_gutter"
+            android:paddingBottom="@dimen/space_xl">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:padding="20dp">
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="@dimen/content_max_width">
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@android:drawable/ic_menu_delete"
-                    app:tint="#E50914"
-                    android:layout_marginRight="16dp"/>
+                <!-- Header -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/backButton"
+                        style="@style/Widget.IPTV.IconButton"
+                        android:layout_marginEnd="@dimen/space_sm"
+                        android:contentDescription="@string/back"
+                        app:icon="@drawable/ic_arrow_back" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/dashboard_eyebrow"
+                            android:textAppearance="@style/TextAppearance.IPTV.Overline"
+                            android:textColor="@color/accent" />
+
+                        <TextView
+                            android:id="@+id/AdminPageLable"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/dashboard"
+                            android:textAppearance="@style/TextAppearance.IPTV.Display" />
+
+                        <TextView
+                            android:id="@+id/signedInText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/logoutButton"
+                        style="@style/Widget.IPTV.IconButton"
+                        android:contentDescription="@string/log_out"
+                        android:tooltipText="@string/log_out"
+                        app:icon="@drawable/ic_logout" />
+                </LinearLayout>
+
+                <!-- Stats -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="-5dp"
+                    android:layout_marginTop="@dimen/space_lg"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardChannels"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="14dp">
+
+                            <FrameLayout
+                                android:layout_width="34dp"
+                                android:layout_height="34dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_live_tv"
+                                    android:tint="@color/accent" />
+                            </FrameLayout>
+
+                            <!-- Shrinks to fit so 5-6 digit totals are never cut off -->
+                            <TextView
+                                android:id="@+id/tvTotalChannels"
+                                android:layout_width="match_parent"
+                                android:layout_height="34dp"
+                                android:layout_marginTop="@dimen/space_sm"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:text="0"
+                                android:textAppearance="@style/TextAppearance.IPTV.Stat"
+                                app:autoSizeMaxTextSize="26sp"
+                                app:autoSizeMinTextSize="13sp"
+                                app:autoSizeStepGranularity="1sp"
+                                app:autoSizeTextType="uniform" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:text="@string/stat_channels"
+                                android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardCategories"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="14dp">
+
+                            <FrameLayout
+                                android:layout_width="34dp"
+                                android:layout_height="34dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_category"
+                                    android:tint="@color/tint_1" />
+                            </FrameLayout>
+
+                            <!-- Shrinks to fit so 5-6 digit totals are never cut off -->
+                            <TextView
+                                android:id="@+id/tvTotalCategories"
+                                android:layout_width="match_parent"
+                                android:layout_height="34dp"
+                                android:layout_marginTop="@dimen/space_sm"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:text="0"
+                                android:textAppearance="@style/TextAppearance.IPTV.Stat"
+                                app:autoSizeMaxTextSize="26sp"
+                                app:autoSizeMinTextSize="13sp"
+                                app:autoSizeStepGranularity="1sp"
+                                app:autoSizeTextType="uniform" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:text="@string/stat_categories"
+                                android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardCountries"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="14dp">
+
+                            <FrameLayout
+                                android:layout_width="34dp"
+                                android:layout_height="34dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_public"
+                                    android:tint="@color/tint_2" />
+                            </FrameLayout>
+
+                            <!-- Shrinks to fit so 5-6 digit totals are never cut off -->
+                            <TextView
+                                android:id="@+id/tvTotalCountries"
+                                android:layout_width="match_parent"
+                                android:layout_height="34dp"
+                                android:layout_marginTop="@dimen/space_sm"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:text="0"
+                                android:textAppearance="@style/TextAppearance.IPTV.Stat"
+                                app:autoSizeMaxTextSize="26sp"
+                                app:autoSizeMinTextSize="13sp"
+                                app:autoSizeStepGranularity="1sp"
+                                app:autoSizeTextType="uniform" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:text="@string/stat_countries"
+                                android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Clear Database"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                    style="@style/IPTV.SectionLabel"
+                    android:text="@string/section_manage" />
 
-        <!-- Logout Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/logoutButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Logout"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:backgroundTint="#E50914"
-            android:layout_marginTop="8dp"
-            android:layout_marginHorizontal="8dp"
-            android:paddingVertical="16dp"
-            app:cornerRadius="12dp"
-            android:elevation="4dp"
-            android:letterSpacing="0.03"/>
-    </LinearLayout>
-</ScrollView>
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.IPTV.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/manageChannelsButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:minHeight="72dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/space_md"
+                            android:paddingTop="@dimen/space_sm"
+                            android:paddingEnd="@dimen/space_sm"
+                            android:paddingBottom="@dimen/space_sm">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_live_tv"
+                                    android:tint="@color/accent" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_md"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/manage_channels"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+                                    android:textColor="@color/text_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/manage_channels_desc"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_chevron_right"
+                                android:tint="@color/text_tertiary" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/outline" />
+
+                        <LinearLayout
+                            android:id="@+id/manageCategoriesButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:minHeight="72dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/space_md"
+                            android:paddingTop="@dimen/space_sm"
+                            android:paddingEnd="@dimen/space_sm"
+                            android:paddingBottom="@dimen/space_sm">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_category"
+                                    android:tint="@color/tint_1" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_md"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/manage_categories"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+                                    android:textColor="@color/text_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/manage_categories_desc"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_chevron_right"
+                                android:tint="@color/text_tertiary" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/outline" />
+
+                        <LinearLayout
+                            android:id="@+id/manageCountriesButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:minHeight="72dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/space_md"
+                            android:paddingTop="@dimen/space_sm"
+                            android:paddingEnd="@dimen/space_sm"
+                            android:paddingBottom="@dimen/space_sm">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_public"
+                                    android:tint="@color/tint_2" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_md"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/manage_countries"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+                                    android:textColor="@color/text_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/manage_countries_desc"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_chevron_right"
+                                android:tint="@color/text_tertiary" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <TextView
+                    style="@style/IPTV.SectionLabel"
+                    android:text="@string/section_import" />
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.IPTV.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/updateDatabaseButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:minHeight="72dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/space_md"
+                            android:paddingTop="@dimen/space_sm"
+                            android:paddingEnd="@dimen/space_sm"
+                            android:paddingBottom="@dimen/space_sm">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_sync"
+                                    android:tint="@color/accent" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_md"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/update_database"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+                                    android:textColor="@color/text_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/update_database_desc"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_chevron_right"
+                                android:tint="@color/text_tertiary" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/outline" />
+
+                        <LinearLayout
+                            android:id="@+id/getMyCountryChannelsButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:minHeight="72dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/space_md"
+                            android:paddingTop="@dimen/space_sm"
+                            android:paddingEnd="@dimen/space_sm"
+                            android:paddingBottom="@dimen/space_sm">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_my_location"
+                                    android:tint="@color/tint_6" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_md"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/import_my_country"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+                                    android:textColor="@color/text_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/import_my_country_desc"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_chevron_right"
+                                android:tint="@color/text_tertiary" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/outline" />
+
+                        <LinearLayout
+                            android:id="@+id/getAllCountriesChannelsButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:minHeight="72dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/space_md"
+                            android:paddingTop="@dimen/space_sm"
+                            android:paddingEnd="@dimen/space_sm"
+                            android:paddingBottom="@dimen/space_sm">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_cloud_download"
+                                    android:tint="@color/tint_3" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_md"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/import_all"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+                                    android:textColor="@color/text_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/import_all_desc"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_chevron_right"
+                                android:tint="@color/text_tertiary" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <TextView
+                    style="@style/IPTV.SectionLabel"
+                    android:text="@string/section_maintenance" />
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.IPTV.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/checkServersButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:minHeight="72dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/space_md"
+                            android:paddingTop="@dimen/space_sm"
+                            android:paddingEnd="@dimen/space_sm"
+                            android:paddingBottom="@dimen/space_sm">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_dns"
+                                    android:tint="@color/success" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_md"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/check_servers"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+                                    android:textColor="@color/text_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/check_servers_desc"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_chevron_right"
+                                android:tint="@color/text_tertiary" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/outline" />
+
+                        <LinearLayout
+                            android:id="@+id/refreshLogosButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:minHeight="72dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/space_md"
+                            android:paddingTop="@dimen/space_sm"
+                            android:paddingEnd="@dimen/space_sm"
+                            android:paddingBottom="@dimen/space_sm">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_image"
+                                    android:tint="@color/tint_7" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_md"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/refresh_logos"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+                                    android:textColor="@color/text_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/refresh_logos_desc"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_chevron_right"
+                                android:tint="@color/text_tertiary" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <TextView
+                    style="@style/IPTV.SectionLabel"
+                    android:text="@string/section_danger" />
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.IPTV.Card.Danger"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/clearDatabaseButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:minHeight="72dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/space_md"
+                            android:paddingTop="@dimen/space_sm"
+                            android:paddingEnd="@dimen/space_sm"
+                            android:paddingBottom="@dimen/space_sm">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_delete_sweep"
+                                    android:tint="@color/danger" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_md"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/clear_database"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+                                    android:textColor="@color/danger" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/clear_database_desc"
+                                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_chevron_right"
+                                android:tint="@color/text_tertiary" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</LinearLayout>

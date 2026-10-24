@@ -2,57 +2,81 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#1A1B2E">
-    <!-- Heading -->
+    android:orientation="vertical">
+
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="10dp"
-        android:paddingBottom="8dp">
+        android:paddingStart="@dimen/page_gutter"
+        android:paddingTop="@dimen/space_lg"
+        android:paddingEnd="@dimen/page_gutter">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/categories_eyebrow"
+            android:textAppearance="@style/TextAppearance.IPTV.Overline"
+            android:textColor="@color/accent" />
 
         <TextView
             android:id="@+id/categoriesUserPageLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="All Categories List"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.1"
-            android:layout_marginBottom="4dp" />
-
-        <View
-            android:layout_width="270dp"
-            android:layout_height="3dp"
-            android:background="#E50914"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginTop="2dp"
+            android:minHeight="44dp"
+            android:gravity="center_vertical"
+            android:text="@string/categories_title"
+            android:textAppearance="@style/TextAppearance.IPTV.Display" />
     </LinearLayout>
 
-    <!-- Search Bar -->
-    <EditText
-        android:id="@+id/CategoriesUserSearchEditText"
+    <!-- Search -->
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.IPTV.SearchField"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="Search channels..."
-        android:background="@drawable/search_background"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#AAAAAA"
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:drawablePadding="8dp"
-        android:paddingHorizontal="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center_vertical"
-        />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_categories"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"
-        android:clipToPadding="false" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/page_gutter"
+        android:layout_marginTop="@dimen/space_md"
+        android:layout_marginEnd="@dimen/page_gutter">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/CategoriesUserSearchEditText"
+            style="@style/Widget.IPTV.SearchInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_categories" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/countText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/page_gutter"
+        android:layout_marginTop="@dimen/space_md"
+        android:layout_marginBottom="@dimen/space_xs"
+        android:textAppearance="@style/TextAppearance.IPTV.Overline" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_categories"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/page_gutter"
+            android:paddingTop="@dimen/space_2xs"
+            android:paddingEnd="@dimen/page_gutter"
+            android:paddingBottom="@dimen/space_lg" />
+
+        <include
+            android:id="@+id/emptyState"
+            layout="@layout/view_empty_state"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

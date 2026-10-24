@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.OOP.Category;
 import com.example.iptv.R;
+import com.example.iptv.ui.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         Category category = filteredList.get(position);
         holder.nameTextView.setText(category.getName());
-        holder.idTextView.setText(String.valueOf(category.getId()));
+        holder.idTextView.setText("ID " + category.getId());
+        UiUtils.applyCategoryIcon(holder.iconImageView, category.getName());
 
         holder.editButton.setOnClickListener(v -> listener.onEdit(category));
         holder.deleteButton.setOnClickListener(v -> listener.onDelete(category));
@@ -94,12 +96,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     static class CategoryViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView, idTextView;
-        ImageButton editButton, deleteButton;
+        ImageView iconImageView;
+        View editButton, deleteButton;
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
             idTextView = itemView.findViewById(R.id.categoryIdTextView);
             nameTextView = itemView.findViewById(R.id.categoryNameTextView);
+            iconImageView = itemView.findViewById(R.id.categoryIconImageView);
             editButton = itemView.findViewById(R.id.editCategoryButton);
             deleteButton = itemView.findViewById(R.id.deleteCategoryButton);
         }

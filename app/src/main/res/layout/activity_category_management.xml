@@ -1,78 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#0A0E21"
-    android:padding="16dp">
+    android:background="@color/bg">
 
-    <!-- Title -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="16dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/AdminPageLable"
-            android:layout_width="wrap_content"
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Categories"
-            android:textColor="#FFFFFF"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="6dp"/>
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/space_xs"
+            android:paddingTop="@dimen/space_xs"
+            android:paddingEnd="@dimen/page_gutter">
 
-        <View
-            android:layout_width="165dp"
-            android:layout_height="2dp"
-            android:background="#E50914" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/backButton"
+                style="@style/Widget.IPTV.IconButton.Row"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/back"
+                app:icon="@drawable/ic_arrow_back"
+                app:iconTint="@color/text_primary" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_2xs"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/AdminPageLable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/category_management"
+                    android:textAppearance="@style/TextAppearance.IPTV.Title" />
+
+                <TextView
+                    android:id="@+id/countText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loadAllCategoriesButton"
+                style="@style/Widget.IPTV.IconButton"
+                android:layout_marginEnd="@dimen/space_xs"
+                android:contentDescription="@string/load_all_categories"
+                android:tooltipText="@string/load_all_categories"
+                app:icon="@drawable/ic_cloud_download" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/deleteAllCategoriesButton"
+                style="@style/Widget.IPTV.IconButton.Danger"
+                android:contentDescription="@string/delete_all"
+                android:tooltipText="@string/delete_all"
+                app:icon="@drawable/ic_delete_sweep" />
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.IPTV.SearchField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/page_gutter"
+            android:layout_marginTop="@dimen/space_sm"
+            android:layout_marginEnd="@dimen/page_gutter"
+            android:layout_marginBottom="@dimen/space_sm">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchCategoryEditText"
+                style="@style/Widget.IPTV.SearchInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_categories" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categoryRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingStart="@dimen/page_gutter"
+                android:paddingTop="@dimen/space_2xs"
+                android:paddingEnd="@dimen/page_gutter"
+                android:paddingBottom="@dimen/fab_clearance" />
+
+            <include
+                android:id="@+id/emptyState"
+                layout="@layout/view_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+        </FrameLayout>
     </LinearLayout>
 
-    <!-- Search Bar -->
-    <EditText
-        android:id="@+id/searchCategoryEditText"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/addCategoryButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/search_background"
-        android:hint="Search categories..."
-        android:padding="10dp"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#AAAAAA" />
-
-    <!-- Action Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
-
-        <Button
-            android:id="@+id/addCategoryButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Add Category"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#E50914"
-            android:layout_marginEnd="8dp"/>
-
-        <Button
-            android:id="@+id/deleteAllCategoriesButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Delete All"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#8B0000"/>
-    </LinearLayout>
-
-    <!-- RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/categoryRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-</LinearLayout>
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/page_gutter"
+        android:text="@string/add_category"
+        app:icon="@drawable/ic_add" />
+</FrameLayout>

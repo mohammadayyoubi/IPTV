@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.R;
@@ -20,6 +19,7 @@ import com.example.iptv.activities.user.activity_user_filtered_channels;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.DBHelper;
 import com.example.iptv.adapters.user.CategoryAdapter;
+import com.example.iptv.ui.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +29,10 @@ public class CategoriesFragment extends Fragment {
     private RecyclerView recyclerView;
     private CategoryAdapter adapter;
     private List<Category> categoryList;
-    private List<Category> filteredList;
     private DBHelper dbHelper;
     private EditText searchEditText;
-    private TextView pageTitle;
+    private TextView countText;
+    private View emptyState;
 
     public CategoriesFragment() {}
 
@@ -41,27 +41,18 @@ public class CategoriesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
 
-        // Initialize views
         recyclerView = view.findViewById(R.id.recycler_categories);
         searchEditText = view.findViewById(R.id.CategoriesUserSearchEditText);
-        pageTitle = view.findViewById(R.id.categoriesUserPageLabel);
+        countText = view.findViewById(R.id.countText);
+        emptyState = view.findViewById(R.id.emptyState);
 
-        if (pageTitle != null) {
-            pageTitle.setText("All Categories List");
-        } else {
-            System.err.println("categoriesUserPageLabel not found in layout.");
-        }
+        UiUtils.setupGrid(recyclerView, R.dimen.tile_min_row);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
-
-        // Initialize database helper and DAO
         dbHelper = new DBHelper(requireContext());
         CategoryDAO categoryDAO = new CategoryDAO(dbHelper.getWritableDatabase());
-        categoryList = categoryDAO.getAll(); // Fetch all categories
-        filteredList = new ArrayList<>(categoryList);
+        categoryList = categoryDAO.getAll();
 
-        // Initialize adapter
-        adapter = new CategoryAdapter(requireContext(), categoryList, category -> {
+        adapter = new CategoryAdapter(requireContext(), new ArrayList<>(categoryList), category -> {
             Intent intent = new Intent(requireContext(), activity_user_filtered_channels.class);
             intent.putExtra("filterType", "category");
             intent.putExtra("filterId", category.getId());
@@ -70,7 +61,6 @@ public class CategoriesFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
-        // Add search functionality
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -84,21 +74,27 @@ public class CategoriesFragment extends Fragment {
             public void afterTextChanged(Editable s) { }
         });
 
+        filterCategories("");
         return view;
     }
 
     private void filterCategories(String query) {
         List<Category> tempList = new ArrayList<>();
-        if (query.isEmpty()) {
-            tempList.addAll(categoryList);
-        } else {
-            String lowerQuery = query.toLowerCase();
-            for (Category category : categoryList) {
-                if (category.getName().toLowerCase().contains(lowerQuery)) {
-                    tempList.add(category);
-                }
+        String lowerQuery = query.toLowerCase().trim();
+        for (Category category : categoryList) {
+            if (category.getName().toLowerCase().contains(lowerQuery)) {
+                tempList.add(category);
             }
         }
         adapter.updateList(tempList);
+
+        countText.setText(UiUtils.quantity(requireContext(), R.plurals.count_categories, tempList.size()));
+        if (categoryList.isEmpty()) {
+            UiUtils.showEmptyState(emptyState, true, R.drawable.ic_category,
+                    R.string.empty_categories_title, R.string.empty_categories_body);
+        } else {
+            UiUtils.showEmptyState(emptyState, tempList.isEmpty(), R.drawable.ic_search,
+                    R.string.empty_search_title, R.string.empty_search_body);
+        }
     }
 }

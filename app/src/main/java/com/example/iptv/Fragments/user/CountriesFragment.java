@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.R;
@@ -20,6 +19,7 @@ import com.example.iptv.activities.user.activity_user_filtered_channels;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
 import com.example.iptv.adapters.user.CountryAdapter;
+import com.example.iptv.ui.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +29,10 @@ public class CountriesFragment extends Fragment {
     private RecyclerView recyclerView;
     private CountryAdapter adapter;
     private List<Country> countryList;
-    private List<Country> filteredList;
     private DBHelper dbHelper;
     private EditText searchEditText;
-    private TextView pageTitle;
+    private TextView countText;
+    private View emptyState;
 
     public CountriesFragment() {}
 
@@ -41,35 +41,26 @@ public class CountriesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_countries, container, false);
 
-        // Initialize views
         recyclerView = view.findViewById(R.id.recycler_countries);
         searchEditText = view.findViewById(R.id.CountriesUserSearchEditText);
+        countText = view.findViewById(R.id.countText);
+        emptyState = view.findViewById(R.id.emptyState);
 
-        if (pageTitle != null) {
-            pageTitle.setText("All Countries List");
-        } else {
-            System.err.println("CountriesListUserPageLabel not found in layout.");
-        }
+        UiUtils.setupGrid(recyclerView, R.dimen.tile_min_row);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
-
-        // Initialize database helper and DAO
         dbHelper = new DBHelper(requireContext());
         CountryDAO countryDAO = new CountryDAO(dbHelper.getWritableDatabase());
-        countryList = countryDAO.getAll(); // Fetch all countries
-        filteredList = new ArrayList<>(countryList); // Initialize filtered list
+        countryList = countryDAO.getAll();
 
-        // Initialize adapter
-        adapter = new CountryAdapter(requireContext(), filteredList, country -> {
+        adapter = new CountryAdapter(requireContext(), new ArrayList<>(countryList), country -> {
             Intent intent = new Intent(requireContext(), activity_user_filtered_channels.class);
             intent.putExtra("filterType", "country");
             intent.putExtra("filterId", country.getId());
+            intent.putExtra("filterName", country.getName());
             startActivity(intent);
         });
-
         recyclerView.setAdapter(adapter);
 
-        // Add search functionality
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -83,22 +74,27 @@ public class CountriesFragment extends Fragment {
             public void afterTextChanged(Editable s) { }
         });
 
+        filterCountries("");
         return view;
     }
 
     private void filterCountries(String query) {
         List<Country> tempList = new ArrayList<>();
-        if (query.isEmpty()) {
-            tempList.addAll(countryList);
-        } else {
-            String lowerQuery = query.toLowerCase();
-            for (Country country : countryList) {
-                if (country.getName().toLowerCase().contains(lowerQuery)) {
-                    tempList.add(country);
-                }
+        String lowerQuery = query.toLowerCase().trim();
+        for (Country country : countryList) {
+            if (country.getName().toLowerCase().contains(lowerQuery)) {
+                tempList.add(country);
             }
         }
         adapter.updateList(tempList);
-    }
 
+        countText.setText(UiUtils.quantity(requireContext(), R.plurals.count_countries, tempList.size()));
+        if (countryList.isEmpty()) {
+            UiUtils.showEmptyState(emptyState, true, R.drawable.ic_public,
+                    R.string.empty_countries_title, R.string.empty_countries_body);
+        } else {
+            UiUtils.showEmptyState(emptyState, tempList.isEmpty(), R.drawable.ic_search,
+                    R.string.empty_search_title, R.string.empty_search_body);
+        }
+    }
 }

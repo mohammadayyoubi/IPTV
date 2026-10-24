@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="100dp"
-    android:layout_height="120dp"
-    android:layout_margin="4dp"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:clickable="true"
-    android:focusable="true"
-    android:elevation="2dp"
-    android:backgroundTint="#FFFFFF"
-    app:cardCornerRadius="8dp">
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#1D1E33"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="4dp">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="68dp"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_sm">
+
+        <ImageView
+            android:id="@+id/image_category_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_avatar_circle"
+            android:importantForAccessibility="no"
+            android:padding="9dp"
+            android:src="@drawable/ic_category" />
 
         <TextView
             android:id="@+id/text_category_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Category"
-            android:textColor="#FFFFFFFF"
-            android:textSize="14sp"
-            android:gravity="center"
+            android:layout_marginStart="@dimen/space_sm"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="2"
-            android:padding="4dp" />
+            android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+            android:textSize="14sp" />
 
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_chevron_right"
+            android:tint="@color/text_tertiary" />
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

@@ -1,9 +1,82 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.IPTV" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!--
+        IPTV "dark cinema" theme. The app is intentionally always dark: deep layered
+        surfaces, one accent (refined red) used sparingly for primary actions,
+        selection and the LIVE badge.
+    -->
+    <style name="Base.Theme.IPTV" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Accent -->
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorOnPrimary">@color/on_accent</item>
+        <item name="colorPrimaryContainer">@color/accent_container</item>
+        <item name="colorOnPrimaryContainer">@color/on_accent_container</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorOnSecondary">@color/on_accent</item>
+        <item name="colorSecondaryContainer">@color/accent_container</item>
+        <item name="colorOnSecondaryContainer">@color/on_accent_container</item>
+        <item name="colorTertiary">@color/tint_6</item>
+
+        <!-- Surfaces -->
+        <item name="android:colorBackground">@color/bg</item>
+        <item name="colorSurface">@color/bg</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/surface_high</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="colorSurfaceContainerLowest">@color/bg</item>
+        <item name="colorSurfaceContainerLow">@color/surface</item>
+        <item name="colorSurfaceContainer">@color/surface</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_high</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_highest</item>
+        <item name="colorOutline">@color/outline_strong</item>
+        <item name="colorOutlineVariant">@color/outline</item>
+        <item name="colorError">@color/danger</item>
+        <item name="colorOnError">@color/black</item>
+
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_tertiary</item>
+        <item name="android:windowBackground">@color/bg</item>
+
+        <!-- System bars: drawn edge-to-edge, light icons on dark content -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+
+        <!-- Default component styles -->
+        <item name="materialCardViewStyle">@style/Widget.IPTV.Card</item>
+        <item name="textInputStyle">@style/Widget.IPTV.TextField</item>
+        <item name="materialButtonStyle">@style/Widget.IPTV.Button</item>
+        <item name="bottomNavigationStyle">@style/Widget.IPTV.BottomNav</item>
+        <item name="navigationRailStyle">@style/Widget.IPTV.NavRail</item>
+        <item name="extendedFloatingActionButtonStyle">@style/Widget.IPTV.ExtendedFab</item>
+        <item name="toolbarStyle">@style/Widget.IPTV.Toolbar</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.IPTV.Dialog</item>
+        <item name="linearProgressIndicatorStyle">@style/Widget.IPTV.LinearProgress</item>
     </style>
 
     <style name="Theme.IPTV" parent="Base.Theme.IPTV" />
+
+    <!-- Player screen: black window so rotation / fullscreen never flashes the page colour -->
+    <style name="Theme.IPTV.Player" parent="Theme.IPTV">
+        <item name="android:windowBackground">@color/player_bg</item>
+    </style>
+
+    <style name="ThemeOverlay.IPTV.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/surface_high</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_high</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.IPTV.Dialog</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/IPTV.DialogTitle</item>
+        <item name="textInputStyle">@style/Widget.IPTV.TextField.OnDialog</item>
+    </style>
+
+    <style name="IPTV.DialogTitle" parent="MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ShapeAppearance.IPTV.Dialog" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
+    </style>
 </resources>

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.OOP.Category;
 import com.example.iptv.R;
+import com.example.iptv.ui.UiUtils;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         Category category = categoryList.get(position);
         holder.textView.setText(category.getName());
+        UiUtils.applyCategoryIcon(holder.iconView, category.getName());
         holder.itemView.setOnClickListener(v -> listener.onCategoryClick(category));
     }
     public void updateList(List<Category> newList) {
@@ -55,10 +57,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
+        android.widget.ImageView iconView;
 
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.text_category_name);
+            iconView = itemView.findViewById(R.id.image_category_icon);
         }
     }
 }

@@ -1,97 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="#0A0E21"
-    android:padding="16dp"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg">
 
-    <!-- Heading -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="8dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/AllChannelsUserPageLabel"
-            android:layout_width="wrap_content"
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Channel Management"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.1"
-            android:layout_marginBottom="4dp" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/space_xs"
+            android:paddingTop="@dimen/space_xs"
+            android:paddingEnd="@dimen/page_gutter">
 
-        <View
-            android:layout_width="320dp"
-            android:layout_height="3dp"
-            android:background="#E50914"
-            android:layout_marginBottom="12dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/backButton"
+                style="@style/Widget.IPTV.IconButton.Row"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/back"
+                app:icon="@drawable/ic_arrow_back"
+                app:iconTint="@color/text_primary" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_2xs"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/AllChannelsUserPageLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/channel_management"
+                    android:textAppearance="@style/TextAppearance.IPTV.Title" />
+
+                <TextView
+                    android:id="@+id/countText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/deleteAllChannelsButton"
+                style="@style/Widget.IPTV.IconButton.Danger"
+                android:contentDescription="@string/delete_all"
+                android:tooltipText="@string/delete_all"
+                app:icon="@drawable/ic_delete_sweep" />
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.IPTV.SearchField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/page_gutter"
+            android:layout_marginTop="@dimen/space_sm"
+            android:layout_marginEnd="@dimen/page_gutter"
+            android:layout_marginBottom="@dimen/space_sm">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/AllChannelsSearchEditText"
+                style="@style/Widget.IPTV.SearchInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_channels" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/channelRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingStart="@dimen/page_gutter"
+                android:paddingTop="@dimen/space_2xs"
+                android:paddingEnd="@dimen/page_gutter"
+                android:paddingBottom="@dimen/fab_clearance" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                app:indicatorColor="@color/accent" />
+
+            <include
+                android:id="@+id/emptyState"
+                layout="@layout/view_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+        </FrameLayout>
     </LinearLayout>
 
-    <!-- Search Bar -->
-    <EditText
-        android:id="@+id/AllChannelsSearchEditText"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="Search channels..."
-        android:background="@drawable/search_background"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#AAAAAA"
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:drawablePadding="8dp"
-        android:paddingHorizontal="16dp"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Button Group -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="16dp"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/addChannelButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Add Channel"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#E50914"
-            android:textSize="16sp"
-            android:layout_marginEnd="8dp" />
-
-        <Button
-            android:id="@+id/deleteAllChannelsButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Delete All"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#8B0000"
-            android:textSize="16sp"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
-
-    <!-- Progress Bar -->
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/addChannelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Channel List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/channelRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical" />
-</LinearLayout>
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/page_gutter"
+        android:text="@string/add_channel"
+        app:icon="@drawable/ic_add" />
+</FrameLayout>

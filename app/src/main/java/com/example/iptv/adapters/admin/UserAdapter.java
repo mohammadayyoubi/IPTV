@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.R;
+import com.example.iptv.ui.UiUtils;
 
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User user = userList.get(position);
         holder.emailTextView.setText(user.email);
+        UiUtils.applyAvatar(holder.initialTextView, user.email);
         holder.editButton.setOnClickListener(v -> listener.onEdit(user));
         holder.deleteButton.setOnClickListener(v -> listener.onDelete(user));
     }
@@ -56,12 +58,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
-        TextView emailTextView;
-        ImageButton editButton, deleteButton;
+        TextView emailTextView, initialTextView;
+        View editButton, deleteButton;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             emailTextView = itemView.findViewById(R.id.userEmailTextView);
+            initialTextView = itemView.findViewById(R.id.userInitialTextView);
             editButton = itemView.findViewById(R.id.editUserButton);
             deleteButton = itemView.findViewById(R.id.deleteUserButton);
         }

@@ -5,13 +5,11 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +21,7 @@ import com.example.iptv.activities.admin.activity_add_channel;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.ChannelDAO;
 import com.example.iptv.database.CountryDAO;
+import com.example.iptv.ui.InputDialog;
 
 import java.util.List;
 
@@ -58,23 +57,23 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ChannelV
         holder.nameTextView.setText(channel.getName());
 
         // Get and display category
-        Category category = categoryDAO.getById(channel.getCategoryId());
+        Category category = categoryCache().get(channel.getCategoryId());
         holder.categoryTextView.setText(category != null ? category.getName() : "Unknown");
 
         // Load logo
         Glide.with(context)
                 .load(channel.getLogoUrl())
-                .placeholder(R.drawable.placeholder)
+                .placeholder(R.drawable.ic_channel_placeholder)
+                .error(R.drawable.ic_channel_placeholder)
                 .into(holder.channelLogoImageView);
 
         // Load country flag
-        Country country = countryDAO.getById(channel.getCountryId());
-        if (country != null && country.getFlagUrl() != null) {
-            Glide.with(context)
-                    .load(country.getFlagUrl())
-                    .placeholder(R.drawable.placeholder_flag)
-                    .into(holder.countryFlagImageView);
-        }
+        Country country = countryCache().get(channel.getCountryId());
+        Glide.with(context)
+                .load(country != null ? country.getFlagUrl() : null)
+                .placeholder(R.drawable.ic_flag_placeholder)
+                .error(R.drawable.ic_flag_placeholder)
+                .into(holder.countryFlagImageView);
 
         holder.editButton.setOnClickListener(v -> {
             Intent intent = new Intent(context, activity_add_channel.class);
@@ -82,17 +81,14 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ChannelV
             context.startActivity(intent);
         });
         holder.deleteButton.setOnClickListener(v -> {
-            new AlertDialog.Builder(context)
-                    .setTitle("Delete Channel")
-                    .setMessage("Are you sure you want to delete this channel?")
-                    .setPositiveButton("Yes", (dialog, which) -> {
+            InputDialog.confirm(context, "Delete channel",
+                    "Delete \"" + channel.getName() + "\" and all of its servers?",
+                    context.getString(R.string.delete), true, () -> {
                         ChannelDAO channelDAO = new ChannelDAO(new com.example.iptv.database.DBHelper(context).getWritableDatabase());
                         channelDAO.deleteChanelByID(channel.getId());
                         Toast.makeText(context, "Channel deleted", Toast.LENGTH_SHORT).show();
                         refreshCallback.run();
-                    })
-                    .setNegativeButton("Cancel", null)
-                    .show();
+                    });
         });
 
     }
@@ -100,6 +96,34 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ChannelV
     @Override
     public int getItemCount() {
         return channelList.size();
+    }
+
+    // Countries / categories are few: load them once instead of two queries per row
+    private java.util.Map<Integer, Country> countries;
+    private java.util.Map<Integer, Category> categories;
+
+    private java.util.Map<Integer, Country> countryCache() {
+        if (countries == null) {
+            countries = new java.util.HashMap<>();
+            for (Country c : countryDAO.getAll()) countries.put(c.getId(), c);
+        }
+        return countries;
+    }
+
+    private java.util.Map<Integer, Category> categoryCache() {
+        if (categories == null) {
+            categories = new java.util.HashMap<>();
+            for (Category c : categoryDAO.getAll()) categories.put(c.getId(), c);
+        }
+        return categories;
+    }
+
+    /** Adds the next page at the end of the list. */
+    public void appendData(List<Channel> more) {
+        if (!(channelList instanceof java.util.ArrayList)) channelList = new java.util.ArrayList<>(channelList);
+        int start = channelList.size();
+        channelList.addAll(more);
+        notifyItemRangeInserted(start, more.size());
     }
 
     public void updateData(List<Channel> newChannels) {
@@ -110,7 +134,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ChannelV
     public static class ChannelViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView, categoryTextView;
         ImageView channelLogoImageView, countryFlagImageView;
-        ImageButton editButton, deleteButton;
+        View editButton, deleteButton;
 
         public ChannelViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -4,14 +4,22 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-05-20T16:32:21.309368900Z">
+        <DropdownSelection timestamp="2026-10-24T20:26:07.601672800Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\mra21\.android\avd\Small_Phone_API_36.avd" />
+              <DeviceId pluginId="Wireless" identifier="serviceName=adb-083752524E010127-DnAHJ6" />
             </handle>
           </Target>
         </DropdownSelection>
-        <DialogSelection />
+        <DialogSelection>
+          <targets>
+            <Target type="DEFAULT_BOOT">
+              <handle>
+                <DeviceId pluginId="Wireless" identifier="serviceName=adb-083752524E010127-DnAHJ6" />
+              </handle>
+            </Target>
+          </targets>
+        </DialogSelection>
       </SelectionState>
       <SelectionState runConfigName="Unnamed">
         <option name="selectionMode" value="DROPDOWN" />

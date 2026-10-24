@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <!-- ── Surfaces (darkest → lightest) ─────────────────────────── -->
+    <color name="bg">#0B0D12</color>
+    <color name="surface">#151821</color>
+    <color name="surface_high">#1D212C</color>
+    <color name="surface_highest">#262B38</color>
+    <color name="outline">#2A2F3B</color>
+    <color name="outline_strong">#3A4152</color>
+    <color name="scrim">#99000000</color>
+    <color name="player_bg">#000000</color>
+    <color name="ripple_light">#1FFFFFFF</color>
+
+    <!-- ── Brand accent (refined red) ─────────────────────────────── -->
+    <color name="accent">#E5484D</color>
+    <color name="accent_pressed">#C93A3F</color>
+    <color name="on_accent">#FFFFFF</color>
+    <color name="accent_container">#3A1A1D</color>
+    <color name="on_accent_container">#FFB3B5</color>
+
+    <!-- ── Text ───────────────────────────────────────────────────── -->
+    <color name="text_primary">#F2F4F8</color>
+    <color name="text_secondary">#9AA3B2</color>
+    <color name="text_tertiary">#6B7383</color>
+
+    <!-- ── Status ─────────────────────────────────────────────────── -->
+    <color name="success">#3DD68C</color>
+    <color name="warning">#F5B54A</color>
+    <color name="danger">#FF6369</color>
+    <color name="danger_container">#3A1A1D</color>
+
+    <!-- ── Avatar tints for categories / users (muted, dark-friendly) ─ -->
+    <color name="tint_1">#5B8DEF</color>
+    <color name="tint_2">#3DD68C</color>
+    <color name="tint_3">#F5B54A</color>
+    <color name="tint_4">#B07CFF</color>
+    <color name="tint_5">#FF7A59</color>
+    <color name="tint_6">#22C3E6</color>
+    <color name="tint_7">#FF6FAE</color>
+    <color name="tint_8">#A3B33D</color>
+
     <color name="white">#FFFFFFFF</color>
-    <color name="ll.xml">#FFFFFF</color> <!-- White or your preferred selected color -->
-    <color name="nav_item_unselected">#9E9E9E</color> <!-- Grey or your preferred unselected color -->
-    <color name="myRed">#E50914</color>
-    <color name="accent_gold">#d4af37</color>
-
-
+    <color name="black">#FF000000</color>
 </resources>

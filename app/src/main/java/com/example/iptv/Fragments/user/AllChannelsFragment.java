@@ -4,24 +4,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.iptv.HomeCountry;
 import com.example.iptv.R;
 import com.example.iptv.activities.admin.LoginActivity;
 import com.example.iptv.adapters.user.ChannelUserAdapter;
 import com.example.iptv.OOP.Channel;
-import com.example.iptv.database.ChannelDAO;
-import com.example.iptv.database.DBHelper;
+import com.example.iptv.database.ChannelQuery;
+import com.example.iptv.ui.AvailabilityFilter;
+import com.example.iptv.ui.ChannelPager;
+import com.example.iptv.ui.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +30,11 @@ public class AllChannelsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ChannelUserAdapter adapter;
-    private List<Channel> channelList;
-    private DBHelper dbHelper;
     private EditText searchEditText;
-    private TextView pageTitle;
+    private TextView countText;
+    private View emptyState;
+    private AvailabilityFilter availabilityFilter;
+    private ChannelPager pager;
 
     public AllChannelsFragment() {
         // Required empty public constructor
@@ -44,32 +45,49 @@ public class AllChannelsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_channels, container, false);
 
-        // Initialize views
         recyclerView = view.findViewById(R.id.recycler_all_channels);
         searchEditText = view.findViewById(R.id.AllChannelsSearchEditText);
+        countText = view.findViewById(R.id.countText);
+        emptyState = view.findViewById(R.id.emptyState);
 
-        if (pageTitle != null) {
-            pageTitle.setText("All Channels List");
-        } else {
-            Log.e("AllChannelsFragment", "TextView AllChannelsListUserPageLabel not found in layout!");
-        }
-
-        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
-        recyclerView.addItemDecoration(new SpacesItemDecoration(12));
-
-        dbHelper = new DBHelper(requireContext());
-        ChannelDAO channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
-        channelList = channelDAO.getAll();
-        //print all chennelservers
-        for (Channel channel : channelList) {
-            Log.d("AllChannelsFragment", "Channel: " + channel.getName());
-            for (int i = 0; i < channel.getServers().size(); i++) {
-                Log.d("AllChannelsFragment", "Server: " + channel.getServers().get(i).getStreamUrl());
-            }
-        }
-
-        adapter = new ChannelUserAdapter(requireContext(), new ArrayList<>(channelList));
+        UiUtils.setupGrid(recyclerView, R.dimen.tile_min_channel);
+        adapter = new ChannelUserAdapter(requireContext(), new ArrayList<>());
         recyclerView.setAdapter(adapter);
+
+        // Channels are paged from SQLite as the user scrolls (see ChannelPager)
+        pager = new ChannelPager(requireContext(), recyclerView, new ChannelPager.Sink() {
+            @Override
+            public void onFirstPage(List<Channel> channels) {
+                adapter.updateList(channels);
+                recyclerView.scrollToPosition(0);
+            }
+
+            @Override
+            public void onNextPage(List<Channel> channels) {
+                adapter.appendList(channels);
+            }
+
+            @Override
+            public void onCounts(ChannelQuery.Counts counts) {
+                showCounts(counts);
+            }
+        });
+
+        availabilityFilter = new AvailabilityFilter(view.findViewById(R.id.availabilityFilter),
+                view.findViewById(R.id.filterButton), availability -> {
+            ChannelQuery q = pager.getQuery().copy();
+            q.availability = availability;
+            pager.setQuery(q);
+        });
+        pager.getQuery().availability = availabilityFilter.getAvailability();
+        // Channels of the viewer's own country are listed first
+        pager.getQuery().priorityCountryId = HomeCountry.countryId(requireContext());
+        HomeCountry.refreshAsync(requireContext(), () -> {
+            if (!isAdded()) return;
+            ChannelQuery q = pager.getQuery().copy();
+            q.priorityCountryId = HomeCountry.countryId(requireContext());
+            pager.setQuery(q);
+        });
 
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -77,42 +95,48 @@ public class AllChannelsFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterChannels(s.toString());
+                pager.setSearchDebounced(s.toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) { }
         });
 
-        ImageButton adminLoginButton = view.findViewById(R.id.btn_admin_login);
-        adminLoginButton.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), LoginActivity.class);
-            startActivity(intent);
-        });
+        view.findViewById(R.id.btn_admin_login).setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), LoginActivity.class)));
 
         return view;
     }
 
-    private void filterChannels(String query) {
-        List<Channel> filteredList = new ArrayList<>();
-        String lowerQuery = query.toLowerCase();
-        for (Channel channel : channelList) {
-            if (channel.getName().toLowerCase().contains(lowerQuery)) {
-                filteredList.add(channel);
-            }
+    private void showCounts(ChannelQuery.Counts counts) {
+        availabilityFilter.updateCounts(counts);
+        int shown = counts.of(pager.getQuery().availability);
+        String text = UiUtils.quantity(requireContext(), R.plurals.count_channels, shown);
+        if (pager.getQuery().availability != ChannelQuery.Availability.WATCHABLE) {
+            text += " · " + availabilityFilter.label();
         }
-        adapter.updateList(filteredList);
+        countText.setText(text);
+        boolean searching = !pager.getQuery().search.trim().isEmpty();
+        if (counts.all == 0 && !searching) {
+            UiUtils.showEmptyState(emptyState, true, R.drawable.ic_live_tv,
+                    R.string.empty_channels_title, R.string.empty_channels_body);
+        } else if (shown == 0) {
+            availabilityFilter.showEmpty(emptyState, searching);
+        } else {
+            emptyState.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        refreshChannels();
+        // Picks up favorites / statuses changed on the player screen
+        pager.reload();
     }
 
-    public void refreshChannels() {
-        ChannelDAO channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
-        channelList = channelDAO.getAll();
-        adapter.updateList(new ArrayList<>(channelList));
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        pager.destroy();
     }
 }

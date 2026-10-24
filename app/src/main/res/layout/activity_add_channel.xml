@@ -1,161 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#0A0E21"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp">
+    android:background="@color/bg"
+    android:orientation="vertical">
 
+    <!-- Header -->
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/space_xs"
+        android:paddingTop="@dimen/space_xs"
+        android:paddingEnd="@dimen/page_gutter"
+        android:paddingBottom="@dimen/space_xs">
 
-        <!-- Header -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="1dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/backButton"
+            style="@style/Widget.IPTV.IconButton.Row"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/back"
+            app:icon="@drawable/ic_arrow_back"
+            app:iconTint="@color/text_primary" />
 
-            <TextView
-                android:id="@+id/AddChannelPageLable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Channel"
-                android:textColor="#FFFFFF"
-                android:textSize="26sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="6dp"/>
-
-            <View
-                android:layout_width="175dp"
-                android:layout_height="2dp"
-                android:background="#E50914"
-                android:layout_marginBottom="16dp"/>
-        </LinearLayout>
-
-        <!-- Channel Name -->
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/AddChannelPageLable"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Channel Name"
-            android:textColor="#B0B0B0"/>
-        <EditText
-            android:id="@+id/channelNameEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/search_background"
-            android:textColor="#FFFFFF"
-            android:hint="Example Channel"
-            android:padding="12dp"/>
-
-        <!-- Logo URL and Preview -->
-        <TextView
-            android:layout_marginTop="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Logo URL"
-            android:textColor="#B0B0B0"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-            <EditText
-                android:id="@+id/logoUrlEditText"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:hint="https://example.com/logo.png"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/search_background"
-                android:padding="12dp"/>
-            <ImageView
-                android:id="@+id/logoPreviewImageView"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginStart="12dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/placeholder"/>
-        </LinearLayout>
-
-        <!-- Category Spinner -->
-        <TextView
-            android:layout_marginTop="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category"
-            android:textColor="#B0B0B0"/>
-        <Spinner
-            android:id="@+id/categorySpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/search_background"
-            android:padding="12dp"/>
-
-        <!-- Country Spinner -->
-        <TextView
-            android:layout_marginTop="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Country"
-            android:textColor="#B0B0B0"/>
-        <Spinner
-            android:id="@+id/countrySpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/search_background"
-            android:padding="12dp"/>
-
-        <!-- Server Management -->
-        <TextView
-            android:layout_marginTop="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Servers"
-            android:textColor="#B0B0B0"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/serverUrlEditText"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:hint="Server URL"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/search_background"
-                android:padding="12dp"/>
-            <Button
-                android:id="@+id/addServerButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Server"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#E50914"
-                android:layout_marginStart="8dp"/>
-        </LinearLayout>
-
-        <!-- Server list (added dynamically in Java) -->
-        <LinearLayout
-            android:id="@+id/serverListLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="8dp" />
-
-        <!-- Save Button -->
-        <Button
-            android:id="@+id/saveChannelButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="#E50914"
-            android:textSize="18sp"/>
-
+            android:layout_marginStart="@dimen/space_2xs"
+            android:layout_weight="1"
+            android:text="@string/add_channel"
+            android:textAppearance="@style/TextAppearance.IPTV.Title" />
     </LinearLayout>
-</ScrollView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/page_gutter"
+            android:paddingEnd="@dimen/page_gutter"
+            android:paddingBottom="@dimen/space_lg">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="@dimen/form_max_width">
+
+                <!-- Details -->
+                <TextView
+                    style="@style/IPTV.SectionLabel"
+                    android:layout_marginTop="@dimen/space_xs"
+                    android:text="@string/section_details" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_md">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:background="@drawable/bg_logo_well_rounded">
+
+                            <ImageView
+                                android:id="@+id/logoPreviewImageView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:contentDescription="@string/logo_url"
+                                android:padding="@dimen/space_md"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_channel_placeholder" />
+                        </FrameLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/channelNameField"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_md"
+                            android:hint="@string/channel_name"
+                            app:startIconDrawable="@drawable/ic_live_tv">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/channelNameEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textCapWords"
+                                android:maxLines="1"
+                                android:textColor="@color/text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/logoUrlField"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_sm"
+                            android:hint="@string/logo_url"
+                            app:endIconContentDescription="Preview logo"
+                            app:endIconDrawable="@drawable/ic_refresh"
+                            app:endIconMode="custom"
+                            app:startIconDrawable="@drawable/ic_image">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/logoUrlEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textUri"
+                                android:maxLines="1"
+                                android:textColor="@color/text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Classification -->
+                <TextView
+                    style="@style/IPTV.SectionLabel"
+                    android:text="@string/section_classification" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_md">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/categoryField"
+                            style="@style/Widget.IPTV.TextField.Dropdown"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/category"
+                            app:startIconDrawable="@drawable/ic_category">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/categoryDropdown"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:completionThreshold="0"
+                                android:inputType="text"
+                                android:textColor="@color/text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/countryField"
+                            style="@style/Widget.IPTV.TextField.Dropdown"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_sm"
+                            android:hint="@string/country"
+                            app:startIconDrawable="@drawable/ic_public">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/countryDropdown"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:completionThreshold="0"
+                                android:inputType="text"
+                                android:textColor="@color/text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Servers -->
+                <TextView
+                    style="@style/IPTV.SectionLabel"
+                    android:text="@string/section_servers" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_md">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/serverUrlField"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:hint="@string/stream_url"
+                                app:startIconDrawable="@drawable/ic_link">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/serverUrlEditText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:imeOptions="actionDone"
+                                    android:inputType="textUri"
+                                    android:maxLines="1"
+                                    android:textColor="@color/text_primary" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/addServerButton"
+                                style="@style/Widget.IPTV.Button.Tonal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_xs"
+                                android:layout_marginTop="6dp"
+                                android:minHeight="56dp"
+                                android:text="@string/add_server"
+                                app:icon="@drawable/ic_add" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/serverEmptyText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_sm"
+                            android:text="@string/no_servers_added"
+                            android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+
+                        <LinearLayout
+                            android:id="@+id/serverListLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_2xs"
+                            android:orientation="vertical" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <!-- Sticky action bar -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/outline" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        android:paddingStart="@dimen/page_gutter"
+        android:paddingTop="@dimen/space_sm"
+        android:paddingEnd="@dimen/page_gutter"
+        android:paddingBottom="@dimen/space_sm">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveChannelButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/save_channel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="@dimen/form_max_width" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

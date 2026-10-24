@@ -1,6 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/nav_all_channels" android:title="All Channels" android:icon="@android:drawable/ic_menu_view" />
-    <item android:id="@+id/nav_categories" android:title="Categories" android:icon="@android:drawable/ic_menu_sort_by_size" />
-    <item android:id="@+id/nav_countries" android:title="Countries" android:icon="@android:drawable/ic_menu_mapmode" />
-    <item android:id="@+id/nav_favorites" android:title="Favorites" android:icon="@android:drawable/btn_star_big_on" />
+    <item
+        android:id="@+id/nav_all_channels"
+        android:icon="@drawable/ic_live_tv"
+        android:title="@string/nav_home" />
+    <item
+        android:id="@+id/nav_categories"
+        android:icon="@drawable/ic_category"
+        android:title="@string/nav_categories" />
+    <item
+        android:id="@+id/nav_countries"
+        android:icon="@drawable/ic_public"
+        android:title="@string/nav_countries" />
+    <item
+        android:id="@+id/nav_favorites"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/nav_favorites" />
 </menu>

@@ -1,35 +1,26 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Phone: content + bottom navigation. Wide screens use layout-w600dp (navigation rail). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical">
 
-    <!-- Main content -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-    <!-- Admin Sign-In Button -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/outline" />
 
-    <Button
-        android:id="@+id/button_admin_signin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Admin Sign In"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="600dp"
-        android:backgroundTint="@color/myRed"
-        android:textColor="@android:color/white" />
-
-    <!-- BottomNavigationView overlaid -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:menu="@menu/nav_menu"
-        app:itemIconTint="@color/selector_nav_item"
-        app:itemTextColor="@color/selector_nav_item"
-        android:background="#1D1E33" />
-
-</FrameLayout>
+        app:menu="@menu/nav_menu" />
+</LinearLayout>

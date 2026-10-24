@@ -1,75 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#1A1B2E">
+    android:orientation="vertical">
 
-    <!-- Heading with Login Icon -->
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:paddingBottom="8dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingStart="@dimen/page_gutter"
+        android:paddingTop="@dimen/space_lg"
+        android:paddingEnd="@dimen/page_gutter">
 
-        <TextView
-            android:id="@+id/AllChannelsUserPageLabel"
-            android:layout_width="232dp"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="85dp"
-            android:layout_marginBottom="4dp"
             android:layout_weight="1"
-            android:letterSpacing="0.1"
-            android:text="All Channels"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <ImageButton
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/bg_live_dot"
+                android:drawablePadding="6dp"
+                android:gravity="center_vertical"
+                android:text="@string/home_eyebrow"
+                android:textAppearance="@style/TextAppearance.IPTV.Overline"
+                android:textColor="@color/accent" />
+
+            <TextView
+                android:id="@+id/AllChannelsUserPageLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/home_title"
+                android:textAppearance="@style/TextAppearance.IPTV.Display" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_admin_login"
-            android:layout_width="60dp"
-            android:layout_height="50dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_myplaces"
-            />
+            style="@style/Widget.IPTV.IconButton"
+            android:contentDescription="@string/admin_sign_in"
+            android:tooltipText="@string/admin_sign_in"
+            app:icon="@drawable/ic_shield" />
     </LinearLayout>
 
-    <View
-        android:layout_width="200dp"
-        android:layout_height="3dp"
-        android:background="#E50914"
-        android:layout_gravity="center_horizontal"
-
-        android:layout_marginBottom="12dp" />
-
-    <!-- Search Bar -->
-    <EditText
-        android:id="@+id/AllChannelsSearchEditText"
+    <!-- Search -->
+    <!-- Search + filter button (opens the availability options below) -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="Search channels..."
-        android:background="@drawable/search_background"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#AAAAAA"
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:drawablePadding="8dp"
-        android:paddingHorizontal="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center_vertical"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/page_gutter"
+        android:layout_marginTop="@dimen/space_md"
+        android:layout_marginEnd="@dimen/page_gutter"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_all_channels"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.IPTV.SearchField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/AllChannelsSearchEditText"
+                style="@style/Widget.IPTV.SearchInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_channels" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/filterButton"
+            style="@style/Widget.IPTV.IconButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/space_xs"
+            android:contentDescription="@string/filter"
+            android:tooltipText="@string/filter"
+            app:cornerRadius="24dp"
+            app:icon="@drawable/ic_filter_list" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/availabilityFilter"
+        layout="@layout/view_availability_filter"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="80dp"
-        android:clipToPadding="false"/>
+        android:layout_height="wrap_content" />
 
+    <TextView
+        android:id="@+id/countText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/page_gutter"
+        android:layout_marginTop="@dimen/space_md"
+        android:layout_marginBottom="@dimen/space_xs"
+        android:textAppearance="@style/TextAppearance.IPTV.Overline" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_all_channels"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/page_gutter"
+            android:paddingTop="@dimen/space_2xs"
+            android:paddingEnd="@dimen/page_gutter"
+            android:paddingBottom="@dimen/space_lg" />
+
+        <include
+            android:id="@+id/emptyState"
+            layout="@layout/view_empty_state"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

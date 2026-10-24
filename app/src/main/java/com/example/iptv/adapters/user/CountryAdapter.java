@@ -45,7 +45,8 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
 
         Glide.with(context)
                 .load(country.getFlagUrl())
-                .placeholder(R.drawable.placeholder)
+                .placeholder(R.drawable.ic_flag_placeholder)
+                .error(R.drawable.ic_flag_placeholder)
                 .into(holder.imageCountryFlag);
 
         holder.itemView.setOnClickListener(v -> listener.onCountryClick(country));

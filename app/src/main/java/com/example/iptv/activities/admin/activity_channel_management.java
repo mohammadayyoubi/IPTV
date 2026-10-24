@@ -5,14 +5,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iptv.adapters.admin.ChannelAdapter;
@@ -20,114 +16,113 @@ import com.example.iptv.OOP.Channel;
 import com.example.iptv.R;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.ChannelDAO;
+import com.example.iptv.database.ChannelQuery;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
+import com.example.iptv.ui.BaseActivity;
+import com.example.iptv.ui.ChannelPager;
+import com.example.iptv.ui.InputDialog;
+import com.example.iptv.ui.UiUtils;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class activity_channel_management extends AppCompatActivity {
+public class activity_channel_management extends BaseActivity {
 
     private RecyclerView recyclerView;
     private ChannelAdapter adapter;
     private EditText searchEditText;
-    private ChannelDAO channelDAO;
-    private CountryDAO countryDAO;
-    private CategoryDAO categoryDAO;
-    private List<Channel> allChannels = new ArrayList<>();
-    private ProgressBar progressBar; // NEW: show loading spinner
+    private View progressBar;
+    private TextView countText;
+    private View emptyState;
+    private ChannelPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel_management);
+        UiUtils.applyInsets(findViewById(R.id.root), true, true);
 
         DBHelper dbHelper = new DBHelper(this);
-        channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
-        countryDAO = new CountryDAO(dbHelper.getWritableDatabase());
-        categoryDAO = new CategoryDAO(dbHelper.getWritableDatabase());
+        CountryDAO countryDAO = new CountryDAO(dbHelper.getWritableDatabase());
+        CategoryDAO categoryDAO = new CategoryDAO(dbHelper.getWritableDatabase());
+
+        countText = findViewById(R.id.countText);
+        emptyState = findViewById(R.id.emptyState);
+        findViewById(R.id.backButton).setOnClickListener(v -> finish());
 
         recyclerView = findViewById(R.id.channelRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setVisibility(View.GONE); // Hide until data is loaded
+        UiUtils.setupGrid(recyclerView, R.dimen.tile_min_admin_row);
 
-        progressBar = findViewById(R.id.progressBar); // Add this in your XML layout
+        progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
         searchEditText = findViewById(R.id.AllChannelsSearchEditText);
-        Button addButton = findViewById(R.id.addChannelButton);
 
-        // Initial adapter with empty list to avoid "no adapter" error
-        adapter = new ChannelAdapter(this, new ArrayList<>(), countryDAO, categoryDAO, this::refreshChannelList);
+        adapter = new ChannelAdapter(this, new ArrayList<>(), countryDAO, categoryDAO, () -> pager.reload());
         recyclerView.setAdapter(adapter);
 
-        // Load channels from DB in background
-        loadChannelsFromDatabase();
+        // Paged from SQLite: the list stays responsive with every channel in the world imported
+        pager = new ChannelPager(this, recyclerView, new ChannelPager.Sink() {
+            @Override
+            public void onFirstPage(List<Channel> channels) {
+                progressBar.setVisibility(View.GONE);
+                adapter.updateData(channels);
+                recyclerView.scrollToPosition(0);
+            }
 
-        // Filter on search
+            @Override
+            public void onNextPage(List<Channel> channels) {
+                adapter.appendData(channels);
+            }
+
+            @Override
+            public void onCounts(ChannelQuery.Counts counts) {
+                countText.setText(UiUtils.quantity(activity_channel_management.this, R.plurals.count_channels, counts.all));
+                boolean searching = !pager.getQuery().search.trim().isEmpty();
+                if (counts.all == 0 && !searching) {
+                    UiUtils.showEmptyState(emptyState, true, R.drawable.ic_live_tv,
+                            R.string.empty_channels_title, R.string.empty_channels_body);
+                } else {
+                    UiUtils.showEmptyState(emptyState, counts.all == 0, R.drawable.ic_search,
+                            R.string.empty_search_title, R.string.empty_search_body);
+                }
+            }
+        });
+
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filter(s.toString());
+                pager.setSearchDebounced(s.toString());
             }
             @Override public void afterTextChanged(Editable s) {}
         });
 
-        // Add new channel
-        addButton.setOnClickListener(v -> {
-            Intent intent = new Intent(activity_channel_management.this, activity_add_channel.class);
-            startActivity(intent);
-        });
+        ExtendedFloatingActionButton addButton = findViewById(R.id.addChannelButton);
+        addButton.setOnClickListener(v ->
+                startActivity(new Intent(activity_channel_management.this, activity_add_channel.class)));
+        UiUtils.shrinkFabOnScroll(recyclerView, addButton);
 
-        Button deleteAllButton = findViewById(R.id.deleteAllChannelsButton);
-        deleteAllButton.setOnClickListener(v -> {
-            // Confirm deletion (optional)
-            new AlertDialog.Builder(this)
-                    .setTitle("Confirm Delete")
-                    .setMessage("Are you sure you want to delete all channels?")
-                    .setPositiveButton("Yes", (dialog, which) -> {
-                        ChannelDAO channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
-                        channelDAO.deleteAllChannels(); // Add this method to ChannelDAO if not present
-                        Toast.makeText(this, "All channels deleted", Toast.LENGTH_SHORT).show();
-                        // Refresh RecyclerView
-                        refreshChannelList(); // Assuming this method reloads your channel list
-                    })
-                    .setNegativeButton("Cancel", null)
-                    .show();
-        });
-
-    }
-
-    private void loadChannelsFromDatabase() {
-        new Thread(() -> {
-            List<Channel> loaded = channelDAO.getAll(); // Load safely in background
-            runOnUiThread(() -> {
-                allChannels.clear();
-                allChannels.addAll(loaded);
-                adapter.updateData(allChannels);
-                progressBar.setVisibility(View.GONE); // Hide spinner
-                recyclerView.setVisibility(View.VISIBLE); // Show list
-            });
-        }).start();
-    }
-
-    private void refreshChannelList() {
-        loadChannelsFromDatabase(); // Use thread-safe loading again
-    }
-
-    private void filter(String text) {
-        List<Channel> filteredList = new ArrayList<>();
-        for (Channel channel : allChannels) {
-            if (channel.getName().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(channel);
-            }
-        }
-        adapter.updateData(filteredList);
+        findViewById(R.id.deleteAllChannelsButton).setOnClickListener(v ->
+                InputDialog.confirm(this, "Delete all channels",
+                        "Every channel and its servers will be removed. It can't be undone.",
+                        getString(R.string.delete_all), true, () -> {
+                            new ChannelDAO(dbHelper.getWritableDatabase()).deleteAllChannels();
+                            Toast.makeText(this, "All channels deleted", Toast.LENGTH_SHORT).show();
+                            pager.reload();
+                        }));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        refreshChannelList(); // Refresh when returning
+        pager.reload(); // Refresh when returning from add / edit
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        pager.destroy();
     }
 }

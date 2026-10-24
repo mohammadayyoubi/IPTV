@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Lets stream checks pause when the phone goes offline (NetworkMonitor) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -10,6 +12,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/iptv_logo"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.IPTV"
@@ -33,7 +36,8 @@
             android:name=".activities.user.ChannelDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:screenOrientation="sensor" /> <!-- Admin Side Activities -->
+            android:screenOrientation="sensor"
+            android:theme="@style/Theme.IPTV.Player" /> <!-- Admin Side Activities -->
         <activity
             android:name=".activities.admin.activity_add_channel"
             android:exported="false" />

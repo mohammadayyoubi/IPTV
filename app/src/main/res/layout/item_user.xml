@@ -1,41 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="12dp"
-    android:background="#1D1E33"
-    android:layout_marginBottom="8dp"
-    android:gravity="center_vertical">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/userEmailTextView"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="user@example.com"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp" />
+        android:gravity="center_vertical"
+        android:minHeight="72dp"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/space_sm"
+        android:paddingTop="@dimen/space_xs"
+        android:paddingEnd="@dimen/space_2xs"
+        android:paddingBottom="@dimen/space_xs">
 
-    <ImageButton
-        android:id="@+id/editUserButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:backgroundTint="#FFA500"
-        android:contentDescription="Edit Country"
-        android:src="@android:drawable/ic_menu_edit"
-        app:tint="#FFA500" />
+        <TextView
+            android:id="@+id/userInitialTextView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_avatar_circle"
+            android:gravity="center"
+            android:importantForAccessibility="no"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <ImageButton
-        android:id="@+id/deleteUserButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:backgroundTint="#E50914"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_menu_delete"
-        android:contentDescription="Delete Country"
-        app:tint="#E50914" />
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_sm"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/userEmailTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.IPTV.Subtitle"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/userRoleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/admin_role"
+                android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editUserButton"
+            style="@style/Widget.IPTV.IconButton.Row"
+            android:contentDescription="@string/edit"
+            app:icon="@drawable/ic_edit" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/deleteUserButton"
+            style="@style/Widget.IPTV.IconButton.Row.Danger"
+            android:contentDescription="@string/delete"
+            app:icon="@drawable/ic_delete" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

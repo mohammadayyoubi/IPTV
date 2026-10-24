@@ -6,21 +6,25 @@ Note that this page till now is only stimulating but not real controls the users
  then deploy it to firebase*/
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.*;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.*;
 
 import com.example.iptv.R;
 import com.example.iptv.adapters.admin.UserAdapter;
+import com.example.iptv.ui.BaseActivity;
+import com.example.iptv.ui.InputDialog;
+import com.example.iptv.ui.UiUtils;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.*;
 import com.google.firebase.firestore.*;
 
 import java.util.*;
 
-public class activity_user_management extends AppCompatActivity {
+public class activity_user_management extends BaseActivity {
 
     private RecyclerView userRecyclerView;
     private EditText searchEditText;
@@ -28,18 +32,23 @@ public class activity_user_management extends AppCompatActivity {
     private List<UserAdapter.User> userList = new ArrayList<>();
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
+    private TextView countText;
+    private View emptyState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_management);
+        UiUtils.applyInsets(findViewById(R.id.root), true, true);
 
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
         userRecyclerView = findViewById(R.id.userRecyclerView);
         searchEditText = findViewById(R.id.AllChannelsSearchEditText);
-        Button addButton = findViewById(R.id.addUserButton);
+        countText = findViewById(R.id.countText);
+        emptyState = findViewById(R.id.emptyState);
+        findViewById(R.id.backButton).setOnClickListener(v -> finish());
 
         adapter = new UserAdapter(userList, getLayoutInflater(), new UserAdapter.OnUserActionListener() {
             @Override
@@ -49,22 +58,20 @@ public class activity_user_management extends AppCompatActivity {
 
             @Override
             public void onDelete(UserAdapter.User user) {
-                new AlertDialog.Builder(activity_user_management.this)
-                        .setTitle("Delete User")
-                        .setMessage("Are you sure you want to delete " + user.email + "?")
-                        .setPositiveButton("Yes", (dialog, which) -> {
+                InputDialog.confirm(activity_user_management.this, "Delete admin",
+                        "Remove " + user.email + "?", getString(R.string.delete), true, () -> {
                             FirebaseAuth.getInstance().getCurrentUser().delete(); // placeholder
                             Toast.makeText(activity_user_management.this, "Deletion request (stub)", Toast.LENGTH_SHORT).show();
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
+                        });
             }
         });
 
-        userRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        UiUtils.setupGrid(userRecyclerView, R.dimen.tile_min_admin_row);
         userRecyclerView.setAdapter(adapter);
 
+        ExtendedFloatingActionButton addButton = findViewById(R.id.addUserButton);
         addButton.setOnClickListener(v -> showUserDialog(null));
+        UiUtils.shrinkFabOnScroll(userRecyclerView, addButton);
 
         searchEditText.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -78,31 +85,25 @@ public class activity_user_management extends AppCompatActivity {
     }
 
     private void showUserDialog(UserAdapter.User existingUser) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(existingUser == null ? "Add Admin" : "Edit Admin");
+        new InputDialog(this)
+                .title(existingUser == null ? getString(R.string.add_admin) : "Edit admin")
+                .icon(R.drawable.ic_person)
+                .field(getString(R.string.email), existingUser != null ? existingUser.email : null)
+                .fieldInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
+                .onSubmit((email, unused) -> {
+                    if (email.isEmpty()) return;
 
-        final EditText input = new EditText(this);
-        input.setHint("Email");
-        if (existingUser != null) input.setText(existingUser.email);
-        builder.setView(input);
-
-        builder.setPositiveButton("Save", (dialog, which) -> {
-            String email = input.getText().toString().trim();
-            if (email.isEmpty()) return;
-
-            if (existingUser == null) {
-                // You should also request password or send invite
-                Map<String, Object> newUser = new HashMap<>();
-                newUser.put("email", email);
-                firestore.collection("adminUsers").add(newUser);
-            } else {
-                firestore.collection("adminUsers").document(existingUser.uid).update("email", email);
-            }
-            loadUsersFromFirestore();
-        });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-        builder.show();
+                    if (existingUser == null) {
+                        // You should also request password or send invite
+                        Map<String, Object> newUser = new HashMap<>();
+                        newUser.put("email", email);
+                        firestore.collection("adminUsers").add(newUser);
+                    } else {
+                        firestore.collection("adminUsers").document(existingUser.uid).update("email", email);
+                    }
+                    loadUsersFromFirestore();
+                })
+                .show();
     }
 
     private void loadUsersFromFirestore() {
@@ -115,17 +116,26 @@ public class activity_user_management extends AppCompatActivity {
                     userList.add(new UserAdapter.User(id, email));
                 }
             }
-            adapter.updateList(userList);
+            filter(searchEditText.getText() == null ? "" : searchEditText.getText().toString());
         });
     }
 
     private void filter(String text) {
         List<UserAdapter.User> filtered = new ArrayList<>();
         for (UserAdapter.User user : userList) {
-            if (user.email.toLowerCase().contains(text.toLowerCase())) {
+            if (user.email.toLowerCase().contains(text.toLowerCase().trim())) {
                 filtered.add(user);
             }
         }
         adapter.updateList(filtered);
+
+        countText.setText(UiUtils.quantity(this, R.plurals.count_admins, userList.size()));
+        if (userList.isEmpty()) {
+            UiUtils.showEmptyState(emptyState, true, R.drawable.ic_group,
+                    R.string.empty_admins_title, R.string.empty_admins_body);
+        } else {
+            UiUtils.showEmptyState(emptyState, filtered.isEmpty(), R.drawable.ic_search,
+                    R.string.empty_search_title, R.string.empty_search_body);
+        }
     }
 }

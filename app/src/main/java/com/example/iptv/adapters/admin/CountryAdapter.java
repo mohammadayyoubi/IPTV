@@ -65,17 +65,18 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
     public void onBindViewHolder(@NonNull CountryViewHolder holder, int position) {
         Country country = filteredList.get(position);
         holder.nameTextView.setText(country.getName());
+        holder.idTextView.setText("ID " + country.getId());
 
-        if (country.getFlagUrl() != null && !country.getFlagUrl().isEmpty()) {
-            String url = country.getFlagUrl();
-            if (url != null && url.endsWith(".svg")) {
-                holder.flagImageView.setImageResource(android.R.drawable.ic_menu_gallery); // fallback icon
-            } else {
-                Glide.with(context).load(url).into(holder.flagImageView);
-            }
-
+        String url = country.getFlagUrl();
+        if (url == null || url.isEmpty() || url.endsWith(".svg")) {
+            // Glide can't decode SVG; show the neutral placeholder instead
+            Glide.with(context).clear(holder.flagImageView);
+            holder.flagImageView.setImageResource(R.drawable.ic_flag_placeholder);
         } else {
-            holder.flagImageView.setImageResource(android.R.drawable.ic_menu_gallery);
+            Glide.with(context).load(url)
+                    .placeholder(R.drawable.ic_flag_placeholder)
+                    .error(R.drawable.ic_flag_placeholder)
+                    .into(holder.flagImageView);
         }
 
         holder.editButton.setOnClickListener(v -> listener.onEdit(country));
@@ -89,13 +90,14 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
 
     static class CountryViewHolder extends RecyclerView.ViewHolder {
         ImageView flagImageView;
-        TextView nameTextView;
-        ImageButton editButton, deleteButton;
+        TextView nameTextView, idTextView;
+        View editButton, deleteButton;
 
         public CountryViewHolder(@NonNull View itemView) {
             super(itemView);
             flagImageView = itemView.findViewById(R.id.flagImageView);
             nameTextView = itemView.findViewById(R.id.countryNameTextView);
+            idTextView = itemView.findViewById(R.id.countryIdTextView);
             editButton = itemView.findViewById(R.id.editCountryButton);
             deleteButton = itemView.findViewById(R.id.deleteCountryButton);
         }
