@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/space_lg"
+    android:paddingTop="@dimen/space_xs"
+    android:paddingEnd="@dimen/space_lg">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/linkField"
+        style="@style/Widget.IPTV.TextField.Dropdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/play_link_hint"
+        app:helperText="@string/play_link_helper"
+        app:startIconDrawable="@drawable/ic_link">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/linkInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:completionThreshold="1"
+            android:imeOptions="actionGo"
+            android:inputType="textUri"
+            android:maxLines="3"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/linkProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_sm"
+        android:indeterminate="true"
+        android:visibility="invisible" />
+</LinearLayout>

@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Arabic (العربية). Layouts mirror right-to-left automatically (android:supportsRtl). -->
+<resources>
+    <string name="app_name">TechWrap TV</string>
+    <string name="live">مباشر</string>
+    <string name="back">رجوع</string>
+    <string name="cancel">إلغاء</string>
+    <string name="save">حفظ</string>
+    <string name="delete">حذف</string>
+    <string name="edit">تعديل</string>
+    <string name="delete_all">حذف الكل</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">القنوات</string>
+    <string name="nav_categories">الفئات</string>
+    <string name="nav_countries">الدول</string>
+    <string name="nav_favorites">المفضلة</string>
+
+    <!-- Viewer -->
+    <string name="home_eyebrow">بث مباشر</string>
+    <string name="home_title">شاهد الآن</string>
+    <string name="categories_eyebrow">تصفّح</string>
+    <string name="categories_title">الفئات</string>
+    <string name="countries_eyebrow">تصفّح</string>
+    <string name="countries_title">الدول</string>
+    <string name="favorites_eyebrow">قائمتك</string>
+    <string name="favorites_title">المفضلة</string>
+    <string name="search_channels">ابحث عن قناة</string>
+    <string name="search_categories">ابحث عن فئة</string>
+    <string name="search_countries">ابحث عن دولة</string>
+    <string name="admin_sign_in">دخول المشرف</string>
+
+    <plurals name="count_channels">
+        <item quantity="zero">لا توجد قنوات</item>
+        <item quantity="one">قناة واحدة</item>
+        <item quantity="two">قناتان</item>
+        <item quantity="few">%d قنوات</item>
+        <item quantity="many">%d قناة</item>
+        <item quantity="other">%d قناة</item>
+    </plurals>
+    <plurals name="count_categories">
+        <item quantity="zero">لا توجد فئات</item>
+        <item quantity="one">فئة واحدة</item>
+        <item quantity="two">فئتان</item>
+        <item quantity="few">%d فئات</item>
+        <item quantity="many">%d فئة</item>
+        <item quantity="other">%d فئة</item>
+    </plurals>
+    <plurals name="count_countries">
+        <item quantity="zero">لا توجد دول</item>
+        <item quantity="one">دولة واحدة</item>
+        <item quantity="two">دولتان</item>
+        <item quantity="few">%d دول</item>
+        <item quantity="many">%d دولة</item>
+        <item quantity="other">%d دولة</item>
+    </plurals>
+    <plurals name="count_servers">
+        <item quantity="zero">لا توجد خوادم</item>
+        <item quantity="one">خادم واحد</item>
+        <item quantity="two">خادمان</item>
+        <item quantity="few">%d خوادم</item>
+        <item quantity="many">%d خادمًا</item>
+        <item quantity="other">%d خادم</item>
+    </plurals>
+    <plurals name="count_admins">
+        <item quantity="zero">لا يوجد مشرفون</item>
+        <item quantity="one">مشرف واحد</item>
+        <item quantity="two">مشرفان</item>
+        <item quantity="few">%d مشرفين</item>
+        <item quantity="many">%d مشرفًا</item>
+        <item quantity="other">%d مشرف</item>
+    </plurals>
+
+    <string name="empty_channels_title">لا توجد قنوات بعد</string>
+    <string name="empty_channels_body">ستظهر القنوات هنا بعد أن يستوردها المشرف أو يضيفها.</string>
+    <string name="empty_search_title">لا توجد نتائج</string>
+    <string name="empty_search_body">جرّب اسمًا آخر أو امسح البحث.</string>
+    <string name="empty_categories_title">لا توجد فئات بعد</string>
+    <string name="empty_categories_body">تُحمَّل الفئات عند أول تسجيل دخول للمشرف.</string>
+    <string name="empty_countries_title">لا توجد دول بعد</string>
+    <string name="empty_countries_body">تُحمَّل الدول عند أول تسجيل دخول للمشرف.</string>
+    <string name="empty_favorites_title">لا توجد قنوات مفضلة بعد</string>
+    <string name="empty_favorites_body">اضغط على القلب في أي قناة لحفظها هنا.</string>
+    <string name="empty_filtered_body">لا توجد قنوات هنا بعد.</string>
+
+    <!-- Availability filter -->
+    <string name="filter_watchable">قابلة للمشاهدة</string>
+    <string name="filter_not_working">لا تعمل</string>
+    <string name="filter_no_servers">بدون خوادم</string>
+    <string name="filter_all">الكل</string>
+    <string name="filter">تصفية</string>
+    <string name="filter_recent">شوهدت مؤخرًا</string>
+    <string name="filter_recent_count">شوهدت مؤخرًا · %d</string>
+    <string name="clear_history">مسح السجل</string>
+    <string name="clear_history_title">مسح سجل المشاهدة؟</string>
+    <string name="clear_history_body">ستُفرَّغ قائمة القنوات التي شاهدتها مؤخرًا. لن تتأثر المفضلة.</string>
+    <string name="history_cleared">تم مسح سجل المشاهدة</string>
+    <string name="empty_recent_title">لم تشاهد شيئًا بعد</string>
+    <string name="empty_recent_body">تظهر هنا القنوات التي تشاهدها، الأحدث أولًا.</string>
+    <string name="filter_hide">إخفاء التصفية</string>
+    <string name="filter_watchable_count">قابلة للمشاهدة · %d</string>
+    <string name="filter_not_working_count">لا تعمل · %d</string>
+    <string name="filter_no_servers_count">بدون خوادم · %d</string>
+    <string name="filter_all_count">الكل · %d</string>
+    <string name="empty_watchable_title">لا يوجد ما يُشاهَد هنا</string>
+    <string name="empty_watchable_body">لا توجد بين هذه القنوات قناة بخادم يعمل. جرّب تصفية أخرى.</string>
+    <string name="empty_not_working_title">لا توجد قنوات معطّلة</string>
+    <string name="empty_not_working_body">تظهر القناة هنا عندما تفشل كل خوادمها. تُفحص الخوادم عند تشغيلها أو من لوحة المشرف.</string>
+    <string name="empty_no_servers_title">كل القنوات لديها خادم</string>
+    <string name="empty_no_servers_body">تظهر هنا القنوات التي ليس لها أي رابط بث.</string>
+    <string name="tile_no_servers">بدون خوادم</string>
+    <string name="tile_not_working">لا تعمل</string>
+    <string name="offline">غير متاحة</string>
+
+    <!-- Admin: import options -->
+    <string name="update_database">تحديث قاعدة البيانات</string>
+    <string name="update_database_desc">إضافة القنوات والخوادم والشعارات والفئات الجديدة من المصادر</string>
+    <string name="import_scope">الدول</string>
+    <string name="scope_my_countries">دولي</string>
+    <string name="scope_all_countries">كل الدول</string>
+    <string name="import_which_channels">القنوات المراد استيرادها</string>
+    <string name="import_filter_all">الكل</string>
+    <string name="import_filter_servers">لها خوادم</string>
+    <string name="import_filter_working">تعمل</string>
+    <string name="import_filter_all_help">كل القنوات، حتى التي ليس لها رابط بث.</string>
+    <string name="import_filter_servers_help">فقط القنوات التي لها رابط بث واحد على الأقل.</string>
+    <string name="import_filter_working_help">تُختبر روابط البث أثناء الاستيراد ولا تُحفظ إلا القنوات التي لها خادم يستجيب. أبطأ، خصوصًا لكل الدول.</string>
+    <string name="check_servers_stale">التي لم تُفحص خلال آخر 24 ساعة</string>
+    <string name="check_servers_all">كل الخوادم</string>
+    <string name="task_running">هناك مهمة أخرى قيد التنفيذ</string>
+    <string name="stop">إيقاف</string>
+    <string name="load_all_categories">تحميل كل الفئات من iptv-org</string>
+    <string name="load_all_countries">تحميل كل الدول</string>
+    <string name="offline_title">لا يوجد اتصال بالإنترنت</string>
+    <string name="offline_body">هذا يحتاج إلى اتصال إنترنت يعمل. اتصل بشبكة Wi-Fi أو بيانات الجوال وحاول مجددًا.</string>
+    <string name="offline_check_body">فحص الخوادم يحتاج إلى اتصال إنترنت يعمل، وإلا ستبدو كل الخوادم معطّلة. اتصل وحاول مجددًا.</string>
+
+    <!-- Admin: maintenance -->
+    <string name="section_maintenance">الصيانة</string>
+    <string name="check_servers">فحص كل الخوادم</string>
+    <string name="check_servers_desc">اختبار كل روابط البث وتمييز التي لا تستجيب</string>
+    <string name="check_servers_progress">جارٍ فحص الخوادم… %1$s / %2$s</string>
+    <string name="refresh_logos">تحديث الشعارات</string>
+    <string name="refresh_logos_desc">إكمال شعارات القنوات الناقصة من iptv-org</string>
+
+    <!-- Player -->
+    <string name="now_playing">يُعرض الآن</string>
+    <string name="servers">الخوادم</string>
+    <string name="add_to_favorites">إضافة إلى المفضلة</string>
+    <string name="in_favorites">في المفضلة</string>
+    <string name="player_pick_server">اختر خادمًا لبدء المشاهدة</string>
+    <string name="player_no_servers">لا توجد خوادم بث لهذه القناة بعد</string>
+    <string name="player_error_title">هذا الخادم لا يستجيب</string>
+    <string name="player_error_body">جرّب خادمًا آخر في الأسفل.</string>
+    <string name="retry">إعادة المحاولة</string>
+
+    <!-- Play a link -->
+    <string name="play_link">تشغيل رابط</string>
+    <string name="play_link_hint">رابط M3U / M3U8</string>
+    <string name="play_link_helper">يُشغَّل البث فورًا، وتُفتح قائمة التشغيل كقائمة قنوات</string>
+    <string name="play_link_invalid">أدخل رابطًا يبدأ بـ http:// أو https://</string>
+    <string name="play_link_failed">تعذّر فتح الرابط. %1$s</string>
+    <string name="play">تشغيل</string>
+    <string name="playlist">قائمة التشغيل</string>
+    <string name="playlist_empty_title">لا توجد قنوات في قائمة التشغيل هذه</string>
+    <string name="playlist_empty_body">ارجع وجرّب رابطًا آخر.</string>
+
+    <!-- Settings -->
+    <string name="settings">الإعدادات</string>
+    <string name="section_language">اللغة</string>
+    <string name="app_language">لغة التطبيق</string>
+    <string name="language_system">لغة الهاتف</string>
+    <string name="language_english">English</string>
+    <string name="language_arabic">العربية</string>
+    <string name="section_playback">التشغيل</string>
+    <string name="auto_switch">التبديل التلقائي بين الخوادم</string>
+    <string name="auto_switch_desc">إذا لم يعمل خادم، جرّب التالي</string>
+    <string name="auto_pip">صورة داخل صورة عند المغادرة</string>
+    <string name="auto_pip_desc">تابع المشاهدة في نافذة صغيرة أثناء استخدام تطبيقات أخرى</string>
+    <string name="default_quality">جودة الفيديو</string>
+    <string name="subtitles_desc">إظهار الترجمة عندما تتوفر في القناة</string>
+    <string name="subtitle_language">لغة الترجمة</string>
+    <string name="section_history">سجل المشاهدة</string>
+    <string name="history_count">%d قناة شوهدت مؤخرًا</string>
+    <string name="section_about">حول التطبيق</string>
+    <string name="about_version">الإصدار %1$s</string>
+    <string name="about_developer">تطوير فريق TechWrap LB</string>
+    <string name="about_phone_label">اتصال أو واتساب</string>
+    <string name="about_phone">+961 70 080 214</string>
+    <string name="about_copied">تم نسخ الرقم</string>
+    <string name="about_tagline">بث تلفزيوني مباشر ومجاني من حول العالم</string>
+
+    <!-- Welcome introduction -->
+    <string name="intro_1_title">أهلًا بك في TechWrap TV</string>
+    <string name="intro_1_body">تلفزيون مباشر مجاني من كل أنحاء العالم، وقنوات بلدك أولًا.</string>
+    <string name="intro_2_title">اعثر على القنوات بسرعة</string>
+    <string name="intro_2_body">تصفّح حسب الفئة أو الدولة، وابحث بالاسم، وصفِّ القنوات لتبقى التي تعمل فقط.</string>
+    <string name="intro_3_title">شاهد على طريقتك</string>
+    <string name="intro_3_body">تبديل تلقائي بين الخوادم، والتحكم بالجودة للاتصالات البطيئة، والترجمة، وصورة داخل صورة.</string>
+    <string name="intro_4_title">شغّل أي رابط</string>
+    <string name="intro_4_body">لديك قائمة تشغيل M3U؟ الصق الرابط وشاهد هنا مباشرة، واحتفظ بمفضلتك وما شاهدته مؤخرًا في متناول يدك.</string>
+    <string name="intro_skip">تخطٍّ</string>
+    <string name="intro_next">التالي</string>
+    <string name="intro_start">لنبدأ</string>
+
+    <!-- Crash report -->
+    <string name="crash_title">أُغلق التطبيق بشكل غير متوقع</string>
+    <string name="crash_body">مشاركة التقرير تساعد فريق TechWrap LB على إصلاح المشكلة. لا يحتوي على أي بيانات شخصية.</string>
+    <string name="crash_share">مشاركة التقرير</string>
+    <string name="crash_dismiss">ليس الآن</string>
+
+    <string name="channel_not_found">هذه القناة لم تعد متاحة</string>
+    <string name="no_stream_url">لا يوجد رابط بث لهذا الخادم</string>
+    <string name="server_switched">%1$s لم يستجب. تم التبديل إلى %2$s</string>
+    <string name="player_all_failed_title">لا يستجيب أي خادم</string>
+    <string name="player_all_failed_body">قد تكون القناة متوقفة أو محجوبة في منطقتك.</string>
+    <string name="subtitles">الترجمة</string>
+    <string name="subtitles_off">إيقاف</string>
+    <string name="subtitles_auto">تلقائي: %1$s عند توفرها</string>
+    <string name="subtitles_none_in_stream">هذه القناة لا ترسل ترجمة. يمكن لميزة «النسخ النصي التلقائي» في أندرويد إنشاء ترجمة على الهواتف التي تدعمها.</string>
+    <string name="live_caption">النسخ النصي التلقائي…</string>
+    <string name="picture_in_picture">صورة داخل صورة</string>
+    <string name="pip_unsupported">ميزة صورة داخل صورة غير متاحة على هذا الجهاز</string>
+    <string name="direct_link">رابط مباشر</string>
+    <string name="video_quality">جودة الفيديو</string>
+    <string name="quality_auto">الجودة: تلقائي</string>
+    <string name="quality_label">الجودة: %1$s</string>
+    <string name="quality_label_playing">الجودة: %1$s · %2$dp</string>
+    <string name="quality_option_auto">تلقائي: تتكيّف مع اتصالك</string>
+    <string name="quality_option_up_to">حتى %1$dp</string>
+    <string name="quality_option_lowest">توفير البيانات: أقل جودة</string>
+    <string name="quality_short_auto">تلقائي</string>
+    <string name="quality_short_lowest">توفير البيانات</string>
+    <string name="quality_single">لهذه القناة جودة واحدة فقط (%1$dp). اختيارك يُطبَّق على القنوات الأخرى.</string>
+    <string name="player_offline_title">أنت غير متصل</string>
+    <string name="player_offline_body">اتصل بالإنترنت ثم اضغط «إعادة المحاولة».</string>
+    <string name="unknown">غير معروف</string>
+
+    <!-- Auth -->
+    <string name="login_title">دخول المشرف</string>
+    <string name="login_subtitle">إدارة القنوات والفئات وعمليات الاستيراد.</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="sign_in">تسجيل الدخول</string>
+    <string name="forgot_password">نسيت كلمة المرور؟</string>
+    <string name="reset_title">إعادة تعيين كلمة المرور</string>
+    <string name="reset_subtitle">أدخل البريد الذي تسجّل الدخول به وسنرسل لك رابطًا لاختيار كلمة مرور جديدة.</string>
+    <string name="send_reset_link">إرسال رابط إعادة التعيين</string>
+
+    <!-- Admin dashboard -->
+    <string name="dashboard">لوحة التحكم</string>
+    <string name="dashboard_eyebrow">المشرف</string>
+    <string name="log_out">تسجيل الخروج</string>
+    <string name="stat_channels">القنوات</string>
+    <string name="stat_categories">الفئات</string>
+    <string name="stat_countries">الدول</string>
+    <string name="section_manage">الإدارة</string>
+    <string name="section_import">الاستيراد من iptv-org</string>
+    <string name="section_danger">منطقة الخطر</string>
+    <string name="manage_channels">القنوات</string>
+    <string name="manage_channels_desc">إضافة القنوات وخوادمها وتعديلها وحذفها</string>
+    <string name="manage_categories">الفئات</string>
+    <string name="manage_categories_desc">تنظيم القنوات حسب النوع</string>
+    <string name="manage_countries">الدول</string>
+    <string name="manage_countries_desc">الأسماء والأعلام التي يراها المشاهدون</string>
+    <string name="manage_admins">المشرفون</string>
+    <string name="manage_admins_desc">من يمكنه الدخول إلى هذه اللوحة</string>
+    <string name="import_my_country">قنوات دولتي</string>
+    <string name="import_my_country_desc">تحديد دولتك واستيراد قنواتها</string>
+    <string name="import_all">كل الدول</string>
+    <string name="import_all_desc">استيراد كل الدول، مع حد اختياري لكل دولة</string>
+    <string name="clear_database">مسح قاعدة البيانات</string>
+    <string name="clear_database_desc">حذف كل القنوات والفئات والدول نهائيًا</string>
+    <string name="channels_per_country">عدد القنوات لكل دولة</string>
+    <string name="channels_per_country_helper">اتركه فارغًا لاستيراد الكل</string>
+
+    <!-- Admin CRUD -->
+    <string name="channel_management">القنوات</string>
+    <string name="category_management">الفئات</string>
+    <string name="country_management">الدول</string>
+    <string name="user_management">المشرفون</string>
+    <string name="add_channel">إضافة قناة</string>
+    <string name="edit_channel">تعديل القناة</string>
+    <string name="add_category">إضافة فئة</string>
+    <string name="add_country">إضافة دولة</string>
+    <string name="add_admin">إضافة مشرف</string>
+    <string name="search_admins">ابحث عن مشرف</string>
+    <string name="empty_admins_title">لا يوجد مشرفون</string>
+    <string name="empty_admins_body">أضف بريد من يجب أن يدير هذا التطبيق.</string>
+    <string name="category_name">اسم الفئة</string>
+    <string name="country_name">اسم الدولة</string>
+    <string name="flag_url">رابط صورة العلم</string>
+    <string name="admin_role">مشرف</string>
+
+    <!-- Add / edit channel -->
+    <string name="section_details">التفاصيل</string>
+    <string name="section_classification">التصنيف</string>
+    <string name="section_servers">خوادم البث</string>
+    <string name="channel_name">اسم القناة</string>
+    <string name="logo_url">رابط الشعار</string>
+    <string name="category">الفئة</string>
+    <string name="country">الدولة</string>
+    <string name="stream_url">رابط البث (.m3u8)</string>
+    <string name="add_server">إضافة</string>
+    <string name="no_servers_added">لا توجد خوادم بعد. أضف رابط بث واحدًا على الأقل.</string>
+    <string name="save_channel">حفظ القناة</string>
+    <string name="error_required">مطلوب</string>
+    <string name="error_pick_from_list">اختر خيارًا من القائمة</string>
+
+    <!-- Admin messages -->
+    <string name="adm_logout_body">ستحتاج إلى تسجيل الدخول مجددًا لإدارة التطبيق.</string>
+    <string name="adm_preparing_logos">جارٍ التحضير لتحديث الشعارات…</string>
+    <string name="adm_logos_refreshed">تم تحديث الشعارات</string>
+    <string name="adm_clear_body">سيُحذف كل قناة وخادم وفئة ودولة ومفضلة. لا يمكن التراجع عن ذلك.</string>
+    <string name="adm_all_cleared">تم مسح كل البيانات</string>
+    <string name="adm_loading_categories">جارٍ تحميل الفئات…</string>
+    <string name="adm_categories_failed">تعذّر تحميل الفئات. تحقّق من الاتصال واستخدم «تحديث قاعدة البيانات».</string>
+    <string name="adm_import">استيراد</string>
+    <string name="adm_update">تحديث</string>
+    <string name="adm_check">فحص</string>
+    <string name="adm_invalid_number">رقم غير صالح</string>
+    <string name="adm_detecting_country">جارٍ تحديد دولتك…</string>
+    <string name="adm_import_for_done">اكتمل الاستيراد لـ %1$s</string>
+    <string name="adm_starting_import">جارٍ بدء الاستيراد…</string>
+    <string name="adm_import_done">اكتمل الاستيراد</string>
+    <string name="adm_no_channels_yet">لا توجد قنوات بعد: ستُحدَّث الفئات والدول فقط. اختر «كل الدول» لاستيراد القنوات.</string>
+    <string name="adm_starting_update">جارٍ بدء التحديث…</string>
+    <string name="adm_database_updated">تم تحديث قاعدة البيانات</string>
+    <string name="adm_result">%1$s: %2$s</string>
+    <string name="adm_failed">فشل: %1$s</string>
+    <string name="adm_no_servers_yet">لا توجد خوادم لفحصها بعد</string>
+    <string name="adm_preparing_check">جارٍ التحضير لفحص الخوادم…</string>
+    <string name="adm_check_paused">متوقف مؤقتًا: %1$s. يُستأنف تلقائيًا عند عودة الاتصال (%2$s / %3$s)</string>
+    <string name="adm_check_done">%1$s خادم يعمل، و%2$s لا يستجيب</string>
+    <string name="adm_check_stopped">توقف الفحص. %1$s خادم يعمل، و%2$s لا يستجيب</string>
+    <string name="adm_paused_waiting">متوقف مؤقتًا: %1$s. بانتظار الاتصال…</string>
+    <string name="adm_no_internet">لا يوجد اتصال بالإنترنت</string>
+    <string name="adm_slow_connection">الاتصال بطيء جدًا</string>
+    <string name="adm_email_required">البريد الإلكتروني مطلوب</string>
+    <string name="adm_password_required">كلمة المرور مطلوبة</string>
+    <string name="adm_login_ok">تم تسجيل الدخول</string>
+    <string name="adm_no_account">لا يوجد حساب بهذا البريد.</string>
+    <string name="adm_wrong_password">البريد أو كلمة المرور غير صحيحة. حاول مجددًا.</string>
+    <string name="adm_auth_failed">تعذّر تسجيل الدخول: %1$s</string>
+    <string name="adm_enter_email">يرجى إدخال بريدك الإلكتروني</string>
+    <string name="adm_reset_sent">تم إرسال رسالة إعادة التعيين. تحقّق من بريدك.</string>
+    <string name="adm_category_country_missing">الفئة أو الدولة المختارة لم تعد موجودة</string>
+    <string name="adm_add_server_required">أضف رابط خادم واحدًا على الأقل</string>
+    <string name="adm_update_failed">تعذّر تحديث القناة</string>
+    <string name="adm_channel_updated">تم تحديث القناة</string>
+    <string name="adm_channel_added">تمت إضافة القناة</string>
+    <string name="adm_channel_add_failed">تعذّرت إضافة القناة</string>
+    <string name="adm_all_categories_here">كل فئات iptv-org موجودة مسبقًا</string>
+    <string name="adm_categories_added">تمت إضافة %1$d فئة</string>
+    <string name="adm_categories_load_failed">تعذّر تحميل الفئات: %1$s</string>
+    <string name="adm_delete_all_categories">حذف كل الفئات</string>
+    <string name="adm_delete_all_categories_body">سيُحذف أيضًا كل قناة تنتمي إلى فئة. لا يمكن التراجع عن ذلك.</string>
+    <string name="adm_all_categories_deleted">تم حذف كل الفئات</string>
+    <string name="adm_edit_category">تعديل الفئة</string>
+    <string name="adm_delete_category">حذف الفئة</string>
+    <string name="adm_delete_category_body">حذف «%1$s»؟ ستُحذف قنواتها أيضًا.</string>
+    <string name="adm_delete_all_channels">حذف كل القنوات</string>
+    <string name="adm_delete_all_channels_body">ستُزال كل القنوات وخوادمها. لا يمكن التراجع عن ذلك.</string>
+    <string name="adm_all_channels_deleted">تم حذف كل القنوات</string>
+    <string name="adm_edit_country">تعديل الدولة</string>
+    <string name="adm_delete_country">حذف الدولة</string>
+    <string name="adm_delete_country_body">حذف «%1$s»؟ ستُحذف قنواتها أيضًا.</string>
+    <string name="adm_all_countries_here">كل الدول موجودة مسبقًا</string>
+    <string name="adm_countries_added">تمت إضافة %1$d دولة</string>
+    <string name="adm_delete_all_countries">حذف كل الدول</string>
+    <string name="adm_delete_all_countries_body">سيُحذف أيضًا كل قناة تنتمي إلى دولة. لا يمكن التراجع عن ذلك.</string>
+    <string name="adm_all_countries_deleted">تم حذف كل الدول</string>
+    <string name="adm_delete_admin">حذف المشرف</string>
+    <string name="adm_delete_admin_body">إزالة %1$s؟</string>
+    <string name="adm_delete_stub">طلب حذف (تجريبي فقط)</string>
+    <string name="adm_edit_admin">تعديل المشرف</string>
+    <string name="adm_delete_channel">حذف القناة</string>
+    <string name="adm_delete_channel_body">حذف «%1$s» وكل خوادمها؟</string>
+    <string name="adm_channel_deleted">تم حذف القناة</string>
+    <string name="adm_update_categories">جارٍ تحديث الفئات والدول…</string>
+    <string name="adm_categories_updated">تم تحديث الفئات والدول</string>
+    <string name="adm_downloading_categories">جارٍ تنزيل الفئات…</string>
+    <string name="adm_downloading_catalogue">جارٍ تنزيل دليل القنوات…</string>
+    <string name="adm_downloading_channels">جارٍ تنزيل القنوات…</string>
+    <string name="adm_downloading_logos">جارٍ تنزيل الشعارات…</string>
+    <string name="adm_downloading_streams">جارٍ تنزيل روابط البث…</string>
+    <string name="adm_downloading_freetv">جارٍ تنزيل قائمة Free-TV…</string>
+    <string name="adm_catalogue_downloaded">تم تنزيل الدليل</string>
+    <string name="adm_logos_downloaded">تم تنزيل الشعارات</string>
+    <string name="adm_testing_streams">جارٍ اختبار روابط البث… %1$s / %2$s</string>
+    <string name="adm_saving_channels">جارٍ حفظ القنوات…</string>
+    <string name="adm_saving_channels_n">جارٍ حفظ القنوات… %1$s / %2$s</string>
+    <string name="adm_saving_channels_done">جارٍ حفظ القنوات… اكتمل</string>
+    <string name="adm_saving_logos">جارٍ حفظ الشعارات…</string>
+    <string name="adm_stopped">توقف</string>
+    <string name="adm_network_error">خطأ في الشبكة: %1$s</string>
+    <string name="adm_summary_base">%1$d قناة جديدة، %2$d خادم جديد</string>
+    <string name="adm_summary_updated">، %1$d قناة محدَّثة</string>
+    <string name="adm_summary_logos">، %1$d شعار محدَّث</string>
+    <string name="adm_summary_categories">، %1$d فئة جديدة</string>
+    <string name="adm_summary_countries">، %1$d دولة جديدة</string>
+    <string name="server_n">الخادم %1$d</string>
+
+    <!-- iptv-org category names -->
+    <string name="cat_animation">رسوم متحركة</string>
+    <string name="cat_auto">سيارات</string>
+    <string name="cat_business">أعمال</string>
+    <string name="cat_classic">كلاسيكي</string>
+    <string name="cat_comedy">كوميديا</string>
+    <string name="cat_cooking">طبخ</string>
+    <string name="cat_culture">ثقافة</string>
+    <string name="cat_documentary">وثائقي</string>
+    <string name="cat_education">تعليم</string>
+    <string name="cat_entertainment">ترفيه</string>
+    <string name="cat_family">عائلة</string>
+    <string name="cat_general">عام</string>
+    <string name="cat_interactive">تفاعلي</string>
+    <string name="cat_kids">أطفال</string>
+    <string name="cat_legislative">تشريعي</string>
+    <string name="cat_lifestyle">أسلوب حياة</string>
+    <string name="cat_movies">أفلام</string>
+    <string name="cat_music">موسيقى</string>
+    <string name="cat_news">أخبار</string>
+    <string name="cat_outdoor">الهواء الطلق</string>
+    <string name="cat_public">عام رسمي</string>
+    <string name="cat_relax">استرخاء</string>
+    <string name="cat_religious">ديني</string>
+    <string name="cat_science">علوم</string>
+    <string name="cat_series">مسلسلات</string>
+    <string name="cat_shop">تسوّق</string>
+    <string name="cat_sports">رياضة</string>
+    <string name="cat_travel">سفر</string>
+    <string name="cat_weather">طقس</string>
+    <string name="cat_xxx">للبالغين</string>
+</resources>
