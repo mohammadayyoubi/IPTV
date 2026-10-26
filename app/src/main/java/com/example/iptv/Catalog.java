@@ -76,7 +76,8 @@ public class Catalog {
 
     /** Download progress: {@code fraction} goes from 0 to 1 over all the files of a load. */
     public interface Progress {
-        void onProgress(String status, double fraction);
+        /** @param status a string resource id, e.g. R.string.adm_downloading_logos */
+        void onProgress(int status, double fraction);
     }
 
     private static final Progress NO_PROGRESS = (status, fraction) -> { };
@@ -94,7 +95,7 @@ public class Catalog {
         }
 
         /** Starts the next file; returns a reporter for that file's own 0..1. */
-        FileProgress next(String status) {
+        FileProgress next(int status) {
             if (index >= 0) done += weights[index];
             index++;
             final double base = done;
@@ -103,7 +104,7 @@ public class Catalog {
             return f -> progress.onProgress(status, base + weight * Math.min(1, f));
         }
 
-        void finish(String status) {
+        void finish(int status) {
             progress.onProgress(status, 1);
         }
     }
@@ -120,43 +121,43 @@ public class Catalog {
     public static List<Entry> load(Progress progress) throws IOException {
         // Rough share of the download time per file
         Steps steps = new Steps(progress, 0.32, 0.22, 0.26, 0.20);
-        Map<String, Entry> entries = loadIptvOrgChannels(steps.next("Downloading channels…"));
+        Map<String, Entry> entries = loadIptvOrgChannels(steps.next(R.string.adm_downloading_channels));
         Log.d(TAG, "iptv-org channels: " + entries.size());
 
-        Map<String, String> logos = loadLogos(steps.next("Downloading logos…"));
+        Map<String, String> logos = loadLogos(steps.next(R.string.adm_downloading_logos));
         for (Entry entry : entries.values()) {
             String logo = logos.get(entry.sourceId);
             if (logo != null) entry.logoUrl = logo;
         }
 
-        int linked = loadIptvOrgStreams(entries, steps.next("Downloading streams…"));
+        int linked = loadIptvOrgStreams(entries, steps.next(R.string.adm_downloading_streams));
         Log.d(TAG, "iptv-org streams linked to channels: " + linked);
 
         try {
-            int added = mergeFreeTv(entries, steps.next("Downloading Free-TV playlist…"));
+            int added = mergeFreeTv(entries, steps.next(R.string.adm_downloading_freetv));
             Log.d(TAG, "Free-TV streams merged: " + added);
         } catch (IOException e) {
             // The extra source is optional; iptv-org alone is still a full catalogue
             Log.w(TAG, "Free-TV playlist unavailable, continuing without it", e);
         }
-        steps.finish("Catalogue downloaded");
+        steps.finish(R.string.adm_catalogue_downloaded);
         return new ArrayList<>(entries.values());
     }
 
     /** iptv-org channel id → best logo URL, without downloading channels or streams. */
     public static Map<String, String> loadLogoMap(Progress progress) throws IOException {
         Steps steps = new Steps(progress, 1.0);
-        Map<String, String> logos = loadLogos(steps.next("Downloading logos…"));
-        steps.finish("Logos downloaded");
+        Map<String, String> logos = loadLogos(steps.next(R.string.adm_downloading_logos));
+        steps.finish(R.string.adm_logos_downloaded);
         return logos;
     }
 
     /** Channels (without streams) and their logos only: enough to repair missing logos. */
     public static List<Entry> loadLogosOnly(Progress progress) throws IOException {
         Steps steps = new Steps(progress, 0.6, 0.4);
-        Map<String, Entry> entries = loadIptvOrgChannels(steps.next("Downloading channels…"));
-        Map<String, String> logos = loadLogos(steps.next("Downloading logos…"));
-        steps.finish("Logos downloaded");
+        Map<String, Entry> entries = loadIptvOrgChannels(steps.next(R.string.adm_downloading_channels));
+        Map<String, String> logos = loadLogos(steps.next(R.string.adm_downloading_logos));
+        steps.finish(R.string.adm_logos_downloaded);
         List<Entry> result = new ArrayList<>();
         for (Entry entry : entries.values()) {
             String logo = logos.get(entry.sourceId);

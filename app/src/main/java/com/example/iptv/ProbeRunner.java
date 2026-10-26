@@ -45,6 +45,11 @@ public class ProbeRunner<T> {
         boolean hasValidatedNetwork();
         NetworkMonitor.Health probeInternet();
         NetworkMonitor.Watch watch(NetworkMonitor.Listener listener);
+
+        /** Why the run paused, for the dashboard. */
+        default String describe(NetworkMonitor.Health health) {
+            return health.online ? "Connection too slow" : "No internet connection";
+        }
     }
 
     /** The real phone connection. */
@@ -54,6 +59,9 @@ public class ProbeRunner<T> {
             @Override public boolean hasValidatedNetwork() { return NetworkMonitor.hasValidatedNetwork(app); }
             @Override public NetworkMonitor.Health probeInternet() { return NetworkMonitor.probeInternet(); }
             @Override public NetworkMonitor.Watch watch(NetworkMonitor.Listener l) { return NetworkMonitor.watch(app, l); }
+            @Override public String describe(NetworkMonitor.Health health) {
+                return app.getString(health.online ? R.string.adm_slow_connection : R.string.adm_no_internet);
+            }
         };
     }
 
@@ -237,7 +245,7 @@ public class ProbeRunner<T> {
         Tentative<T> f;
         while ((f = failures.poll()) != null) pending.addFirst(f.item);
 
-        String reason = health.online ? "Connection too slow" : "No internet connection";
+        String reason = connectivity.describe(health);
         Log.w(TAG, "Pausing: " + reason);
         sink.onPaused(reason);
         while (!cancelled.get()) {
@@ -253,7 +261,7 @@ public class ProbeRunner<T> {
             if (!connectivity.hasValidatedNetwork()) continue;
             NetworkMonitor.Health retry = connectivity.probeInternet();
             if (retry.isGood()) break;
-            sink.onPaused(retry.online ? "Connection too slow" : "No internet connection");
+            sink.onPaused(connectivity.describe(retry));
         }
         // Probes still in flight started before / during the outage: their failures get re-queued
         lastOutageAt = System.currentTimeMillis();

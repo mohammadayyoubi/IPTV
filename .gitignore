@@ -13,3 +13,11 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Release signing (never commit keys)
+keystore.properties
+*.jks
+*.keystore
+
+# Personal Claude Code notes
+CLAUDE.local.md

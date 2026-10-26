@@ -19,6 +19,8 @@ import com.example.iptv.activities.admin.LoginActivity;
 import com.example.iptv.adapters.user.ChannelUserAdapter;
 import com.example.iptv.OOP.Channel;
 import com.example.iptv.database.ChannelQuery;
+import com.example.iptv.database.DBHelper;
+import com.example.iptv.database.HistoryDAO;
 import com.example.iptv.ui.AvailabilityFilter;
 import com.example.iptv.ui.ChannelPager;
 import com.example.iptv.ui.UiUtils;
@@ -57,9 +59,9 @@ public class AllChannelsFragment extends Fragment {
         // Channels are paged from SQLite as the user scrolls (see ChannelPager)
         pager = new ChannelPager(requireContext(), recyclerView, new ChannelPager.Sink() {
             @Override
-            public void onFirstPage(List<Channel> channels) {
+            public void onFirstPage(List<Channel> channels, boolean newQuery) {
                 adapter.updateList(channels);
-                recyclerView.scrollToPosition(0);
+                if (newQuery) recyclerView.scrollToPosition(0);
             }
 
             @Override
@@ -80,6 +82,10 @@ public class AllChannelsFragment extends Fragment {
             pager.setQuery(q);
         });
         pager.getQuery().availability = availabilityFilter.getAvailability();
+        availabilityFilter.setOnClearHistory(() -> {
+            new HistoryDAO(DBHelper.getInstance(requireContext()).getWritableDatabase()).clear();
+            pager.reload();
+        });
         // Channels of the viewer's own country are listed first
         pager.getQuery().priorityCountryId = HomeCountry.countryId(requireContext());
         HomeCountry.refreshAsync(requireContext(), () -> {
@@ -102,6 +108,10 @@ public class AllChannelsFragment extends Fragment {
             public void afterTextChanged(Editable s) { }
         });
 
+        view.findViewById(R.id.btn_play_link).setOnClickListener(v ->
+                com.example.iptv.ui.PlayLinkDialog.show(requireActivity()));
+        view.findViewById(R.id.btn_settings).setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), com.example.iptv.activities.user.SettingsActivity.class)));
         view.findViewById(R.id.btn_admin_login).setOnClickListener(v ->
                 startActivity(new Intent(requireContext(), LoginActivity.class)));
 
@@ -130,8 +140,8 @@ public class AllChannelsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Picks up favorites / statuses changed on the player screen
-        pager.reload();
+        // Picks up favorites / statuses changed on the player screen, keeping the scroll position
+        pager.refresh();
     }
 
     @Override

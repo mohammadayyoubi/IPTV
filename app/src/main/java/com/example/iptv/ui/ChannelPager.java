@@ -26,8 +26,11 @@ import java.util.concurrent.Executors;
 public class ChannelPager {
 
     public interface Sink {
-        /** First page of a new query (replace the list). */
-        void onFirstPage(List<Channel> channels);
+        /**
+         * Replace the list. {@code newQuery} is true for a new search / filter (scroll to the top)
+         * and false for {@link #refresh()} (keep the scroll position).
+         */
+        void onFirstPage(List<Channel> channels, boolean newQuery);
         /** Following pages (append). */
         void onNextPage(List<Channel> channels);
         /** Totals for the current search/scope, per availability. */
@@ -53,7 +56,7 @@ public class ChannelPager {
     private final Runnable debouncedReload = this::reload;
 
     public ChannelPager(Context context, RecyclerView recyclerView, Sink sink) {
-        this.dao = new ChannelDAO(new DBHelper(context.getApplicationContext()).getWritableDatabase());
+        this.dao = new ChannelDAO(DBHelper.getInstance(context.getApplicationContext()).getWritableDatabase());
         this.sink = sink;
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -86,7 +89,34 @@ public class ChannelPager {
         main.postDelayed(debouncedReload, SEARCH_DEBOUNCE_MS);
     }
 
-    /** Reloads the current query from the first page (e.g. when the screen resumes). */
+    /**
+     * Re-reads everything already loaded, in place: coming back from the player keeps the
+     * viewer exactly where they were, while statuses and favorites are up to date.
+     */
+    public void refresh() {
+        if (generation == 0) {
+            reload(); // nothing loaded yet: first load
+            return;
+        }
+        final int gen = ++generation;
+        final ChannelQuery q = query.copy();
+        final int count = Math.max(PAGE_SIZE, loadedCount);
+        loading = true;
+        executor.execute(() -> {
+            List<Channel> rows = dao.queryPage(q, count, 0);
+            ChannelQuery.Counts counts = dao.countByAvailability(q);
+            main.post(() -> {
+                if (destroyed || gen != generation) return;
+                loading = false;
+                loadedCount = rows.size();
+                endReached = rows.size() < count;
+                sink.onFirstPage(rows, false);
+                sink.onCounts(counts);
+            });
+        });
+    }
+
+    /** Loads the current query from the first page and scrolls to the top. */
     public void reload() {
         final int gen = ++generation;
         final ChannelQuery q = query.copy();
@@ -101,7 +131,7 @@ public class ChannelPager {
                 loading = false;
                 loadedCount = page.size();
                 endReached = page.size() < PAGE_SIZE;
-                sink.onFirstPage(page);
+                sink.onFirstPage(page, true);
                 sink.onCounts(counts);
             });
         });

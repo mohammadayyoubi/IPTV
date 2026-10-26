@@ -35,7 +35,7 @@ public class activity_category_management extends BaseActivity {
         setContentView(R.layout.activity_category_management);
         UiUtils.applyInsets(findViewById(R.id.root), true, true);
 
-        DBHelper dbHelper = new DBHelper(this);
+        DBHelper dbHelper = DBHelper.getInstance(this);
         categoryDAO = new CategoryDAO(dbHelper.getWritableDatabase());
 
         countText = findViewById(R.id.countText);
@@ -53,8 +53,8 @@ public class activity_category_management extends BaseActivity {
 
             @Override
             public void onDelete(Category category) {
-                InputDialog.confirm(activity_category_management.this, "Delete category",
-                        "Delete \"" + category.getName() + "\"? Its channels will be deleted too.",
+                InputDialog.confirm(activity_category_management.this, getString(R.string.adm_delete_category),
+                        getString(R.string.adm_delete_category_body, category.getName()),
                         getString(R.string.delete), true, () -> {
                             categoryDAO.delete(category.getId());
                             loadCategories();
@@ -105,32 +105,32 @@ public class activity_category_management extends BaseActivity {
             loadAll.setEnabled(false);
             loadAll.setIcon(spinner());
             com.example.iptv.getFromInternet.loadAllCategories(daos(dbHelper), new com.example.iptv.getFromInternet.ImportCallback() {
-                @Override public void onProgress(String status, int percent) { }
+                @Override public void onProgress(String status, int percent, boolean paused) { }
 
                 @Override
                 public void onDone(com.example.iptv.ImportOptions.Result result) {
                     resetLoadAll(loadAll);
                     loadCategories();
                     Toast.makeText(activity_category_management.this, result.newCategories == 0
-                            ? "All iptv-org categories are already here"
-                            : result.newCategories + " categories added", Toast.LENGTH_SHORT).show();
+                            ? getString(R.string.adm_all_categories_here)
+                            : getString(R.string.adm_categories_added, result.newCategories), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(String message) {
                     resetLoadAll(loadAll);
-                    Toast.makeText(activity_category_management.this, "Couldn't load categories: " + message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity_category_management.this, getString(R.string.adm_categories_load_failed, message), Toast.LENGTH_LONG).show();
                 }
             });
         });
 
         findViewById(R.id.deleteAllCategoriesButton).setOnClickListener(v ->
-                InputDialog.confirm(this, "Delete all categories",
-                        "This also deletes every channel that belongs to a category. It can't be undone.",
+                InputDialog.confirm(this, getString(R.string.adm_delete_all_categories),
+                        getString(R.string.adm_delete_all_categories_body),
                         getString(R.string.delete_all), true, () -> {
                             categoryDAO.deleteAllCategories();
                             loadCategories();
-                            Toast.makeText(this, "All categories deleted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, R.string.adm_all_categories_deleted, Toast.LENGTH_SHORT).show();
                         }));
     }
 
@@ -175,7 +175,7 @@ public class activity_category_management extends BaseActivity {
 
     private void showCategoryDialog(Category categoryToEdit) {
         new InputDialog(this)
-                .title(categoryToEdit == null ? getString(R.string.add_category) : "Edit category")
+                .title(categoryToEdit == null ? getString(R.string.add_category) : getString(R.string.adm_edit_category))
                 .field(getString(R.string.category_name), categoryToEdit != null ? categoryToEdit.getName() : null)
                 .onSubmit((name, unused) -> {
                     if (name.isEmpty()) return;

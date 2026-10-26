@@ -83,7 +83,7 @@ public class AdminPanelActivity extends BaseActivity {
             signedInText.setVisibility(View.GONE);
         }
 
-        dbHelper = new DBHelper(this);
+        dbHelper = DBHelper.getInstance(this);
         countryDao = new CountryDAO(dbHelper.getWritableDatabase());
         categoryDao = new CategoryDAO(dbHelper.getWritableDatabase());
         ChannelDao = new ChannelDAO(dbHelper.getWritableDatabase());
@@ -99,7 +99,7 @@ public class AdminPanelActivity extends BaseActivity {
 
         findViewById(R.id.logoutButton).setOnClickListener(v ->
                 InputDialog.confirm(this, getString(R.string.log_out),
-                        "You'll need to sign in again to manage the app.",
+                        getString(R.string.adm_logout_body),
                         getString(R.string.log_out), false, () -> {
                             FirebaseAuth.getInstance().signOut();
                             Intent intent = new Intent(this, LoginActivity.class);
@@ -122,17 +122,17 @@ public class AdminPanelActivity extends BaseActivity {
         findViewById(R.id.checkServersButton).setOnClickListener(v -> showCheckServersDialog());
         findViewById(R.id.refreshLogosButton).setOnClickListener(v -> {
             if (!requireOnline(R.string.offline_body)) return;
-            if (!AdminTasks.start("Preparing logo refresh…")) return;
-            getFromInternet.refreshLogos(daos, taskCallback("Logos refreshed"));
+            if (!AdminTasks.start(getString(R.string.adm_preparing_logos))) return;
+            getFromInternet.refreshLogos(daos, taskCallback(getString(R.string.adm_logos_refreshed)));
         });
         findViewById(R.id.clearDatabaseButton).setOnClickListener(v ->
                 InputDialog.confirm(this, getString(R.string.clear_database),
-                        "This deletes every channel, server, category, country and favorite. It can't be undone.",
+                        getString(R.string.adm_clear_body),
                         getString(R.string.delete_all), true, () -> {
                             if (AdminTasks.isRunning()) return;
                             Log.d("ClearDatabase", "Clearing database...");
                             dbHelper.resetDatabase();
-                            Toast.makeText(this, "All data cleared!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, R.string.adm_all_cleared, Toast.LENGTH_SHORT).show();
                             seedIfEmpty();
                             refreshDashboard();
                         }));
@@ -149,12 +149,12 @@ public class AdminPanelActivity extends BaseActivity {
         }
         // Offline: wait for the next visit (or Update database) instead of failing now
         if (categoryDao.count() == 0 && NetworkMonitor.hasValidatedNetwork(this)
-                && AdminTasks.start("Loading categories…")) {
+                && AdminTasks.start(getString(R.string.adm_loading_categories))) {
             getFromInternet.getAllCategories(categories -> {
                 for (Category c : categories) categoryDao.insert(c);
                 AdminTasks.finish();
                 if (categories.isEmpty()) {
-                    toast(getApplicationContext(), "Couldn't load categories. Check the connection and use Update database.");
+                    toast(getApplicationContext(), getString(R.string.adm_categories_failed));
                 }
             });
         }
@@ -198,7 +198,7 @@ public class AdminPanelActivity extends BaseActivity {
                 .setIcon(icon)
                 .setView(body)
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(mode == ImportMode.UPDATE ? "Update" : "Import", (d, w) -> {
+                .setPositiveButton(mode == ImportMode.UPDATE ? R.string.adm_update : R.string.adm_import, (d, w) -> {
                     ImportOptions options = new ImportOptions();
                     int checked = filter.getCheckedButtonId();
                     options.serverFilter = checked == R.id.filterAll ? ImportOptions.ServerFilter.ALL
@@ -211,7 +211,7 @@ public class AdminPanelActivity extends BaseActivity {
                             try {
                                 options.maxPerCountry = Integer.parseInt(cap);
                             } catch (NumberFormatException e) {
-                                Toast.makeText(this, "Invalid number", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, R.string.adm_invalid_number, Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         }
@@ -225,29 +225,28 @@ public class AdminPanelActivity extends BaseActivity {
         boolean testsStreams = options.serverFilter == ImportOptions.ServerFilter.WORKING;
         switch (mode) {
             case MY_COUNTRY:
-                if (!AdminTasks.start("Detecting your country…")) return;
+                if (!AdminTasks.start(getString(R.string.adm_detecting_country))) return;
                 getFromInternet.getUserCountryCode(countryCode -> {
                     options.countryCode = countryCode;
-                    getFromInternet.importChannels(options, daos, taskCallback("Import for " + countryCode + " done"));
+                    getFromInternet.importChannels(options, daos, taskCallback(getString(R.string.adm_import_for_done, countryCode)));
                 });
                 if (testsStreams) AdminTasks.setStopAction(StreamChecker::cancel);
                 break;
             case ALL_COUNTRIES:
-                if (!AdminTasks.start("Starting import…")) return;
-                getFromInternet.importChannels(options, daos, taskCallback("Import done"));
+                if (!AdminTasks.start(getString(R.string.adm_starting_import))) return;
+                getFromInternet.importChannels(options, daos, taskCallback(getString(R.string.adm_import_done)));
                 if (testsStreams) AdminTasks.setStopAction(StreamChecker::cancel);
                 break;
             case UPDATE:
                 if (myCountriesOnly) {
                     Set<String> codes = getFromInternet.countryCodesInUse(daos);
                     if (codes.isEmpty()) {
-                        Toast.makeText(this, "No channels yet: only categories and countries will be updated. Choose All countries to import channels.",
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, R.string.adm_no_channels_yet, Toast.LENGTH_LONG).show();
                     }
                     options.countryCodes = codes;
                 }
-                if (!AdminTasks.start("Starting update…")) return;
-                getFromInternet.updateDatabase(options, daos, taskCallback("Database updated"));
+                if (!AdminTasks.start(getString(R.string.adm_starting_update))) return;
+                getFromInternet.updateDatabase(options, daos, taskCallback(getString(R.string.adm_database_updated)));
                 if (testsStreams) AdminTasks.setStopAction(StreamChecker::cancel);
                 break;
         }
@@ -258,20 +257,20 @@ public class AdminPanelActivity extends BaseActivity {
         Context app = getApplicationContext();
         return new getFromInternet.ImportCallback() {
             @Override
-            public void onProgress(String status, int percent) {
-                AdminTasks.update(status, status.startsWith("Paused"), percent);
+            public void onProgress(String status, int percent, boolean paused) {
+                AdminTasks.update(status, paused, percent);
             }
 
             @Override
             public void onDone(ImportOptions.Result result) {
                 AdminTasks.finish();
-                toast(app, doneTitle + ": " + result.summary());
+                toast(app, app.getString(R.string.adm_result, doneTitle, result.summary(app)));
             }
 
             @Override
             public void onError(String message) {
                 AdminTasks.finish();
-                toast(app, "Failed: " + message);
+                toast(app, app.getString(R.string.adm_failed, message));
             }
         };
     }
@@ -286,7 +285,7 @@ public class AdminPanelActivity extends BaseActivity {
         if (!requireOnline(R.string.offline_check_body)) return;
         int total = ChannelServerDao.count();
         if (total == 0) {
-            Toast.makeText(this, "There are no servers to check yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.adm_no_servers_yet, Toast.LENGTH_SHORT).show();
             return;
         }
         final int[] choice = {0};
@@ -298,12 +297,12 @@ public class AdminPanelActivity extends BaseActivity {
                         getString(R.string.check_servers_all) + " (" + NumberFormat.getInstance().format(total) + ")"
                 }, 0, (d, which) -> choice[0] = which)
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton("Check", (d, w) -> startServerCheck(choice[0] == 0))
+                .setPositiveButton(R.string.adm_check, (d, w) -> startServerCheck(choice[0] == 0))
                 .show();
     }
 
     private void startServerCheck(boolean staleOnly) {
-        if (!AdminTasks.start("Preparing server check…")) return;
+        if (!AdminTasks.start(getString(R.string.adm_preparing_check))) return;
         Context app = getApplicationContext();
         NumberFormat nf = NumberFormat.getInstance();
         boolean started = StreamChecker.checkAll(this, staleOnly, new StreamChecker.Listener() {
@@ -319,8 +318,7 @@ public class AdminPanelActivity extends BaseActivity {
 
             @Override
             public void onPaused(String reason) {
-                AdminTasks.update("Paused: " + reason + ". Resumes by itself when the connection is back ("
-                        + nf.format(lastDone) + " / " + nf.format(lastTotal) + ")", true);
+                AdminTasks.update(app.getString(R.string.adm_check_paused, reason, nf.format(lastDone), nf.format(lastTotal)), true);
             }
 
             @Override
@@ -331,8 +329,7 @@ public class AdminPanelActivity extends BaseActivity {
             @Override
             public void onComplete(int working, int broken, boolean cancelled) {
                 AdminTasks.finish();
-                toast(app, (cancelled ? "Check stopped. " : "") + nf.format(working) + " servers working, "
-                        + nf.format(broken) + " not responding");
+                toast(app, app.getString(cancelled ? R.string.adm_check_stopped : R.string.adm_check_done, nf.format(working), nf.format(broken)));
             }
         });
         if (!started) AdminTasks.finish();

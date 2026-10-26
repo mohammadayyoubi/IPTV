@@ -48,7 +48,7 @@ public class CategoriesFragment extends Fragment {
 
         UiUtils.setupGrid(recyclerView, R.dimen.tile_min_row);
 
-        dbHelper = new DBHelper(requireContext());
+        dbHelper = DBHelper.getInstance(requireContext());
         CategoryDAO categoryDAO = new CategoryDAO(dbHelper.getWritableDatabase());
         categoryList = categoryDAO.getAll();
 
@@ -82,7 +82,9 @@ public class CategoriesFragment extends Fragment {
         List<Category> tempList = new ArrayList<>();
         String lowerQuery = query.toLowerCase().trim();
         for (Category category : categoryList) {
-            if (category.getName().toLowerCase().contains(lowerQuery)) {
+            // Match the English name and the translated one (e.g. "News" / "أخبار")
+            String label = UiUtils.categoryLabel(requireContext(), category.getName()).toLowerCase();
+            if (category.getName().toLowerCase().contains(lowerQuery) || label.contains(lowerQuery)) {
                 tempList.add(category);
             }
         }

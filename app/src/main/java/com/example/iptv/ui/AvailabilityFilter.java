@@ -24,8 +24,10 @@ public class AvailabilityFilter {
         void onAvailabilityChanged(ChannelQuery.Availability availability);
     }
 
-    private final Chip chipWatchable, chipNotWorking, chipNoServers, chipAll;
-    private final View options;
+    private final Chip chipWatchable, chipNotWorking, chipNoServers, chipAll, chipRecent;
+    private final View options, clearHistoryButton;
+    private Runnable onClearHistory;
+    private int recentCount;
     private final MaterialButton button;
     private ChannelQuery.Availability availability = ChannelQuery.Availability.WATCHABLE;
     private boolean open;
@@ -42,6 +44,9 @@ public class AvailabilityFilter {
         chipNotWorking = options.findViewById(R.id.chipNotWorking);
         chipNoServers = options.findViewById(R.id.chipNoServers);
         chipAll = options.findViewById(R.id.chipAll);
+        chipRecent = options.findViewById(R.id.chipRecent);
+        clearHistoryButton = options.findViewById(R.id.clearHistoryButton);
+        clearHistoryButton.setOnClickListener(v -> confirmClearHistory());
 
         chipWatchable.setChecked(true);
         group.setOnCheckedStateChangeListener((g, ids) -> {
@@ -50,8 +55,10 @@ public class AvailabilityFilter {
             if (id == R.id.chipNotWorking) availability = ChannelQuery.Availability.NOT_WORKING;
             else if (id == R.id.chipNoServers) availability = ChannelQuery.Availability.NO_SERVERS;
             else if (id == R.id.chipAll) availability = ChannelQuery.Availability.ALL;
+            else if (id == R.id.chipRecent) availability = ChannelQuery.Availability.RECENT;
             else availability = ChannelQuery.Availability.WATCHABLE;
             renderButton();
+            renderClearHistory();
             listener.onAvailabilityChanged(availability);
         });
 
@@ -61,6 +68,30 @@ public class AvailabilityFilter {
 
     public ChannelQuery.Availability getAvailability() {
         return availability;
+    }
+
+    /** What to do after the viewer confirms "Clear history" (empty the table, reload the list). */
+    public void setOnClearHistory(Runnable action) {
+        onClearHistory = action;
+    }
+
+    private void confirmClearHistory() {
+        Context ctx = options.getContext();
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(ctx)
+                .setIcon(R.drawable.ic_history)
+                .setTitle(R.string.clear_history_title)
+                .setMessage(R.string.clear_history_body)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.clear_history, (d, w) -> {
+                    if (onClearHistory != null) onClearHistory.run();
+                    android.widget.Toast.makeText(ctx, R.string.history_cleared, android.widget.Toast.LENGTH_SHORT).show();
+                })
+                .show();
+    }
+
+    private void renderClearHistory() {
+        boolean show = availability == ChannelQuery.Availability.RECENT && recentCount > 0 && onClearHistory != null;
+        clearHistoryButton.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void setOpen(boolean value) {
@@ -87,6 +118,9 @@ public class AvailabilityFilter {
         chipNotWorking.setText(ctx.getString(R.string.filter_not_working_count, counts.notWorking));
         chipNoServers.setText(ctx.getString(R.string.filter_no_servers_count, counts.noServers));
         chipAll.setText(ctx.getString(R.string.filter_all_count, counts.all));
+        chipRecent.setText(ctx.getString(R.string.filter_recent_count, counts.recent));
+        recentCount = counts.recent;
+        renderClearHistory();
     }
 
     /** Short name of the applied filter, e.g. "Not working". */
@@ -96,6 +130,7 @@ public class AvailabilityFilter {
             case NOT_WORKING: return ctx.getString(R.string.filter_not_working);
             case NO_SERVERS: return ctx.getString(R.string.filter_no_servers);
             case ALL: return ctx.getString(R.string.filter_all);
+            case RECENT: return ctx.getString(R.string.filter_recent);
             default: return ctx.getString(R.string.filter_watchable);
         }
     }
@@ -115,6 +150,10 @@ public class AvailabilityFilter {
             case NO_SERVERS:
                 UiUtils.showEmptyState(emptyState, true, R.drawable.ic_dns,
                         R.string.empty_no_servers_title, R.string.empty_no_servers_body);
+                break;
+            case RECENT:
+                UiUtils.showEmptyState(emptyState, true, R.drawable.ic_history,
+                        R.string.empty_recent_title, R.string.empty_recent_body);
                 break;
             default:
                 UiUtils.showEmptyState(emptyState, true, R.drawable.ic_live_tv,

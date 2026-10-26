@@ -40,7 +40,7 @@
                     android:layout_height="72dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="@string/app_name"
-                    android:src="@drawable/iptv_logo" />
+                    android:src="@drawable/ic_logo" />
 
                 <TextView
                     android:id="@+id/AdminLoginPageLable"

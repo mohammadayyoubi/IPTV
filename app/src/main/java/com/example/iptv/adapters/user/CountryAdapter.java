@@ -41,7 +41,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
     @Override
     public void onBindViewHolder(@NonNull CountryViewHolder holder, int position) {
         Country country = countryList.get(position);
-        holder.textCountryName.setText(country.getName());
+        holder.textCountryName.setText(com.example.iptv.ui.UiUtils.countryLabel(country.getName()));
 
         Glide.with(context)
                 .load(country.getFlagUrl())

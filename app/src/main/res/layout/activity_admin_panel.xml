@@ -950,6 +950,25 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+
+                <!-- Credit -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xl"
+                    android:gravity="center"
+                    android:text="@string/about_developer"
+                    android:textAppearance="@style/TextAppearance.IPTV.Caption"
+                    android:textColor="@color/text_tertiary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/about_phone"
+                    android:textAppearance="@style/TextAppearance.IPTV.Caption"
+                    android:textColor="@color/text_tertiary"
+                    android:textDirection="ltr" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

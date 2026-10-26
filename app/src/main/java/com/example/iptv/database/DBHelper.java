@@ -8,8 +8,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "iptv_db";
     // v2: Channel.sourceId, ChannelServer.userAgent/referrer/status/lastChecked
-    // v3: Channel.logoAuto (all migrated in place, see onUpgrade)
-    private static final int DATABASE_VERSION = 3;
+    // v3: Channel.logoAuto
+    // v4: History (recently watched) (all migrated in place, see onUpgrade)
+    private static final int DATABASE_VERSION = 4;
 
     // Table and column names
     private static final String TABLE_CHANNEL = "Channel";
@@ -91,19 +92,45 @@ public class DBHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY (" + COLUMN_FAVORITE_CHANNEL_ID + ") REFERENCES " + TABLE_CHANNEL + "(" + COLUMN_CHANNEL_ID + ") ON DELETE CASCADE" +
                     ")";
 
-    public DBHelper(Context context) {
+    private static DBHelper instance;
+
+    /**
+     * One shared helper (and so one connection pool) for the whole app. Separate helpers per
+     * screen each had their own connection, so a long import could leave the other screens
+     * blocked on "database is locked".
+     */
+    private static final String CREATE_HISTORY_TABLE_QUERY =
+            "CREATE TABLE IF NOT EXISTS History (" +
+                    "channel_id INTEGER PRIMARY KEY, " +
+                    "watchedAt INTEGER NOT NULL, " +
+                    "FOREIGN KEY (channel_id) REFERENCES " + TABLE_CHANNEL + "(" + COLUMN_CHANNEL_ID + ") ON DELETE CASCADE" +
+                    ")";
+
+    public static synchronized DBHelper getInstance(Context context) {
+        if (instance == null) instance = new DBHelper(context.getApplicationContext());
+        return instance;
+    }
+
+    private DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+        db.setForeignKeyConstraintsEnabled(true);
+        // Write-ahead logging: lists keep reading while an import or server check writes
+        db.enableWriteAheadLogging();
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase db) {
-        // Enable foreign key constraints
-        db.execSQL("PRAGMA foreign_keys=ON;");
         db.execSQL(CREATE_COUNTRY_TABLE_QUERY);
         db.execSQL(CREATE_CATEGORY_TABLE_QUERY);
         db.execSQL(CREATE_CHANNEL_TABLE_QUERY);
         db.execSQL(CREATE_CHANNEL_SERVER_TABLE_QUERY);
         db.execSQL(CREATE_FAVORITE_TABLE_QUERY);
+        db.execSQL(CREATE_HISTORY_TABLE_QUERY);
         createIndexes(db);
     }
 
@@ -133,10 +160,14 @@ public class DBHelper extends SQLiteOpenHelper {
                     + COLUMN_CHANNEL_SOURCE_ID + " IS NOT NULL");
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_channel_name ON " + TABLE_CHANNEL + "(" + COLUMN_CHANNEL_NAME + " COLLATE NOCASE)");
         }
+        if (oldVersion < 4) {
+            db.execSQL(CREATE_HISTORY_TABLE_QUERY);
+        }
     }
 
     public void resetDatabase() {
         SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS History");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHANNEL_SERVER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHANNEL);
@@ -145,18 +176,5 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    @Override
-    public SQLiteDatabase getWritableDatabase() {
-        SQLiteDatabase db = super.getWritableDatabase();
-        db.execSQL("PRAGMA foreign_keys=ON;");
-        return db;
-    }
-
-    @Override
-    public SQLiteDatabase getReadableDatabase() {
-        SQLiteDatabase db = super.getReadableDatabase();
-        db.execSQL("PRAGMA foreign_keys=ON;");
-        return db;
-    }
 
 }

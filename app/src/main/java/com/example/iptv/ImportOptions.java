@@ -31,13 +31,12 @@ public class ImportOptions {
     public static class Result {
         public int newChannels, updatedChannels, newServers, logosUpdated, newCategories, newCountries;
 
-        public String summary() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(newChannels).append(" new channels, ").append(newServers).append(" new servers");
-            if (updatedChannels > 0) sb.append(", ").append(updatedChannels).append(" channels updated");
-            if (logosUpdated > 0) sb.append(", ").append(logosUpdated).append(" logos updated");
-            if (newCategories > 0) sb.append(", ").append(newCategories).append(" new categories");
-            if (newCountries > 0) sb.append(", ").append(newCountries).append(" new countries");
+        public String summary(android.content.Context c) {
+            StringBuilder sb = new StringBuilder(c.getString(R.string.adm_summary_base, newChannels, newServers));
+            if (updatedChannels > 0) sb.append(c.getString(R.string.adm_summary_updated, updatedChannels));
+            if (logosUpdated > 0) sb.append(c.getString(R.string.adm_summary_logos, logosUpdated));
+            if (newCategories > 0) sb.append(c.getString(R.string.adm_summary_categories, newCategories));
+            if (newCountries > 0) sb.append(c.getString(R.string.adm_summary_countries, newCountries));
             return sb.toString();
         }
     }

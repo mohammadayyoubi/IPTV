@@ -44,7 +44,7 @@ public class activity_channel_management extends BaseActivity {
         setContentView(R.layout.activity_channel_management);
         UiUtils.applyInsets(findViewById(R.id.root), true, true);
 
-        DBHelper dbHelper = new DBHelper(this);
+        DBHelper dbHelper = DBHelper.getInstance(this);
         CountryDAO countryDAO = new CountryDAO(dbHelper.getWritableDatabase());
         CategoryDAO categoryDAO = new CategoryDAO(dbHelper.getWritableDatabase());
 
@@ -60,16 +60,16 @@ public class activity_channel_management extends BaseActivity {
 
         searchEditText = findViewById(R.id.AllChannelsSearchEditText);
 
-        adapter = new ChannelAdapter(this, new ArrayList<>(), countryDAO, categoryDAO, () -> pager.reload());
+        adapter = new ChannelAdapter(this, new ArrayList<>(), countryDAO, categoryDAO, () -> pager.refresh());
         recyclerView.setAdapter(adapter);
 
         // Paged from SQLite: the list stays responsive with every channel in the world imported
         pager = new ChannelPager(this, recyclerView, new ChannelPager.Sink() {
             @Override
-            public void onFirstPage(List<Channel> channels) {
+            public void onFirstPage(List<Channel> channels, boolean newQuery) {
                 progressBar.setVisibility(View.GONE);
                 adapter.updateData(channels);
-                recyclerView.scrollToPosition(0);
+                if (newQuery) recyclerView.scrollToPosition(0);
             }
 
             @Override
@@ -105,11 +105,11 @@ public class activity_channel_management extends BaseActivity {
         UiUtils.shrinkFabOnScroll(recyclerView, addButton);
 
         findViewById(R.id.deleteAllChannelsButton).setOnClickListener(v ->
-                InputDialog.confirm(this, "Delete all channels",
-                        "Every channel and its servers will be removed. It can't be undone.",
+                InputDialog.confirm(this, getString(R.string.adm_delete_all_channels),
+                        getString(R.string.adm_delete_all_channels_body),
                         getString(R.string.delete_all), true, () -> {
                             new ChannelDAO(dbHelper.getWritableDatabase()).deleteAllChannels();
-                            Toast.makeText(this, "All channels deleted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, R.string.adm_all_channels_deleted, Toast.LENGTH_SHORT).show();
                             pager.reload();
                         }));
     }
@@ -117,7 +117,7 @@ public class activity_channel_management extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        pager.reload(); // Refresh when returning from add / edit
+        pager.refresh(); // Refresh in place when returning from add / edit
     }
 
     @Override

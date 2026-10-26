@@ -58,10 +58,10 @@ public class activity_user_management extends BaseActivity {
 
             @Override
             public void onDelete(UserAdapter.User user) {
-                InputDialog.confirm(activity_user_management.this, "Delete admin",
-                        "Remove " + user.email + "?", getString(R.string.delete), true, () -> {
+                InputDialog.confirm(activity_user_management.this, getString(R.string.adm_delete_admin),
+                        getString(R.string.adm_delete_admin_body, user.email), getString(R.string.delete), true, () -> {
                             FirebaseAuth.getInstance().getCurrentUser().delete(); // placeholder
-                            Toast.makeText(activity_user_management.this, "Deletion request (stub)", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity_user_management.this, getString(R.string.adm_delete_stub), Toast.LENGTH_SHORT).show();
                         });
             }
         });
@@ -86,7 +86,7 @@ public class activity_user_management extends BaseActivity {
 
     private void showUserDialog(UserAdapter.User existingUser) {
         new InputDialog(this)
-                .title(existingUser == null ? getString(R.string.add_admin) : "Edit admin")
+                .title(existingUser == null ? getString(R.string.add_admin) : getString(R.string.adm_edit_admin))
                 .icon(R.drawable.ic_person)
                 .field(getString(R.string.email), existingUser != null ? existingUser.email : null)
                 .fieldInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)

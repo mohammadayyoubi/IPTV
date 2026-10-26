@@ -1,62 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Filter options that drop down under the search bar when the filter button is tapped
      (ui/AvailabilityFilter). Hidden until opened. -->
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/filterChipsContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipToPadding="false"
-    android:paddingStart="@dimen/page_gutter"
+    android:orientation="vertical"
     android:paddingTop="@dimen/space_xs"
-    android:paddingEnd="@dimen/page_gutter"
-    android:scrollbars="none"
     android:visibility="gone">
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/availabilityChips"
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/page_gutter"
+        android:paddingEnd="@dimen/page_gutter"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/availabilityChips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="@dimen/space_xs"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipWatchable"
+                style="@style/Widget.IPTV.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_watchable"
+                app:chipIcon="@drawable/ic_play"
+                app:chipIconTint="@color/success"
+                app:chipIconVisible="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRecent"
+                style="@style/Widget.IPTV.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_recent"
+                app:chipIcon="@drawable/ic_history"
+                app:chipIconTint="@color/tint_1"
+                app:chipIconVisible="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipNotWorking"
+                style="@style/Widget.IPTV.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_not_working"
+                app:chipIcon="@drawable/ic_error"
+                app:chipIconTint="@color/danger"
+                app:chipIconVisible="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipNoServers"
+                style="@style/Widget.IPTV.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_no_servers"
+                app:chipIcon="@drawable/ic_dns"
+                app:chipIconTint="@color/text_tertiary"
+                app:chipIconVisible="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAll"
+                style="@style/Widget.IPTV.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_all" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <!-- Shown while "Recently watched" is selected and there is history -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/clearHistoryButton"
+        style="@style/Widget.IPTV.Button.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:chipSpacingHorizontal="@dimen/space_xs"
-        app:selectionRequired="true"
-        app:singleLine="true"
-        app:singleSelection="true">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipWatchable"
-            style="@style/Widget.IPTV.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/filter_watchable"
-            app:chipIcon="@drawable/ic_play"
-            app:chipIconTint="@color/success"
-            app:chipIconVisible="true" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipNotWorking"
-            style="@style/Widget.IPTV.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/filter_not_working"
-            app:chipIcon="@drawable/ic_error"
-            app:chipIconTint="@color/danger"
-            app:chipIconVisible="true" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipNoServers"
-            style="@style/Widget.IPTV.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/filter_no_servers"
-            app:chipIcon="@drawable/ic_dns"
-            app:chipIconTint="@color/text_tertiary"
-            app:chipIconVisible="true" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipAll"
-            style="@style/Widget.IPTV.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/filter_all" />
-    </com.google.android.material.chip.ChipGroup>
-</HorizontalScrollView>
+        android:layout_marginStart="@dimen/space_xs"
+        android:minHeight="40dp"
+        android:text="@string/clear_history"
+        android:visibility="gone"
+        app:icon="@drawable/ic_delete"
+        app:iconTint="@color/accent" />
+</LinearLayout>

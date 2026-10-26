@@ -47,7 +47,7 @@ public class FavoritesFragment extends Fragment {
 
         pager = new ChannelPager(requireContext(), recyclerView, new ChannelPager.Sink() {
             @Override
-            public void onFirstPage(List<Channel> channels) {
+            public void onFirstPage(List<Channel> channels, boolean newQuery) {
                 adapter.updateList(channels);
             }
 
@@ -91,7 +91,7 @@ public class FavoritesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        pager.reload();
+        pager.refresh();
     }
 
     @Override

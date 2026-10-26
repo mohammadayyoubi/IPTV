@@ -19,6 +19,7 @@ import com.example.iptv.R;
 import com.example.iptv.adapters.user.ChannelUserAdapter;
 import com.example.iptv.database.CategoryDAO;
 import com.example.iptv.database.ChannelQuery;
+import com.example.iptv.database.HistoryDAO;
 import com.example.iptv.database.CountryDAO;
 import com.example.iptv.database.DBHelper;
 import com.example.iptv.ui.AvailabilityFilter;
@@ -65,14 +66,14 @@ public class activity_user_filtered_channels extends BaseActivity {
         adapter = new ChannelUserAdapter(this, new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
-        DBHelper dbHelper = new DBHelper(this);
+        DBHelper dbHelper = DBHelper.getInstance(this);
         ChannelQuery query = new ChannelQuery();
         String title = filterName;
         if ("country".equals(filterType)) {
             query.countryId = filterId;
             Country country = new CountryDAO(dbHelper.getWritableDatabase()).getById(filterId);
             if (country != null) {
-                title = country.getName();
+                title = UiUtils.countryLabel(country.getName());
                 ImageView flag = findViewById(R.id.headerFlag);
                 flag.setVisibility(View.VISIBLE);
                 Glide.with(this).load(country.getFlagUrl())
@@ -84,7 +85,7 @@ public class activity_user_filtered_channels extends BaseActivity {
             query.categoryId = filterId;
             Category category = new CategoryDAO(dbHelper.getWritableDatabase()).getById(filterId);
             if (category != null) {
-                title = category.getName();
+                title = UiUtils.categoryLabel(this, category.getName());
                 ImageView icon = findViewById(R.id.headerCategoryIcon);
                 icon.setVisibility(View.VISIBLE);
                 UiUtils.applyCategoryIcon(icon, category.getName());
@@ -94,9 +95,9 @@ public class activity_user_filtered_channels extends BaseActivity {
 
         pager = new ChannelPager(this, recyclerView, new ChannelPager.Sink() {
             @Override
-            public void onFirstPage(List<Channel> channels) {
+            public void onFirstPage(List<Channel> channels, boolean newQuery) {
                 adapter.updateList(channels);
-                recyclerView.scrollToPosition(0);
+                if (newQuery) recyclerView.scrollToPosition(0);
             }
 
             @Override
@@ -117,6 +118,10 @@ public class activity_user_filtered_channels extends BaseActivity {
             pager.setQuery(q);
         });
         query.availability = availabilityFilter.getAvailability();
+        availabilityFilter.setOnClearHistory(() -> {
+            new HistoryDAO(DBHelper.getInstance(this).getWritableDatabase()).clear();
+            pager.reload();
+        });
         // In a category, the viewer's own country comes first
         if ("category".equals(filterType)) query.priorityCountryId = HomeCountry.countryId(this);
         pager.setQuery(query);
@@ -152,8 +157,8 @@ public class activity_user_filtered_channels extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        // Back from the player: statuses may have changed
-        pager.reload();
+        // Back from the player: statuses may have changed; keep the scroll position
+        pager.refresh();
     }
 
     @Override

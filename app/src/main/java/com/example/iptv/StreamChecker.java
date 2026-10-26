@@ -91,7 +91,7 @@ public class StreamChecker {
             int[] totals = new int[2];
             boolean[] cancelled = new boolean[1];
             try {
-                ChannelServerDAO dao = new ChannelServerDAO(new DBHelper(app).getWritableDatabase());
+                ChannelServerDAO dao = new ChannelServerDAO(DBHelper.getInstance(app).getWritableDatabase());
                 long olderThan = staleOnly ? System.currentTimeMillis() - STALE_AFTER_MS : 0;
                 List<ChannelServer> servers = dao.getForCheck(olderThan);
 

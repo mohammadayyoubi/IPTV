@@ -1,4 +1,4 @@
-# 📺 IPTV Android Player (Java)
+# 📺 TechWrap TV: IPTV Android Player (Java)
 
 [![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://www.android.com)
 [![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
@@ -16,7 +16,14 @@ An Android IPTV streaming app written in Java. Channels, countries and categorie
 
 | Area | What it does |
 | --- | --- |
-| 📡 Streaming | Plays HLS (`.m3u8`) streams with Media3 ExoPlayer, with fullscreen in landscape. It sends each stream's required `User-Agent` / `Referer`. |
+| 📡 Streaming | Plays HLS (`.m3u8`) streams with Media3 ExoPlayer 1.8, with fullscreen in landscape. It sends each stream's required `User-Agent` / `Referer`. |
+| 🔊 More audio formats | Jellyfin's prebuilt **FFmpeg decoder** plays audio the phone can't decode, e.g. **MP2** (Al Jadeed and many Arab satellite restreams), AC-3 and E-AC-3. |
+| 🔁 Auto-switch servers | When a server fails, or stays loading for 20 s, the next untried server starts automatically. Known-broken servers are tried last. (Settings) |
+| 🔗 Play a link | Paste any M3U/M3U8 link: a single stream plays directly; a playlist opens as a searchable channel list (`#EXTVLCOPT` headers supported). |
+| 🖼️ Picture-in-picture | PiP button on the video, plus automatic PiP when leaving the app (Settings). |
+| 💬 Subtitles | Subtitle tracks are listed by language, and *Auto* follows your preferred language. The phone's caption style is respected, with a shortcut to Android *Live Caption* for streams that send no subtitles. |
+| 🕘 Recently watched | Shown as a filter chip, newest first, with **Clear history** (also in Settings). |
+| 🌐 English / العربية | Full Arabic translation with right-to-left layout and an in-app language switch. Category and country names are localized. |
 | 🩺 Stream health | Every server is *working*, *broken* or *unchecked*. The player records the result whenever a server plays or fails, and the admin **Check all servers** action probes every URL. |
 | 🔎 Availability filter | Channel lists filter by **Watchable** (default) / **Not working** (all servers broken) / **No servers** / **All**, with counts. A filter button beside the search field opens and closes the options, and turns red while a non-default filter is applied. |
 | 🏠 My country first | Home, category lists and favorites list the viewer's country first (`HomeCountry`: IP country from ipinfo.io, cached weekly, then SIM/network country, then region setting). |
@@ -203,6 +210,21 @@ Foreign keys are enabled (`PRAGMA foreign_keys=ON`) and every relation uses `ON 
 
 ---
 
+## 📦 Release
+
+- **Package id**: `lb.techwrap.iptv`. In the Firebase console, add an Android app with this id and replace `app/google-services.json`. Until you do, the build automatically keeps the old id `com.example.iptv` and prints a warning.
+- **Signing**: create a keystore once, then add `keystore.properties` at the project root. It's git-ignored:
+  ```
+  storeFile=release.jks
+  storePassword=…
+  keyAlias=techwrap
+  keyPassword=…
+  ```
+  Then run `./gradlew bundleRelease` to get the Play upload (AAB), or `./gradlew assembleRelease` for an APK.
+- **R8** shrinking and obfuscation are on for release (about 11 MB versus about 20 MB debug). `proguard-rules.pro` keeps the FFmpeg renderer, which Media3 loads by reflection.
+- **Crash reports**: `CrashReporter` saves the stack trace of any crash and offers **Share report** the next time the app opens.
+- **FFmpeg licence**: the FFmpeg decoder comes from [jellyfin/jellyfin-androidx-media](https://github.com/jellyfin/jellyfin-androidx-media). Check its licence terms (FFmpeg is LGPL/GPL depending on the build) before publishing.
+
 ## 🚀 Getting started
 
 1. Clone the repo and open it in **Android Studio** (JDK 17).
@@ -235,6 +257,9 @@ Foreign keys are enabled (`PRAGMA foreign_keys=ON`) and every relation uses `ON 
 ---
 
 ## 🤝 Authors
+
+Developed by **TechWrap LB Team**, +961 70 080 214
+
 
 - Mohammad Al Ayoubi
 - Mahmoud Al Natour

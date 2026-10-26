@@ -152,6 +152,41 @@ public final class UiUtils {
         }
     }
 
+    private static final java.util.regex.Pattern SERVER_NAME = java.util.regex.Pattern.compile("^Server (\\d+)(.*)$");
+
+    /** Stored server names are English ("Server 2 · 720p"): show them in the app's language. */
+    public static String serverLabel(Context context, String name) {
+        if (name == null) return "";
+        java.util.regex.Matcher m = SERVER_NAME.matcher(name);
+        if (!m.matches()) return name;
+        return context.getString(R.string.server_n, Integer.parseInt(m.group(1))) + m.group(2);
+    }
+
+    /** Category name in the app's language (iptv-org names are English: "News" → "أخبار"). */
+    public static String categoryLabel(Context context, String name) {
+        if (name == null) return "";
+        int res = context.getResources().getIdentifier(
+                "cat_" + name.trim().toLowerCase(Locale.ROOT), "string", context.getPackageName());
+        return res != 0 ? context.getString(res) : name;
+    }
+
+    private static java.util.Map<String, String> isoByEnglishName;
+
+    /** Country name in the app's language ("Lebanon" → "لبنان"); stored names are English. */
+    public static synchronized String countryLabel(String englishName) {
+        if (englishName == null) return "";
+        if (isoByEnglishName == null) {
+            isoByEnglishName = new java.util.HashMap<>();
+            for (String iso : Locale.getISOCountries()) {
+                isoByEnglishName.put(new Locale("", iso).getDisplayCountry(Locale.ENGLISH).toLowerCase(Locale.ROOT), iso);
+            }
+        }
+        String iso = isoByEnglishName.get(englishName.toLowerCase(Locale.ROOT));
+        if (iso == null) return englishName;
+        String local = new Locale("", iso).getDisplayCountry(Locale.getDefault());
+        return local.isEmpty() ? englishName : local;
+    }
+
     /** Category icon in a tinted circle (tint is stable per name, like the avatars). */
     public static void applyCategoryIcon(android.widget.ImageView view, String name) {
         Context context = view.getContext();

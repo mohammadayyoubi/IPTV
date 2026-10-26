@@ -13,7 +13,9 @@ public class ChannelQuery {
         /** Has servers, all of them broken */
         NOT_WORKING,
         /** No servers at all */
-        NO_SERVERS
+        NO_SERVERS,
+        /** Watched before, most recent first */
+        RECENT
     }
 
     public String search = "";
@@ -37,13 +39,14 @@ public class ChannelQuery {
 
     /** Counts per availability for the same search / country / category / favorites. */
     public static class Counts {
-        public int watchable, notWorking, noServers, all;
+        public int watchable, notWorking, noServers, all, recent;
 
         public int of(Availability availability) {
             switch (availability) {
                 case WATCHABLE: return watchable;
                 case NOT_WORKING: return notWorking;
                 case NO_SERVERS: return noServers;
+                case RECENT: return recent;
                 default: return all;
             }
         }

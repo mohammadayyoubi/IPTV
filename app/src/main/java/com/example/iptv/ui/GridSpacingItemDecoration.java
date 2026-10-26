@@ -30,9 +30,13 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
         }
         int column = position % spanCount;
 
-        // Split the gap so every tile ends up the same width
-        outRect.left = column * gap / spanCount;
-        outRect.right = gap - (column + 1) * gap / spanCount;
+        // Split the gap so every tile ends up the same width. "start"/"end" follow the
+        // layout direction: in Arabic (right-to-left) the first column is on the right.
+        int start = column * gap / spanCount;
+        int end = gap - (column + 1) * gap / spanCount;
+        boolean rtl = parent.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+        outRect.left = rtl ? end : start;
+        outRect.right = rtl ? start : end;
         if (position >= spanCount) {
             outRect.top = gap;
         }

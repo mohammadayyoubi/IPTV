@@ -147,7 +147,10 @@ public class ChannelDAO {
         List<String> args = new ArrayList<>();
         String where = where(q, args, true);
         String order = " ORDER BY ";
-        if (q.priorityCountryId != 0) {
+        if (q.availability == ChannelQuery.Availability.RECENT) {
+            // Recently watched: newest first
+            order += "(SELECT h.watchedAt FROM History h WHERE h.channel_id = c.id) DESC, ";
+        } else if (q.priorityCountryId != 0) {
             // The viewer's own country first, then A-Z
             order += "(c.countryId = ?) DESC, ";
             args.add(String.valueOf(q.priorityCountryId));
@@ -183,7 +186,8 @@ public class ChannelDAO {
         String sql = "SELECT "
                 + "SUM(CASE WHEN IFNULL(s.total, 0) > 0 AND IFNULL(s.broken, 0) < s.total THEN 1 ELSE 0 END), "
                 + "SUM(CASE WHEN IFNULL(s.total, 0) > 0 AND IFNULL(s.broken, 0) >= s.total THEN 1 ELSE 0 END), "
-                + "SUM(CASE WHEN IFNULL(s.total, 0) = 0 THEN 1 ELSE 0 END), COUNT(*)" + STATS_JOIN + where;
+                + "SUM(CASE WHEN IFNULL(s.total, 0) = 0 THEN 1 ELSE 0 END), COUNT(*), "
+                + "SUM(CASE WHEN c.id IN (SELECT channel_id FROM History) THEN 1 ELSE 0 END)" + STATS_JOIN + where;
         ChannelQuery.Counts counts = new ChannelQuery.Counts();
         Cursor cursor = db.rawQuery(sql, args.toArray(new String[0]));
         try {
@@ -192,6 +196,7 @@ public class ChannelDAO {
                 counts.notWorking = cursor.getInt(1);
                 counts.noServers = cursor.getInt(2);
                 counts.all = cursor.getInt(3);
+                counts.recent = cursor.getInt(4);
             }
         } finally {
             cursor.close();
@@ -228,6 +233,9 @@ public class ChannelDAO {
                     break;
                 case NO_SERVERS:
                     clauses.add("IFNULL(s.total, 0) = 0");
+                    break;
+                case RECENT:
+                    clauses.add("c.id IN (SELECT channel_id FROM History)");
                     break;
                 default:
                     break;

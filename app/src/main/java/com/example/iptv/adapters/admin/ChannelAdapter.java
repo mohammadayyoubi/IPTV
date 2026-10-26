@@ -58,7 +58,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ChannelV
 
         // Get and display category
         Category category = categoryCache().get(channel.getCategoryId());
-        holder.categoryTextView.setText(category != null ? category.getName() : "Unknown");
+        holder.categoryTextView.setText(category != null ? com.example.iptv.ui.UiUtils.categoryLabel(context, category.getName()) : context.getString(R.string.unknown));
 
         // Load logo
         Glide.with(context)
@@ -81,12 +81,12 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ChannelV
             context.startActivity(intent);
         });
         holder.deleteButton.setOnClickListener(v -> {
-            InputDialog.confirm(context, "Delete channel",
-                    "Delete \"" + channel.getName() + "\" and all of its servers?",
+            InputDialog.confirm(context, context.getString(R.string.adm_delete_channel),
+                    context.getString(R.string.adm_delete_channel_body, channel.getName()),
                     context.getString(R.string.delete), true, () -> {
-                        ChannelDAO channelDAO = new ChannelDAO(new com.example.iptv.database.DBHelper(context).getWritableDatabase());
+                        ChannelDAO channelDAO = new ChannelDAO(com.example.iptv.database.DBHelper.getInstance(context).getWritableDatabase());
                         channelDAO.deleteChanelByID(channel.getId());
-                        Toast.makeText(context, "Channel deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.adm_channel_deleted, Toast.LENGTH_SHORT).show();
                         refreshCallback.run();
                     });
         });

@@ -48,7 +48,7 @@ public class CountriesFragment extends Fragment {
 
         UiUtils.setupGrid(recyclerView, R.dimen.tile_min_row);
 
-        dbHelper = new DBHelper(requireContext());
+        dbHelper = DBHelper.getInstance(requireContext());
         CountryDAO countryDAO = new CountryDAO(dbHelper.getWritableDatabase());
         countryList = countryDAO.getAll();
 
@@ -82,7 +82,9 @@ public class CountriesFragment extends Fragment {
         List<Country> tempList = new ArrayList<>();
         String lowerQuery = query.toLowerCase().trim();
         for (Country country : countryList) {
-            if (country.getName().toLowerCase().contains(lowerQuery)) {
+            // Match the English name and the translated one (e.g. "Lebanon" / "لبنان")
+            String label = UiUtils.countryLabel(country.getName()).toLowerCase();
+            if (country.getName().toLowerCase().contains(lowerQuery) || label.contains(lowerQuery)) {
                 tempList.add(country);
             }
         }

@@ -7,22 +7,19 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".TechWrapApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/iptv_logo"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.IPTV"
-
-
         tools:targetApi="31">
-        <activity
-            android:name=".activities.user.activity_user_filtered_channels"
-            android:exported="false" />
-        <!-- User Side Launcher Activity -->
+
+        <!-- Viewer -->
         <activity
             android:name=".activities.user.MainUserActivity"
             android:exported="true">
@@ -33,39 +30,64 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.user.ChannelDetailActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="false"
-            android:screenOrientation="sensor"
-            android:theme="@style/Theme.IPTV.Player" /> <!-- Admin Side Activities -->
-        <activity
-            android:name=".activities.admin.activity_add_channel"
+            android:name=".activities.user.OnboardingActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.admin.activity_channel_management"
+            android:name=".activities.user.activity_user_filtered_channels"
+            android:exported="false" />
+        <!-- singleTask: opening another channel while one plays in picture-in-picture switches
+             that window instead of starting a second player -->
+        <activity
+            android:name=".activities.user.ChannelDetailActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="sensor"
+            android:supportsPictureInPicture="true"
+            android:theme="@style/Theme.IPTV.Player" />
+        <activity
+            android:name=".activities.user.PlaylistActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.user.SettingsActivity"
+            android:exported="false" />
+
+        <!-- Admin -->
+        <activity
+            android:name=".activities.admin.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".activities.admin.activity_forgot_password"
             android:exported="false" />
         <activity
-            android:name=".activities.admin.activity_user_management"
+            android:name=".activities.admin.AdminPanelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.activity_channel_management"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.activity_add_channel"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.activity_category_management"
             android:exported="false" />
         <activity
             android:name=".activities.admin.activity_country_management"
             android:exported="false" />
         <activity
-            android:name=".activities.admin.AdminPanelActivity"
+            android:name=".activities.admin.activity_user_management"
             android:exported="false" />
-        <activity
-            android:name=".activities.admin.LoginActivity"
-            android:exported="false" /> <!-- Removed intent-filter here -->
-        <!-- Optional Main Activity (if used) -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.admin.activity_category_management"
-            android:exported="false" />
+
+        <!-- Remembers the in-app language (English / العربية) on Android 12 and older -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
     </application>
 
 </manifest>

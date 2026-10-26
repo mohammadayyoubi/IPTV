@@ -1,239 +1,370 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Player screen: top bar · channel card · video · quality & favorite · servers.
+     In fullscreen / picture-in-picture only the video stays (see ChannelDetailActivity). -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
-    android:orientation="vertical">
+    android:background="@color/bg">
 
-    <!-- ── Video (16:9 in portrait, full screen in landscape; sized in code) ── -->
-    <FrameLayout
-        android:id="@+id/player_container"
+    <!-- Soft accent glow behind the top of the screen -->
+    <View
+        android:id="@+id/screen_glow"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="@color/player_bg">
+        android:layout_height="360dp"
+        android:background="@drawable/bg_header_glow" />
 
-        <androidx.media3.ui.PlayerView
-            android:id="@+id/player_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:shutter_background_color="@color/player_bg"
-            app:show_buffering="always"
-            app:use_controller="true" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <!-- Idle / error message over the video -->
+        <!-- ── Top bar: back on its own, a quiet label ── -->
         <LinearLayout
-            android:id="@+id/player_message"
+            android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/player_bg"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="@dimen/space_lg"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/player_message_icon"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_live_tv"
-                android:tint="@color/text_secondary" />
-
-            <TextView
-                android:id="@+id/player_message_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_sm"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.IPTV.Subtitle" />
-
-            <TextView
-                android:id="@+id/player_message_body"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_2xs"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.IPTV.Caption"
-                android:visibility="gone" />
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/space_sm"
+            android:paddingEnd="@dimen/page_gutter">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/player_retry"
-                style="@style/Widget.IPTV.Button.Tonal"
-                android:layout_width="wrap_content"
+                android:id="@+id/button_back"
+                style="@style/Widget.IPTV.IconButton"
+                android:contentDescription="@string/back"
+                app:icon="@drawable/ic_arrow_back" />
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_sm"
-                android:minHeight="40dp"
-                android:text="@string/retry"
-                android:visibility="gone"
-                app:icon="@drawable/ic_refresh" />
+                android:layout_weight="1"
+                android:drawableStart="@drawable/bg_live_dot"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/space_md"
+                android:paddingEnd="@dimen/space_md"
+                android:text="@string/now_playing"
+                android:textAppearance="@style/TextAppearance.IPTV.Overline"
+                android:textColor="@color/text_secondary" />
         </LinearLayout>
 
-        <View
-            android:id="@+id/player_top_scrim"
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:layout_gravity="top"
-            android:background="@drawable/bg_player_scrim_top" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_back"
-            style="@style/Widget.IPTV.IconButton.OnVideo"
-            android:layout_gravity="top|start"
-            android:layout_margin="@dimen/space_sm"
-            android:contentDescription="@string/back"
-            app:icon="@drawable/ic_arrow_back" />
-
-        <!-- Shown with the player controls, also in fullscreen -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_quality"
-            style="@style/Widget.IPTV.IconButton.OnVideo"
-            android:layout_gravity="top|end"
-            android:layout_margin="@dimen/space_sm"
-            android:contentDescription="@string/video_quality"
-            android:tooltipText="@string/video_quality"
-            app:icon="@drawable/ic_hd" />
-    </FrameLayout>
-
-    <!-- ── Details ── -->
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/details_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:id="@+id/details_content"
+        <!-- ── Channel card ── -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/channel_header"
+            style="@style/Widget.IPTV.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="@dimen/page_gutter"
-            android:paddingTop="@dimen/space_lg"
-            android:paddingEnd="@dimen/page_gutter"
-            android:paddingBottom="@dimen/space_lg">
+            android:layout_marginStart="@dimen/page_gutter"
+            android:layout_marginTop="@dimen/space_2xs"
+            android:layout_marginEnd="@dimen/page_gutter"
+            app:cardCornerRadius="@dimen/radius_lg">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <FrameLayout
-                    android:layout_width="76dp"
-                    android:layout_height="76dp"
-                    android:background="@drawable/bg_logo_well_rounded">
-
-                    <ImageView
-                        android:id="@+id/image_channel_logo"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:importantForAccessibility="no"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_channel_placeholder" />
-                </FrameLayout>
+                android:orientation="vertical"
+                android:padding="@dimen/space_md">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/space_md"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:background="@drawable/bg_logo_well_rounded">
+
+                        <ImageView
+                            android:id="@+id/image_channel_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:importantForAccessibility="no"
+                            android:padding="10dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_channel_placeholder" />
+                    </FrameLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView style="@style/IPTV.LiveBadge" />
+                        android:layout_marginStart="@dimen/space_md"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/text_server_count"
+                            android:id="@+id/text_channel_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:textAppearance="@style/TextAppearance.IPTV.Title"
+                            android:textSize="20sp" />
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/space_xs"
-                            android:textAppearance="@style/TextAppearance.IPTV.Caption" />
-                    </LinearLayout>
+                            android:layout_marginTop="6dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/text_channel_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:ellipsize="end"
-                        android:maxLines="2"
-                        android:textAppearance="@style/TextAppearance.IPTV.Title"
-                        android:textSize="22sp" />
+                            <TextView style="@style/IPTV.LiveBadge" />
+
+                            <TextView
+                                android:id="@+id/text_server_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_xs"
+                                android:textAppearance="@style/TextAppearance.IPTV.Caption" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/meta_chips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    app:chipSpacingHorizontal="@dimen/space_xs">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/text_category_name"
+                        style="@style/Widget.IPTV.Chip.Meta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:chipIcon="@drawable/ic_category" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/text_country_name"
+                        style="@style/Widget.IPTV.Chip.Meta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:chipIcon="@drawable/ic_public" />
+                </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ── Video: rounded frame; edge-to-edge in fullscreen (sized in code) ── -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/player_container"
+            style="@style/Widget.IPTV.Card.Flat"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginStart="@dimen/page_gutter"
+            android:layout_marginTop="@dimen/space_md"
+            android:layout_marginEnd="@dimen/page_gutter"
+            app:cardBackgroundColor="@color/player_bg"
+            app:cardCornerRadius="@dimen/radius_lg">
+
+            <!-- texture_view so the rounded corners also clip the video -->
+            <androidx.media3.ui.PlayerView
+                android:id="@+id/player_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:show_buffering="always"
+                app:shutter_background_color="@color/player_bg"
+                app:surface_type="texture_view"
+                app:use_controller="true" />
+
+            <!-- Idle / error message over the video -->
+            <LinearLayout
+                android:id="@+id/player_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/player_bg"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/space_lg"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/player_message_icon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_live_tv"
+                    android:tint="@color/text_secondary" />
+
+                <TextView
+                    android:id="@+id/player_message_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.IPTV.Subtitle" />
+
+                <TextView
+                    android:id="@+id/player_message_body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2xs"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.IPTV.Caption"
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/player_retry"
+                    style="@style/Widget.IPTV.Button.Tonal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:minHeight="40dp"
+                    android:text="@string/retry"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_refresh" />
             </LinearLayout>
 
-            <com.google.android.material.chip.ChipGroup
+            <View
+                android:id="@+id/player_top_scrim"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_md"
-                app:chipSpacingHorizontal="@dimen/space_xs">
+                android:layout_height="72dp"
+                android:layout_gravity="top"
+                android:background="@drawable/bg_player_scrim_top" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/text_category_name"
-                    style="@style/Widget.IPTV.Chip.Meta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:chipIcon="@drawable/ic_category" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/text_country_name"
-                    style="@style/Widget.IPTV.Chip.Meta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:chipIcon="@drawable/ic_public" />
-            </com.google.android.material.chip.ChipGroup>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_favorite"
-                style="@style/Widget.IPTV.Button.Tonal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_lg"
-                android:text="@string/add_to_favorites"
-                app:icon="@drawable/ic_favorite_border"
-                app:iconGravity="textStart"
-                app:iconPadding="10dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_quality_details"
-                style="@style/Widget.IPTV.Button.Tonal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_xs"
-                android:text="@string/quality_auto"
-                app:icon="@drawable/ic_hd"
-                app:iconGravity="textStart"
-                app:iconPadding="10dp" />
-
-            <TextView
-                style="@style/IPTV.SectionLabel"
-                android:layout_marginTop="28dp"
-                android:text="@string/servers" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/server_chip_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:chipSpacingHorizontal="@dimen/space_xs"
-                app:selectionRequired="true"
-                app:singleSelection="true" />
-
-            <TextView
-                android:id="@+id/text_no_servers"
+            <!-- Subtitles · picture-in-picture · quality: shown with the player controls -->
+            <LinearLayout
+                android:id="@+id/player_actions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_2xs"
-                android:text="@string/player_no_servers"
-                android:textAppearance="@style/TextAppearance.IPTV.Body"
-                android:visibility="gone" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+                android:layout_gravity="top|end"
+                android:layout_margin="@dimen/space_sm"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_subtitles"
+                    style="@style/Widget.IPTV.IconButton.OnVideo"
+                    android:contentDescription="@string/subtitles"
+                    android:tooltipText="@string/subtitles"
+                    app:icon="@drawable/ic_cc" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_pip"
+                    style="@style/Widget.IPTV.IconButton.OnVideo"
+                    android:layout_marginStart="@dimen/space_xs"
+                    android:contentDescription="@string/picture_in_picture"
+                    android:tooltipText="@string/picture_in_picture"
+                    app:icon="@drawable/ic_pip" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_quality"
+                    style="@style/Widget.IPTV.IconButton.OnVideo"
+                    android:layout_marginStart="@dimen/space_xs"
+                    android:contentDescription="@string/video_quality"
+                    android:tooltipText="@string/video_quality"
+                    app:icon="@drawable/ic_hd" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ── Quality & favorite, then servers ── -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/details_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:id="@+id/details_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/page_gutter"
+                android:paddingTop="@dimen/space_md"
+                android:paddingEnd="@dimen/page_gutter"
+                android:paddingBottom="@dimen/space_lg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_quality_details"
+                        style="@style/Widget.IPTV.Button.Pill"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:text="@string/quality_auto"
+                        app:icon="@drawable/ic_hd" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_favorite"
+                        style="@style/Widget.IPTV.Button.Pill"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:text="@string/add_to_favorites"
+                        app:icon="@drawable/ic_favorite_border" />
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.IPTV.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md"
+                    app:cardCornerRadius="@dimen/radius_lg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_md">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <FrameLayout
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/surface_high">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_dns"
+                                    android:tint="@color/accent" />
+                            </FrameLayout>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_sm"
+                                android:layout_weight="1"
+                                android:text="@string/servers"
+                                android:textAppearance="@style/TextAppearance.IPTV.Subtitle" />
+                        </LinearLayout>
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/server_chip_group"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_sm"
+                            app:chipSpacingHorizontal="@dimen/space_xs"
+                            app:selectionRequired="true"
+                            app:singleSelection="true" />
+
+                        <TextView
+                            android:id="@+id/text_no_servers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_xs"
+                            android:text="@string/player_no_servers"
+                            android:textAppearance="@style/TextAppearance.IPTV.Body"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</FrameLayout>

@@ -33,6 +33,11 @@ public class MainUserActivity extends BaseActivity {
         UiUtils.applyInsets(container, true, navView instanceof NavigationRailView);
 
         if (savedInstanceState == null) {
+            if (!com.example.iptv.Prefs.onboardingDone(this)) {
+                startActivity(new android.content.Intent(this, OnboardingActivity.class));
+            } else {
+                offerCrashReport();
+            }
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new AllChannelsFragment())
                     .commit();
@@ -64,5 +69,25 @@ public class MainUserActivity extends BaseActivity {
 
         // Re-selecting the current tab does nothing (instead of rebuilding the page)
         navView.setOnItemReselectedListener(item -> { });
+    }
+
+    /** After a crash: offer to share the saved report (CrashReporter) with the team. */
+    private void offerCrashReport() {
+        String report = com.example.iptv.CrashReporter.pendingReport(this);
+        if (report == null) return;
+        com.example.iptv.CrashReporter.clear(this);
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setIcon(R.drawable.ic_error)
+                .setTitle(R.string.crash_title)
+                .setMessage(R.string.crash_body)
+                .setNegativeButton(R.string.crash_dismiss, null)
+                .setPositiveButton(R.string.crash_share, (d, w) -> {
+                    android.content.Intent send = new android.content.Intent(android.content.Intent.ACTION_SEND)
+                            .setType("text/plain")
+                            .putExtra(android.content.Intent.EXTRA_SUBJECT, "TechWrap TV crash report")
+                            .putExtra(android.content.Intent.EXTRA_TEXT, report);
+                    startActivity(android.content.Intent.createChooser(send, getString(R.string.crash_share)));
+                })
+                .show();
     }
 }

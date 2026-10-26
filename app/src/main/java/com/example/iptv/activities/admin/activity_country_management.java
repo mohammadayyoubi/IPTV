@@ -39,7 +39,7 @@ public class activity_country_management extends BaseActivity {
         emptyState = findViewById(R.id.emptyState);
         findViewById(R.id.backButton).setOnClickListener(v -> finish());
 
-        DBHelper dbHelper = new DBHelper(this);
+        DBHelper dbHelper = DBHelper.getInstance(this);
         countryDAO = new CountryDAO(dbHelper.getWritableDatabase());
 
         UiUtils.setupGrid(recyclerView, R.dimen.tile_min_admin_row);
@@ -53,8 +53,8 @@ public class activity_country_management extends BaseActivity {
 
             @Override
             public void onDelete(Country country) {
-                InputDialog.confirm(activity_country_management.this, "Delete country",
-                        "Delete \"" + country.getName() + "\"? Its channels will be deleted too.",
+                InputDialog.confirm(activity_country_management.this, getString(R.string.adm_delete_country),
+                        getString(R.string.adm_delete_country_body, country.getName()),
                         getString(R.string.delete), true, () -> {
                             countryDAO.delete(country.getId());
                             loadCountries();
@@ -84,17 +84,17 @@ public class activity_country_management extends BaseActivity {
                     new com.example.iptv.database.ChannelDAO(db), countryDAO,
                     new com.example.iptv.database.CategoryDAO(db), new com.example.iptv.database.ChannelServerDAO(db)));
             loadCountries();
-            Toast.makeText(this, added == 0 ? "All countries are already here" : added + " countries added",
+            Toast.makeText(this, added == 0 ? getString(R.string.adm_all_countries_here) : getString(R.string.adm_countries_added, added),
                     Toast.LENGTH_SHORT).show();
         });
 
         findViewById(R.id.deleteAllCountriesButton).setOnClickListener(v ->
-                InputDialog.confirm(this, "Delete all countries",
-                        "This also deletes every channel that belongs to a country. It can't be undone.",
+                InputDialog.confirm(this, getString(R.string.adm_delete_all_countries),
+                        getString(R.string.adm_delete_all_countries_body),
                         getString(R.string.delete_all), true, () -> {
                             countryDAO.deleteAllCountries();
                             loadCountries();
-                            Toast.makeText(this, "All countries deleted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, R.string.adm_all_countries_deleted, Toast.LENGTH_SHORT).show();
                         }));
     }
 
@@ -121,7 +121,7 @@ public class activity_country_management extends BaseActivity {
 
     private void showCountryDialog(Country countryToEdit) {
         new InputDialog(this)
-                .title(countryToEdit == null ? getString(R.string.add_country) : "Edit country")
+                .title(countryToEdit == null ? getString(R.string.add_country) : getString(R.string.adm_edit_country))
                 .field(getString(R.string.country_name), countryToEdit != null ? countryToEdit.getName() : null)
                 .secondField(getString(R.string.flag_url), countryToEdit != null ? countryToEdit.getFlagUrl() : null)
                 .onSubmit((name, flagUrl) -> {

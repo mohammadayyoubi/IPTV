@@ -40,7 +40,7 @@ public class activity_forgot_password extends BaseActivity {
             emailField.setError(null);
 
             if (TextUtils.isEmpty(email)) {
-                emailField.setError("Please enter your email");
+                emailField.setError(getString(R.string.adm_enter_email));
                 emailEditText.requestFocus();
                 return;
             }
@@ -50,7 +50,7 @@ public class activity_forgot_password extends BaseActivity {
                     .addOnCompleteListener(task -> {
                         setLoading(false);
                         if (task.isSuccessful()) {
-                            Toast.makeText(this, "Reset email sent. Check your inbox.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, R.string.adm_reset_sent, Toast.LENGTH_LONG).show();
                             finish();
                         } else {
                             emailField.setError(task.getException().getMessage());

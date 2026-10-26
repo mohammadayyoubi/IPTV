@@ -41,6 +41,22 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_play_link"
+            style="@style/Widget.IPTV.IconButton"
+            android:layout_marginEnd="@dimen/space_xs"
+            android:contentDescription="@string/play_link"
+            android:tooltipText="@string/play_link"
+            app:icon="@drawable/ic_link" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_settings"
+            style="@style/Widget.IPTV.IconButton"
+            android:layout_marginEnd="@dimen/space_xs"
+            android:contentDescription="@string/settings"
+            android:tooltipText="@string/settings"
+            app:icon="@drawable/ic_settings" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_admin_login"
             style="@style/Widget.IPTV.IconButton"
             android:contentDescription="@string/admin_sign_in"

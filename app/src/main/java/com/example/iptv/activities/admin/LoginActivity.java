@@ -73,12 +73,12 @@ public class LoginActivity extends BaseActivity {
         passwordField.setError(null);
 
         if (TextUtils.isEmpty(email)) {
-            emailField.setError("Email is required");
+            emailField.setError(getString(R.string.adm_email_required));
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            passwordField.setError("Password is required");
+            passwordField.setError(getString(R.string.adm_password_required));
             return;
         }
 
@@ -87,17 +87,17 @@ public class LoginActivity extends BaseActivity {
                 .addOnCompleteListener(this, task -> {
                     setLoading(false);
                     if (task.isSuccessful()) {
-                        Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, R.string.adm_login_ok, Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(LoginActivity.this, AdminPanelActivity.class));
                         finish();
                     } else {
                         Exception e = task.getException();
                         if (e instanceof FirebaseAuthInvalidUserException) {
-                            emailField.setError("No account found with this email.");
+                            emailField.setError(getString(R.string.adm_no_account));
                         } else if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                            passwordField.setError("Incorrect email or password. Please try again.");
+                            passwordField.setError(getString(R.string.adm_wrong_password));
                         } else {
-                            Toast.makeText(LoginActivity.this, "Authentication failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, getString(R.string.adm_auth_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

@@ -41,7 +41,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         Category category = categoryList.get(position);
-        holder.textView.setText(category.getName());
+        holder.textView.setText(UiUtils.categoryLabel(context, category.getName()));
         UiUtils.applyCategoryIcon(holder.iconView, category.getName());
         holder.itemView.setOnClickListener(v -> listener.onCategoryClick(category));
     }

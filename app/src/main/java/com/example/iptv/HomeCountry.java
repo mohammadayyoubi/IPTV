@@ -56,7 +56,7 @@ public final class HomeCountry {
         String iso = iso(context);
         if (iso.length() != 2) return 0;
         String name = new Locale("", iso).getDisplayCountry(Locale.ENGLISH);
-        Country country = new CountryDAO(new DBHelper(context.getApplicationContext()).getWritableDatabase()).getByName(name);
+        Country country = new CountryDAO(DBHelper.getInstance(context.getApplicationContext()).getWritableDatabase()).getByName(name);
         return country != null ? country.getId() : 0;
     }
 

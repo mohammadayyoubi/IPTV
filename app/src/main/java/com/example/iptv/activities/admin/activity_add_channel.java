@@ -48,7 +48,7 @@ public class activity_add_channel extends BaseActivity {
         UiUtils.applyInsets(findViewById(R.id.root), true, false);
         UiUtils.applyInsets(findViewById(R.id.bottomBar), false, true, true);
 
-        DBHelper dbHelper = new DBHelper(this);
+        DBHelper dbHelper = DBHelper.getInstance(this);
         channelDAO = new ChannelDAO(dbHelper.getWritableDatabase());
         serverDAO = new ChannelServerDAO(dbHelper.getWritableDatabase());
         categoryDAO = new CategoryDAO(dbHelper.getWritableDatabase());
@@ -200,7 +200,7 @@ public class activity_add_channel extends BaseActivity {
     private void renumberServers() {
         for (int i = 0; i < serverContainer.getChildCount(); i++) {
             TextView label = serverContainer.getChildAt(i).findViewById(R.id.serverLabelTextView);
-            label.setText("Server " + (i + 1));
+            label.setText(getString(R.string.server_n, i + 1));
         }
     }
 
@@ -231,12 +231,12 @@ public class activity_add_channel extends BaseActivity {
         }
 
         if (categoryDAO.getById(selectedCategory.getId()) == null || countryDAO.getById(selectedCountry.getId()) == null) {
-            Toast.makeText(this, "Selected Category or Country does not exist", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.adm_category_country_missing, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (serverUrls.isEmpty()) {
-            serverUrlField.setError("Add at least one server URL");
+            serverUrlField.setError(getString(R.string.adm_add_server_required));
             return;
         }
 
@@ -256,7 +256,7 @@ public class activity_add_channel extends BaseActivity {
             updatedChannel.setLogoAuto(editingChannel != null && editingChannel.isLogoAuto()
                     && logoUrl.equals(editingChannel.getLogoUrl()));
             if (channelDAO.update(updatedChannel) == 0) {
-                Toast.makeText(this, "Update failed due to constraints", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.adm_update_failed, Toast.LENGTH_SHORT).show();
                 return;
             }
             serverDAO.deleteChannelServersByChannelID(editingChannelId);
@@ -264,7 +264,7 @@ public class activity_add_channel extends BaseActivity {
                 server.setChannelId(editingChannelId);
                 serverDAO.insert(server);
             }
-            Toast.makeText(this, "Channel updated successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.adm_channel_updated, Toast.LENGTH_SHORT).show();
         } else {
             Channel newChannel = new Channel(name, logoUrl, countryId, categoryId, servers);
             long channelId = channelDAO.insert(newChannel);
@@ -273,9 +273,9 @@ public class activity_add_channel extends BaseActivity {
                     server.setChannelId((int) channelId);
                     serverDAO.insert(server);
                 }
-                Toast.makeText(this, "Channel added successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.adm_channel_added, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Failed to add channel", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.adm_channel_add_failed, Toast.LENGTH_SHORT).show();
                 return;
             }
         }
